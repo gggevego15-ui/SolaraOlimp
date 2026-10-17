@@ -175,6 +175,10 @@ body{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 @media(prefers-reduced-motion:reduce){.panel.is-leaving,.panel:not(.hidden):not(.is-leaving){animation:none!important}}
 
 
+
+.email-code-row{display:flex;gap:9px;align-items:stretch}.email-code-row input{flex:1;min-width:0}.email-send-button{flex:0 0 auto;min-width:118px;padding:0 14px;font-size:12px;white-space:nowrap}.email-send-button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:460px){.email-code-row{flex-direction:column}.email-send-button{min-height:44px;width:100%}}
+
 /* iOS 26-inspired refinement: depth, grouped surfaces and specular edges */
 :root{--ios-radius:30px;--ios-spring:cubic-bezier(.22,1,.36,1)}
 body{background-image:radial-gradient(ellipse at 7% 2%,rgba(184,207,255,.8),transparent 33%),radial-gradient(ellipse at 94% 8%,rgba(232,197,255,.72),transparent 32%),radial-gradient(ellipse at 53% 105%,rgba(177,244,225,.62),transparent 36%),linear-gradient(155deg,#f8faff 0%,#edf0fb 48%,#f8f3ff 100%)}
@@ -227,7 +231,8 @@ body{background-image:radial-gradient(ellipse at 7% 2%,rgba(184,207,255,.8),tran
    <div class="verify-card-head"><span class="verify-step">01</span><div><h2>Подать заявку</h2><p>Администрация проверит данные вручную</p></div></div>
    <div class="field"><label for="verifyTeacherName">ИМЯ И ФАМИЛИЯ</label><input id="verifyTeacherName" name="teacherName" autocomplete="name" minlength="2" maxlength="100" required placeholder="Например, Анна Иванова"></div>
    <div class="field"><label for="verifySchoolName">ШКОЛА / УЧЕБНОЕ УЧРЕЖДЕНИЕ</label><input id="verifySchoolName" name="schoolName" maxlength="180" required placeholder="Полное название учреждения"></div>
-   <div class="field"><label for="verifySchoolEmail">РАБОЧАЯ ПОЧТА</label><input id="verifySchoolEmail" name="schoolEmail" type="email" autocomplete="email" maxlength="254" required placeholder="name@school.ru"></div>
+   <div class="field"><label for="verifySchoolEmail">РАБОЧАЯ ПОЧТА</label><div class="email-code-row"><input id="verifySchoolEmail" name="schoolEmail" type="email" autocomplete="email" maxlength="254" required placeholder="name@school.ru"><button class="secondary email-send-button" id="sendTeacherEmailCode" type="button">Получить код</button></div><p class="hint field-help">Код придёт на эту почту и действует 10 минут.</p></div>
+   <div class="field"><label for="verifyTeacherEmailCode">КОД ИЗ ПИСЬМА</label><div class="email-code-row"><input id="verifyTeacherEmailCode" name="emailCode" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="6 цифр" required disabled><button class="secondary email-send-button" id="confirmTeacherEmailCode" type="button" disabled>Подтвердить</button></div><p class="verify-status hint" id="teacherEmailStatus" role="status" aria-live="polite"></p></div>
    <div class="field"><label for="verifyProofUrl">ССЫЛКА ДЛЯ ПОДТВЕРЖДЕНИЯ</label><input id="verifyProofUrl" name="proofUrl" type="url" inputmode="url" required placeholder="https://school.ru/teachers/..."><p class="hint field-help">Публичная страница школы или страница, где видна твоя роль. Только HTTPS.</p></div>
    <div class="field"><label for="verifyNotes">КОММЕНТАРИЙ (НЕОБЯЗАТЕЛЬНО)</label><textarea id="verifyNotes" name="notes" maxlength="1000" rows="3" placeholder="Дополнительная информация без личных документов"></textarea></div>
    <button class="primary" id="submitTeacherVerification" type="submit">Отправить заявку ↗</button><p class="verify-status hint" id="teacherRequestStatus" role="status" aria-live="polite"></p>
@@ -572,20 +577,68 @@ try{
 
 
 
+
+let teacherEmailVerifiedFor="";
+const teacherEmailInput=$("verifySchoolEmail");
+const teacherEmailCodeInput=$("verifyTeacherEmailCode");
+const teacherEmailStatus=$("teacherEmailStatus");
+const sendTeacherEmailButton=$("sendTeacherEmailCode");
+const confirmTeacherEmailButton=$("confirmTeacherEmailCode");
+teacherEmailInput.addEventListener("input",()=>{
+ const current=teacherEmailInput.value.trim().toLowerCase();
+ if(current!==teacherEmailVerifiedFor){
+  teacherEmailVerifiedFor="";
+  teacherEmailCodeInput.disabled=true;
+  confirmTeacherEmailButton.disabled=true;
+  teacherEmailCodeInput.value="";
+  teacherEmailStatus.textContent="";
+ }
+});
+sendTeacherEmailButton.addEventListener("click",async()=>{
+ const email=teacherEmailInput.value.trim().toLowerCase();
+ if(!teacherEmailInput.checkValidity()){teacherEmailInput.reportValidity();return}
+ sendTeacherEmailButton.disabled=true;sendTeacherEmailButton.textContent="Отправляем…";teacherEmailStatus.textContent="";
+ try{
+  const data=await api("request_teacher_email_code",{email});
+  teacherEmailCodeInput.disabled=false;confirmTeacherEmailButton.disabled=false;
+  teacherEmailStatus.textContent=data.message||"Код отправлен. Проверь почту.";
+  teacherEmailCodeInput.focus();
+ }catch(err){teacherEmailStatus.textContent=err.message||"Не удалось отправить код."}
+ finally{sendTeacherEmailButton.disabled=false;sendTeacherEmailButton.textContent="Отправить ещё"}
+});
+confirmTeacherEmailButton.addEventListener("click",async()=>{
+ const email=teacherEmailInput.value.trim().toLowerCase(),code=teacherEmailCodeInput.value.trim();
+ if(!/^\d{6}$/.test(code)){teacherEmailCodeInput.reportValidity();teacherEmailStatus.textContent="Введи все 6 цифр из письма.";return}
+ confirmTeacherEmailButton.disabled=true;confirmTeacherEmailButton.textContent="Проверяем…";teacherEmailStatus.textContent="";
+ try{
+  const data=await api("verify_teacher_email_code",{email,code});
+  if(!data.verified)throw new Error("Код не подтверждён.");
+  teacherEmailVerifiedFor=email;
+  teacherEmailStatus.textContent="✓ Рабочая почта подтверждена.";
+  teacherEmailInput.readOnly=true;teacherEmailCodeInput.readOnly=true;
+  sendTeacherEmailButton.disabled=true;sendTeacherEmailButton.textContent="Почта подтверждена";
+  confirmTeacherEmailButton.textContent="Готово";
+ }catch(err){teacherEmailStatus.textContent=err.message||"Код не прошёл проверку.";confirmTeacherEmailButton.disabled=false;confirmTeacherEmailButton.textContent="Подтвердить"}
+});
 $("teacherVerifyForm").addEventListener("submit",async e=>{
  e.preventDefault();
  const button=$("submitTeacherVerification"),status=$("teacherRequestStatus");
+ const email=teacherEmailInput.value.trim().toLowerCase();
+ if(teacherEmailVerifiedFor!==email){teacherEmailStatus.textContent="Сначала подтверди рабочую почту кодом из письма.";teacherEmailInput.focus();return}
  button.disabled=true;button.textContent="Отправляем заявку…";status.textContent="";
  try{
   const data=await api("request_teacher_verification",{
    teacherName:$("verifyTeacherName").value.trim(),schoolName:$("verifySchoolName").value.trim(),
-   schoolEmail:$("verifySchoolEmail").value.trim(),proofUrl:$("verifyProofUrl").value.trim(),notes:$("verifyNotes").value.trim()
+   schoolEmail:email,proofUrl:$("verifyProofUrl").value.trim(),notes:$("verifyNotes").value.trim()
   });
   status.textContent=data.message||"Заявка отправлена на проверку.";
-  $("teacherVerifyForm").reset();
+  $("teacherVerifyForm").reset();teacherEmailInput.readOnly=false;teacherEmailCodeInput.readOnly=false;
+  teacherEmailCodeInput.disabled=true;confirmTeacherEmailButton.disabled=true;sendTeacherEmailButton.disabled=false;sendTeacherEmailButton.textContent="Получить код";
+  teacherEmailVerifiedFor="";teacherEmailStatus.textContent="";
  }catch(err){status.textContent=err.message||"Не удалось отправить заявку."}
  finally{button.disabled=false;button.textContent="Отправить заявку ↗"}
 });
+
 $("teacherAccessForm").addEventListener("submit",async e=>{
  e.preventDefault();
  const button=$("verifyTeacherAccessButton"),status=$("teacherAccessStatus"),code=$("teacherAccessCode").value.trim();
