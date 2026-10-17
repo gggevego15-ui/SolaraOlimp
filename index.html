@@ -151,6 +151,22 @@ body{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 @media(max-width:520px){body{padding-bottom:calc(105px + env(safe-area-inset-bottom,0px))}.ios-dock{bottom:calc(10px + env(safe-area-inset-bottom,0px));gap:4px;padding:6px;border-radius:25px;width:calc(100vw - 24px);justify-content:space-around}.dock-item{height:51px;min-width:49px;padding:0 12px;border-radius:18px;gap:6px}.dock-item.active{padding-inline:13px}.dock-icon{width:23px;height:23px;flex-basis:23px}.dock-icon svg{width:22px;height:22px}.dock-label{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.ios-dock{animation:none}.dock-item,.dock-item:before,.dock-icon,.dock-label{transition:none!important}}
 
+
+/* Richer liquid glass, localized reflections, and low-cost motion */
+.ios-dock{--dock-light-x:50%;--dock-light-y:0%;background:radial-gradient(180px 100px at var(--dock-light-x) var(--dock-light-y),rgba(255,255,255,.82),transparent 78%),linear-gradient(135deg,rgba(255,255,255,.76),rgba(239,243,255,.56) 54%,rgba(255,255,255,.58));backdrop-filter:blur(26px) saturate(175%);-webkit-backdrop-filter:blur(26px) saturate(175%);box-shadow:0 14px 38px rgba(47,59,112,.17),0 3px 9px rgba(47,59,112,.06),inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(255,255,255,.38);transition:box-shadow .25s ease,border-color .25s ease}
+.ios-dock:after{content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;background:linear-gradient(112deg,transparent 18%,rgba(255,255,255,.36) 35%,transparent 48%),linear-gradient(180deg,rgba(255,255,255,.24),transparent 42%);opacity:.75;z-index:-1}
+.dock-item{isolation:isolate;will-change:transform}
+.dock-item:before{inset:1px;background:radial-gradient(90px 60px at 35% 0%,rgba(255,255,255,.95),transparent 78%),linear-gradient(145deg,rgba(255,255,255,.75),rgba(211,223,255,.48));box-shadow:inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(141,160,225,.12),0 5px 14px rgba(83,102,181,.08)}
+.dock-item.active{background:linear-gradient(145deg,rgba(255,255,255,.65),rgba(216,227,255,.46));box-shadow:inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(133,154,222,.15),0 4px 13px rgba(90,106,192,.1)}
+.dock-icon{position:relative;isolation:isolate;border-radius:10px;filter:drop-shadow(0 1px 1px rgba(255,255,255,.95));}
+.dock-icon:before{content:"";position:absolute;inset:1px;border-radius:9px;background:linear-gradient(145deg,rgba(255,255,255,.66),rgba(255,255,255,.06) 48%,rgba(125,148,255,.12));box-shadow:inset 0 1px 0 rgba(255,255,255,.86),inset 0 -1px 0 rgba(122,142,213,.12);z-index:-1;opacity:.85;transition:opacity .22s ease,background .22s ease}
+.dock-item.active .dock-icon:before{background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(255,255,255,.22) 52%,rgba(121,143,255,.2));box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(104,125,224,.1)}
+.dock-icon svg{filter:drop-shadow(0 1px 0 rgba(255,255,255,.85));}
+.dock-item:hover .dock-icon{transform:translateY(-1px) scale(1.045)}
+/* Keep the shine inside the small dock instead of repainting the whole page */
+@media(hover:none){.ios-dock{--dock-light-x:50%!important;--dock-light-y:0%!important}.dock-item:hover{transform:none}.dock-item:hover:before{opacity:0}}
+@media(prefers-reduced-motion:reduce){.dock-item{will-change:auto}}
+
 </style>
 </head>
 <body>
@@ -446,24 +462,30 @@ try{
  }
 }catch(e){}
 
-/* Lightweight iOS-like ambient light and press feedback */
+/* Lightweight dock-only reflection tracking: avoids repainting the full page */
 try{
- const root=document.documentElement;
- let lightTick=false;
- document.addEventListener("pointermove",event=>{
-  if(event.pointerType==="touch"||lightTick)return;
-  lightTick=true;
-  requestAnimationFrame(()=>{
-   root.style.setProperty("--pointer-x",event.clientX+"px");
-   root.style.setProperty("--pointer-y",event.clientY+"px");
-   lightTick=false;
-  });
- },{passive:true});
- document.addEventListener("pointerdown",event=>{
-  const target=event.target.closest("button,.role,.answer,.question-jump");
-  if(!target||target.disabled)return;
-  target.animate([{transform:"scale(1)"},{transform:"scale(.965)"},{transform:"scale(1)"}],{duration:260,easing:"cubic-bezier(.2,.85,.25,1.25)"});
- },{passive:true});
+ const dock=$("iosDock");
+ let shineFrame=0,lastX=-1,lastY=-1;
+ if(dock&&matchMedia("(hover:hover) and (pointer:fine)").matches&&!matchMedia("(prefers-reduced-motion: reduce)").matches){
+  dock.addEventListener("pointermove",event=>{
+   if(event.pointerType==="touch"||shineFrame)return;
+   shineFrame=requestAnimationFrame(()=>{
+    const rect=dock.getBoundingClientRect();
+    const x=Math.max(0,Math.min(100,((event.clientX-rect.left)/rect.width)*100));
+    const y=Math.max(0,Math.min(100,((event.clientY-rect.top)/rect.height)*100));
+    if(Math.abs(x-lastX)>1||Math.abs(y-lastY)>1){
+     dock.style.setProperty("--dock-light-x",x.toFixed(1)+"%");
+     dock.style.setProperty("--dock-light-y",y.toFixed(1)+"%");
+     lastX=x;lastY=y;
+    }
+    shineFrame=0;
+   });
+  },{passive:true});
+  dock.addEventListener("pointerleave",()=>{
+   dock.style.setProperty("--dock-light-x","50%");
+   dock.style.setProperty("--dock-light-y","0%");
+  },{passive:true});
+ }
 }catch(e){}
 
 
