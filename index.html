@@ -167,6 +167,13 @@ body{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 @media(hover:none){.ios-dock{--dock-light-x:50%!important;--dock-light-y:0%!important}.dock-item:hover{transform:none}.dock-item:hover:before{opacity:0}}
 @media(prefers-reduced-motion:reduce){.dock-item{will-change:auto}}
 
+
+/* iOS-style screen transitions: short exit + spring entrance */
+.panel.is-leaving{pointer-events:none;animation:ios-view-out .14s cubic-bezier(.4,0,1,1) both!important}
+@keyframes ios-view-out{from{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}to{opacity:0;transform:translateY(-7px) scale(.992);filter:blur(3px)}}
+.panel:not(.hidden):not(.is-leaving){animation:ios-view-in .42s cubic-bezier(.2,.85,.25,1.15) both}
+@media(prefers-reduced-motion:reduce){.panel.is-leaving,.panel:not(.hidden):not(.is-leaving){animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -230,7 +237,30 @@ const API_URL="https://husjlwgohxtatgguzdjm.supabase.co/functions/v1/olimp-api";
 const API_KEY="sb_publishable_iECwhv5Ljl48x8_v6FasJA_W5jwXNtZ";
 async function api(action,payload={}){const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":API_KEY},body:JSON.stringify({action,...payload})});let data={};try{data=await response.json()}catch(e){}if(!response.ok)throw new Error(data.error||"Ошибка соединения с сервером");return data;}
 const views=['roleView','teacherView','studentView','quizView','resultView'];
-function showView(id){views.forEach(v=>$(v).classList.toggle('hidden',v!==id));$('topStatus').textContent=id==='quizView'?'ЗАНЯТИЕ ИДЁТ':id==='teacherView'?'КАБИНЕТ УЧИТЕЛЯ':id==='studentView'?'КАБИНЕТ УЧЕНИКА':'ПРОСТРАНСТВО ОЛИМПИАД';const dock=$('iosDock');if(dock){dock.classList.toggle('dock-hidden',id==='quizView');dock.querySelectorAll('[data-nav]').forEach(item=>item.classList.toggle('active',item.dataset.nav===id||(id==='resultView'&&item.dataset.nav==='studentView')))}window.scrollTo({top:0,behavior:'smooth'})}
+let viewTransitionTimer=0,viewTransitionToken=0;
+function syncViewChrome(id){
+ $('topStatus').textContent=id==='quizView'?'ЗАНЯТИЕ ИДЁТ':id==='teacherView'?'КАБИНЕТ УЧИТЕЛЯ':id==='studentView'?'КАБИНЕТ УЧЕНИКА':'ПРОСТРАНСТВО ОЛИМПИАД';
+ const dock=$('iosDock');
+ if(dock){dock.classList.toggle('dock-hidden',id==='quizView');dock.querySelectorAll('[data-nav]').forEach(item=>item.classList.toggle('active',item.dataset.nav===id||(id==='resultView'&&item.dataset.nav==='studentView')))}
+}
+function showView(id){
+ if(!views.includes(id))return;
+ const incoming=$(id),currentId=views.find(v=>!$(v).classList.contains('hidden'));
+ if(currentId===id){syncViewChrome(id);return}
+ const token=++viewTransitionToken;
+ clearTimeout(viewTransitionTimer);
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const switchView=()=>{
+  if(token!==viewTransitionToken)return;
+  views.forEach(v=>{const panel=$(v);panel.classList.remove('is-leaving');panel.classList.toggle('hidden',v!==id)});
+  syncViewChrome(id);
+  window.scrollTo({top:0,behavior:reduced?'auto':'smooth'});
+ };
+ if(!currentId||reduced){switchView();return}
+ const current=$(currentId);
+ current.classList.add('is-leaving');
+ viewTransitionTimer=setTimeout(switchView,125);
+}
 let toastTimer;function notify(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2600)}
 document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',()=>{if(session&&!session.finished&&!confirm('Выйти из занятия? Текущий прогресс будет потерян.'))return;session=null;showView('roleView')}));
 $('brandHome').addEventListener('click',e=>{e.preventDefault();if(session&&!session.finished&&!confirm('Выйти из занятия? Текущий прогресс будет потерян.'))return;session=null;showView('roleView')});
