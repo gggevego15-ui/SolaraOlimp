@@ -109,7 +109,7 @@ $("generateCode").addEventListener("click",async()=>{
   $("generatedSubject").textContent=subject==="math"?"∑ Математика":"⌘ Информатика";
   $("teacherResults").classList.add("hidden");$("teacherResults").replaceChildren();
   $("generated").classList.remove("hidden");
-  try{localStorage.setItem("solara_teacher_"+currentCode,currentTeacherToken)}catch(e){}
+  try{localStorage.setItem("solara_teacher_"+currentCode,currentTeacherToken);localStorage.setItem("solara_last_teacher_session",JSON.stringify({code:currentCode,teacherToken:currentTeacherToken,subject}))}catch(e){}
  }catch(error){notify(error.message||"Не удалось создать занятие")}
  finally{button.disabled=false;button.textContent="✦ Сгенерировать код занятия"}
 });
@@ -164,6 +164,15 @@ async function finishQuiz(timeUp){
   showView("resultView");
  }catch(error){session.finishing=false;notify("Не удалось завершить и сохранить результат: "+error.message);if(Date.now()<session.endsAt)timerInterval=setInterval(updateTimer,1000)}
 }
+try{
+ const saved=JSON.parse(localStorage.getItem("solara_last_teacher_session")||"null");
+ if(saved&&/^[MI][A-HJ-NP-Z2-9]{5}$/.test(saved.code)&&saved.teacherToken){
+  currentCode=saved.code;currentTeacherToken=saved.teacherToken;
+  $("generatedCode").textContent=currentCode;$("teacherTokenDisplay").textContent=currentTeacherToken;
+  $("generatedSubject").textContent=saved.subject==="math"?"∑ Математика":"⌘ Информатика";
+  $("teacherSubject").value=saved.subject;$("generated").classList.remove("hidden");
+ }
+}catch(e){}
 showView('roleView');
 </script>
 </body>
