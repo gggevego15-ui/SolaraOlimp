@@ -57,8 +57,8 @@ html{scroll-behavior:smooth}
 <div class="form" style="margin-bottom:22px"><button class="secondary" id="openTeacherDashboard">▤ Мои занятия и результаты</button><button class="secondary" id="refreshTeacherDashboard">↻ Обновить</button></div>
 <div id="teacherDashboard" class="hidden" style="margin-bottom:26px"><h2>Мои занятия</h2><p class="hint" id="dashboardStatus">Загрузка…</p><div id="dashboardSessions" style="display:grid;gap:12px"></div></div>
 <h2 style="margin-top:10px">Создать новое занятие</h2><p class="lead">Выбери предмет и создай уникальный код для нового набора задач.</p>
-<div class="form"><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
-<div class="hidden" id="generated"><div class="code-box"><div><div class="hint">НАСТОЯЩИЙ КОД ЗАНЯТИЯ</div><div class="code" id="generatedCode">—</div></div><button class="secondary" id="copyCode">Копировать код</button></div><div class="meta"><span class="chip" id="generatedSubject">∑ Математика</span><span class="chip">10 задач</span><span class="chip">60 минут на ученика</span></div><p class="hint">Код сохранён в базе. Все ученики, которые введут его, получат один и тот же набор из 10 задач.</p><div class="field" style="margin-top:18px"><label for="teacherTokenDisplay">СЕКРЕТНЫЙ КЛЮЧ УЧИТЕЛЯ — СОХРАНИ ЕГО</label><div class="code-box"><div class="code" id="teacherTokenDisplay" style="font-size:13px;letter-spacing:0;overflow-wrap:anywhere">—</div><button class="secondary" id="copyTeacherToken">Копировать ключ</button></div><p class="hint">Этот ключ нужен для просмотра результатов. Не отправляй его ученикам.</p></div><button class="secondary" id="showResults" style="margin-top:12px">Посмотреть результаты учеников</button><div class="hidden" id="teacherResults" style="margin-top:16px"></div><button class="primary" id="newCode" style="margin-top:16px">Создать ещё одно занятие</button></div>
+<div class="form"><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option></select></div><div class="field"><label for="teacherGrade">КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
+<div class="hidden" id="generated"><div class="code-box"><div><div class="hint">НАСТОЯЩИЙ КОД ЗАНЯТИЯ</div><div class="code" id="generatedCode">—</div></div><button class="secondary" id="copyCode">Копировать код</button></div><div class="meta"><span class="chip" id="generatedSubject">∑ Математика</span><span class="chip" id="generatedGrade">7 класс</span><span class="chip">10 задач</span><span class="chip">60 минут на ученика</span></div><p class="hint">Код сохранён в базе. Все ученики, которые введут его, получат один и тот же набор из 10 задач.</p><div class="field" style="margin-top:18px"><label for="teacherTokenDisplay">СЕКРЕТНЫЙ КЛЮЧ УЧИТЕЛЯ — СОХРАНИ ЕГО</label><div class="code-box"><div class="code" id="teacherTokenDisplay" style="font-size:13px;letter-spacing:0;overflow-wrap:anywhere">—</div><button class="secondary" id="copyTeacherToken">Копировать ключ</button></div><p class="hint">Этот ключ нужен для просмотра результатов. Не отправляй его ученикам.</p></div><button class="secondary" id="showResults" style="margin-top:12px">Посмотреть результаты учеников</button><div class="hidden" id="teacherResults" style="margin-top:16px"></div><button class="primary" id="newCode" style="margin-top:16px">Создать ещё одно занятие</button></div>
 </section>
 <section class="panel glass hidden" id="studentView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> КАБИНЕТ УЧЕНИКА</div><button class="back" data-home>← Назад</button></div>
@@ -135,16 +135,17 @@ let currentCode="",currentTeacherToken="",session=null,timerInterval=null;
 $("generateCode").addEventListener("click",async()=>{
  const button=$("generateCode");button.disabled=true;button.textContent="Создаём занятие…";
  try{
-  const subject=$("teacherSubject").value;
-  const data=await api("create",{subject});
+  const subject=$("teacherSubject").value,grade=Number($("teacherGrade").value);
+  const data=await api("create",{subject,grade});
   currentCode=data.code;currentTeacherToken=data.teacherToken;
   $("generatedCode").textContent=currentCode;
   $("teacherTokenDisplay").textContent=currentTeacherToken;
   $("generatedSubject").textContent=subject==="math"?"∑ Математика":"⌘ Информатика";
+  $("generatedGrade").textContent=grade+" класс";
   $("teacherResults").classList.add("hidden");$("teacherResults").replaceChildren();
   $("generated").classList.remove("hidden");
   try{
-  const item={code:currentCode,teacherToken:currentTeacherToken,subject,createdAt:new Date().toISOString()};
+  const item={code:currentCode,teacherToken:currentTeacherToken,subject,grade,createdAt:new Date().toISOString()};
   let saved=JSON.parse(localStorage.getItem("solara_teacher_sessions")||"[]");
   if(!Array.isArray(saved))saved=[];
   saved=saved.filter(x=>x.code!==item.code);saved.unshift(item);
@@ -163,9 +164,9 @@ $("showResults").addEventListener("click",async()=>{
  try{
   const data=await api("results",{code:currentCode,teacherToken:currentTeacherToken});
   const root=$("teacherResults");root.replaceChildren();root.classList.remove("hidden");
-  const heading=document.createElement("h3");heading.textContent="Результаты · "+data.participants.length+" учен.";root.appendChild(heading);
+  const heading=document.createElement("h3");heading.textContent="Рейтинг · "+data.grade+" класс · "+data.participants.length+" учен.";root.appendChild(heading);
   if(!data.participants.length){const empty=document.createElement("p");empty.className="hint";empty.textContent="Пока никто не присоединился к занятию.";root.appendChild(empty)}
-  data.participants.forEach((p,i)=>{const row=document.createElement("div");row.className="result-row";const left=document.createElement("span");left.textContent=(p.student_name||("Ученик "+(i+1)))+" · "+new Date(p.joined_at).toLocaleString("ru-RU");const right=document.createElement("span");right.className=p.score===null?"":"good";right.textContent=p.score===null?"В процессе":p.score+" / 10";row.append(left,right);root.appendChild(row)});
+  data.participants.forEach((p,i)=>{const row=document.createElement("div");row.className="result-row";const left=document.createElement("span");left.textContent=(p.rank?"#"+p.rank+" · ":"")+(p.student_name||("Ученик "+(i+1)))+" · "+new Date(p.joined_at).toLocaleString("ru-RU");const right=document.createElement("span");right.className=p.score===null?"":"good";right.textContent=p.score===null?"В процессе":p.score+" / 10"+(p.elapsed_seconds!=null?" · "+Math.floor(p.elapsed_seconds/60)+" мин":"");row.append(left,right);root.appendChild(row)});
  }catch(error){notify(error.message||"Не удалось загрузить результаты")}
  finally{button.disabled=false;button.textContent="Посмотреть результаты учеников"}
 });
@@ -186,7 +187,7 @@ function renderTeacherSessions(){
  items.forEach(item=>{
   const card=document.createElement("div");card.className="result-row";card.style.display="block";card.style.padding="16px";
   const header=document.createElement("div");header.style.display="flex";header.style.justifyContent="space-between";header.style.gap="12px";header.style.flexWrap="wrap";
-  const title=document.createElement("strong");title.textContent=item.code+" · "+(item.subject==="math"?"Математика":"Информатика");
+  const title=document.createElement("strong");title.textContent=item.code+" · "+(item.subject==="math"?"Математика":"Информатика")+" · "+(item.grade||7)+" класс";
   const date=document.createElement("span");date.className="hint";date.textContent=item.createdAt?new Date(item.createdAt).toLocaleDateString("ru-RU"):"";
   header.append(title,date);card.appendChild(header);
   const status=document.createElement("p");status.className="hint";status.textContent="Загружаем результаты…";status.style.margin="10px 0";card.appendChild(status);
@@ -262,7 +263,7 @@ try{
   currentCode=saved.code;currentTeacherToken=saved.teacherToken;
   $("generatedCode").textContent=currentCode;$("teacherTokenDisplay").textContent=currentTeacherToken;
   $("generatedSubject").textContent=saved.subject==="math"?"∑ Математика":"⌘ Информатика";
-  $("teacherSubject").value=saved.subject;$("generated").classList.remove("hidden");
+  $("teacherSubject").value=saved.subject;$("teacherGrade").value=String(saved.grade||7);$("generatedGrade").textContent=(saved.grade||7)+" класс";$("generated").classList.remove("hidden");
  }
 }catch(e){}
 showView('roleView');
