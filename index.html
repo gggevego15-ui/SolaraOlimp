@@ -229,6 +229,39 @@ body{background-image:radial-gradient(ellipse at 7% 2%,rgba(184,207,255,.8),tran
 .role-grid .role{animation:glass-breathe 7s ease-in-out infinite}
 .role-grid .role:nth-child(2){animation-delay:-3.5s}
 @media(prefers-reduced-motion:reduce){.role-grid .role{animation:none!important}.panel.glass,.role,.primary,.secondary,.back,.dock-item{transition:none!important}}
+
+/* Performance pass: preserve the glass look while reducing GPU-heavy blur and repaints */
+:root{--glass-blur:16px;--parallax-x:0;--parallax-y:0}
+body{background-size:auto;background-attachment:scroll;animation:none!important}
+body:before,body:after{filter:blur(12px);opacity:.45;mix-blend-mode:normal;will-change:auto;animation:float 24s ease-in-out infinite alternate}
+.top,.glass,.panel,.role,.code-box,.chip,.result-row,.review-card,.field input,.field select,.answer,.question-jump,.timer,.eyebrow{backdrop-filter:blur(var(--glass-blur)) saturate(155%);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(155%)}
+.top{backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%)}
+.panel.glass,.glass{box-shadow:0 14px 42px rgba(55,70,126,.10),inset 0 1px 0 rgba(255,255,255,.88),inset 0 -1px 0 rgba(255,255,255,.25)}
+.panel,.panel.glass{animation:panel-arrive-lite .42s var(--ios-spring) both;transition:transform .35s var(--ios-spring),border-color .25s ease}
+.panel:after{opacity:.48}
+.panel.glass:before{background:linear-gradient(125deg,rgba(255,255,255,.24),transparent 38%,rgba(172,194,255,.06) 70%,rgba(255,255,255,.16));opacity:.7}
+.panel:not(.hidden):hover{transform:translate3d(calc(var(--parallax-x)*2px),calc(var(--parallax-y)*-2px - 1px),0);box-shadow:0 18px 48px rgba(55,70,126,.13),inset 0 1px 0 #fff}
+.role,.primary,.secondary,.back,.answer,.question-jump,.code-box,.result-row{transition:transform .28s var(--ios-spring),background-color .25s ease,border-color .25s ease}
+.role-grid .role{animation:glass-breathe 9s ease-in-out infinite}
+.role:hover{transform:translateY(-3px) scale(1.008);box-shadow:0 12px 26px rgba(86,104,183,.12),inset 0 1px 0 white}
+.role:before,.primary:before,.secondary:before,.back:before{transition:transform .55s ease}
+.role:after,.primary:after,.secondary:after,.back:after,.answer:after{display:none}
+.eyebrow{animation:none}
+.dot{animation:dot-pulse 3.2s ease-in-out infinite}
+.logo{animation:logo-breathe 8s ease-in-out infinite}
+.progress span{animation:none;background-size:100% 100%}
+.review-card{animation:review-in-lite .28s ease both;animation-delay:calc(min(var(--review-delay),180ms))}
+.review-body{animation:review-body-in .2s ease both}
+.review-card:hover,.code-box:hover,.result-row:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(70,82,140,.08)}
+.field input,.field select{transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
+.field input:focus,.field select:focus{transform:none}
+.question-jump:hover{transform:translateY(-1px) scale(1.025)}
+.answer:hover{transform:translateX(2px)}
+.toast{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+@keyframes panel-arrive-lite{from{opacity:0;transform:translateY(8px) scale(.995)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes review-in-lite{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:650px){:root{--glass-blur:12px}.top,.glass,.panel,.role,.code-box,.chip,.result-row,.review-card,.field input,.field select,.answer,.question-jump,.timer,.eyebrow{backdrop-filter:blur(12px) saturate(145%);-webkit-backdrop-filter:blur(12px) saturate(145%)}body:before,body:after{filter:blur(8px);opacity:.32}.role-grid .role{animation:none}}
+@media(prefers-reduced-motion:reduce){body:before,body:after,.logo,.dot,.role-grid .role{animation:none!important}.panel,.review-card{animation:none!important}.panel,.role,.primary,.secondary,.back,.answer,.question-jump,.code-box,.result-row{transition:none!important}}
 </style>
 </head>
 <body>
@@ -586,7 +619,26 @@ document.querySelectorAll('[data-nav]').forEach(item=>item.addEventListener('cli
  showView(target);
 }));
 
-document.querySelectorAll(".panel.glass").forEach(panel=>panel.addEventListener("pointermove",event=>{const r=panel.getBoundingClientRect();panel.style.setProperty("--specular-x",((event.clientX-r.left)/r.width*100).toFixed(1)+"%");panel.style.setProperty("--specular-y",((event.clientY-r.top)/r.height*100).toFixed(1)+"%")},{passive:true}));
+/* Lightweight parallax: animate only the active view, never repaint every glass panel. */
+try{
+ const motionOK=!matchMedia("(prefers-reduced-motion: reduce)").matches;
+ const finePointer=matchMedia("(hover:hover) and (pointer:fine)").matches;
+ const shell=document.querySelector(".shell");
+ let frame=0,px=0,py=0;
+ if(motionOK&&finePointer&&shell){
+  shell.addEventListener("pointermove",event=>{
+   if(frame)return;
+   px=event.clientX;py=event.clientY;
+   frame=requestAnimationFrame(()=>{
+    const r=shell.getBoundingClientRect();
+    shell.style.setProperty("--parallax-x",(((px-r.left)/r.width)-.5).toFixed(3));
+    shell.style.setProperty("--parallax-y",(((py-r.top)/r.height)-.5).toFixed(3));
+    frame=0;
+   });
+  },{passive:true});
+ }
+}catch(e){}
+
 showView('roleView');
 
 }, 50);
