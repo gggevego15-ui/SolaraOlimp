@@ -25,7 +25,10 @@
 </section>
 <section class="panel glass hidden" id="teacherView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> КАБИНЕТ УЧИТЕЛЯ</div><button class="back" data-home>← Назад</button></div>
-<h1>Создать занятие</h1><p class="lead">Выбери предмет и создай код. Для каждого нового кода будет свой набор из 10 задач.</p>
+<h1>Кабинет учителя</h1><p class="lead">Создавай занятия, следи за подключениями и смотри результаты учеников.</p>
+<div class="form" style="margin-bottom:22px"><button class="secondary" id="openTeacherDashboard">▤ Мои занятия и результаты</button><button class="secondary" id="refreshTeacherDashboard">↻ Обновить</button></div>
+<div id="teacherDashboard" class="hidden" style="margin-bottom:26px"><h2>Мои занятия</h2><p class="hint" id="dashboardStatus">Загрузка…</p><div id="dashboardSessions" style="display:grid;gap:12px"></div></div>
+<h2 style="margin-top:10px">Создать новое занятие</h2><p class="lead">Выбери предмет и создай уникальный код для нового набора задач.</p>
 <div class="form"><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
 <div class="hidden" id="generated"><div class="code-box"><div><div class="hint">НАСТОЯЩИЙ КОД ЗАНЯТИЯ</div><div class="code" id="generatedCode">—</div></div><button class="secondary" id="copyCode">Копировать код</button></div><div class="meta"><span class="chip" id="generatedSubject">∑ Математика</span><span class="chip">10 задач</span><span class="chip">60 минут на ученика</span></div><p class="hint">Код сохранён в базе. Все ученики, которые введут его, получат один и тот же набор из 10 задач.</p><div class="field" style="margin-top:18px"><label for="teacherTokenDisplay">СЕКРЕТНЫЙ КЛЮЧ УЧИТЕЛЯ — СОХРАНИ ЕГО</label><div class="code-box"><div class="code" id="teacherTokenDisplay" style="font-size:13px;letter-spacing:0;overflow-wrap:anywhere">—</div><button class="secondary" id="copyTeacherToken">Копировать ключ</button></div><p class="hint">Этот ключ нужен для просмотра результатов. Не отправляй его ученикам.</p></div><button class="secondary" id="showResults" style="margin-top:12px">Посмотреть результаты учеников</button><div class="hidden" id="teacherResults" style="margin-top:16px"></div><button class="primary" id="newCode" style="margin-top:16px">Создать ещё одно занятие</button></div>
 </section>
@@ -109,7 +112,15 @@ $("generateCode").addEventListener("click",async()=>{
   $("generatedSubject").textContent=subject==="math"?"∑ Математика":"⌘ Информатика";
   $("teacherResults").classList.add("hidden");$("teacherResults").replaceChildren();
   $("generated").classList.remove("hidden");
-  try{localStorage.setItem("solara_teacher_"+currentCode,currentTeacherToken);localStorage.setItem("solara_last_teacher_session",JSON.stringify({code:currentCode,teacherToken:currentTeacherToken,subject}))}catch(e){}
+  try{
+  const item={code:currentCode,teacherToken:currentTeacherToken,subject,createdAt:new Date().toISOString()};
+  let saved=JSON.parse(localStorage.getItem("solara_teacher_sessions")||"[]");
+  if(!Array.isArray(saved))saved=[];
+  saved=saved.filter(x=>x.code!==item.code);saved.unshift(item);
+  localStorage.setItem("solara_teacher_sessions",JSON.stringify(saved));
+  localStorage.setItem("solara_teacher_"+currentCode,currentTeacherToken);
+  localStorage.setItem("solara_last_teacher_session",JSON.stringify(item));
+ }catch(e){}
  }catch(error){notify(error.message||"Не удалось создать занятие")}
  finally{button.disabled=false;button.textContent="✦ Сгенерировать код занятия"}
 });
@@ -127,6 +138,53 @@ $("showResults").addEventListener("click",async()=>{
  }catch(error){notify(error.message||"Не удалось загрузить результаты")}
  finally{button.disabled=false;button.textContent="Посмотреть результаты учеников"}
 });
+function getTeacherSessions(){
+ try{
+  let items=JSON.parse(localStorage.getItem("solara_teacher_sessions")||"[]");
+  if(!Array.isArray(items))items=[];
+  const last=JSON.parse(localStorage.getItem("solara_last_teacher_session")||"null");
+  if(last&&last.code&&last.teacherToken&&!items.some(x=>x.code===last.code))items.unshift(last);
+  return items.filter(x=>x&&x.code&&x.teacherToken);
+ }catch(e){return []}
+}
+function renderTeacherSessions(){
+ const root=$("dashboardSessions");root.replaceChildren();
+ const items=getTeacherSessions();
+ $("dashboardStatus").textContent=items.length?"Сохранено занятий: "+items.length+". Список хранится в этом браузере.":"Пока нет сохранённых занятий в этом браузере.";
+ if(!items.length)return;
+ items.forEach(item=>{
+  const card=document.createElement("div");card.className="result-row";card.style.display="block";card.style.padding="16px";
+  const header=document.createElement("div");header.style.display="flex";header.style.justifyContent="space-between";header.style.gap="12px";header.style.flexWrap="wrap";
+  const title=document.createElement("strong");title.textContent=item.code+" · "+(item.subject==="math"?"Математика":"Информатика");
+  const date=document.createElement("span");date.className="hint";date.textContent=item.createdAt?new Date(item.createdAt).toLocaleDateString("ru-RU"):"";
+  header.append(title,date);card.appendChild(header);
+  const status=document.createElement("p");status.className="hint";status.textContent="Загружаем результаты…";status.style.margin="10px 0";card.appendChild(status);
+  const list=document.createElement("div");list.style.display="grid";list.style.gap="7px";card.appendChild(list);
+  const actions=document.createElement("div");actions.style.display="flex";actions.style.gap="8px";actions.style.flexWrap="wrap";actions.style.marginTop="10px";
+  const copy=document.createElement("button");copy.className="secondary";copy.textContent="Копировать код";copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(item.code);notify("Код скопирован")}catch(e){notify("Не удалось скопировать код")}});
+  const show=document.createElement("button");show.className="secondary";show.textContent="Обновить результаты";show.addEventListener("click",()=>loadOneTeacherSession(item,status,list));
+  actions.append(copy,show);card.appendChild(actions);root.appendChild(card);
+  loadOneTeacherSession(item,status,list);
+ });
+}
+async function loadOneTeacherSession(item,status,list){
+ status.textContent="Загружаем результаты…";list.replaceChildren();
+ try{
+  const data=await api("results",{code:item.code,teacherToken:item.teacherToken});
+  status.textContent="Учеников: "+data.participants.length;
+  if(!data.participants.length){const empty=document.createElement("p");empty.className="hint";empty.textContent="Пока ученики не подключались.";list.appendChild(empty);return}
+  data.participants.forEach((p,i)=>{
+   const row=document.createElement("div");row.className="result-row";
+   const left=document.createElement("span");left.textContent="Ученик "+(i+1)+" · "+new Date(p.joined_at).toLocaleString("ru-RU");
+   const right=document.createElement("span");right.className=p.score===null?"":"good";
+   right.textContent=p.score===null?(p.finished_at?"Завершено":"В процессе"):p.score+" / 10";
+   if(p.elapsed_seconds!==null&&p.elapsed_seconds!==undefined&&p.score!==null)right.textContent+=" · "+Math.floor(p.elapsed_seconds/60)+" мин";
+   row.append(left,right);list.appendChild(row);
+  });
+ }catch(error){status.textContent="Не удалось загрузить: "+error.message}
+}
+$("openTeacherDashboard").addEventListener("click",()=>{$("teacherDashboard").classList.toggle("hidden");if(!$("teacherDashboard").classList.contains("hidden"))renderTeacherSessions()});
+$("refreshTeacherDashboard").addEventListener("click",()=>renderTeacherSessions());
 $("studentCode").addEventListener("input",e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"")});
 $("joinForm").addEventListener("submit",async e=>{
  e.preventDefault();const code=$("studentCode").value.trim().toUpperCase(),subject=$("studentSubject").value,button=e.submitter||$("joinForm").querySelector("button[type=submit]");
@@ -166,6 +224,8 @@ async function finishQuiz(timeUp){
 }
 try{
  const saved=JSON.parse(localStorage.getItem("solara_last_teacher_session")||"null");
+ const history=JSON.parse(localStorage.getItem("solara_teacher_sessions")||"[]");
+ if(saved&&saved.code&&saved.teacherToken&&Array.isArray(history)&&!history.some(x=>x.code===saved.code)){history.unshift(saved);localStorage.setItem("solara_teacher_sessions",JSON.stringify(history))}
  if(saved&&/^[MI][A-HJ-NP-Z2-9]{5}$/.test(saved.code)&&saved.teacherToken){
   currentCode=saved.code;currentTeacherToken=saved.teacherToken;
   $("generatedCode").textContent=currentCode;$("teacherTokenDisplay").textContent=currentTeacherToken;
