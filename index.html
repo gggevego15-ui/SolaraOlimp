@@ -244,8 +244,8 @@ async function finishQuiz(timeUp){
  if(!session||session.finished||session.finishing)return;
  session.finishing=true;clearInterval(timerInterval);
  try{
-  for(let i=0;i<session.answers.length;i++){if(session.answers[i]!==null)await api("answer",{participantToken:session.participantToken,index:i,answer:session.answers[i]});}
-  const result=await api("finish",{participantToken:session.participantToken});
+  const submittedAnswers={};session.answers.forEach((answer,index)=>{if(answer!==null)submittedAnswers[String(index)]=answer;});
+  const result=await api("finish",{participantToken:session.participantToken,answers:submittedAnswers});
   session.finished=true;
   const score=result.score,spent=Math.floor(result.elapsedSeconds/60),correct=result.correctAnswers;
   $("scoreDisplay").textContent=score+" / 10";
