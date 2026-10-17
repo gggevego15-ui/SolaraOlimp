@@ -296,7 +296,7 @@ Deno.serve(async (req: Request) => {
       if (proof.protocol !== "https:" || proof.username || proof.password) return reply({ error: "Ссылка на подтверждение должна начинаться с https://." }, 400);
       const { data: emailRecord, error: emailError } = await db.from("olimp_teacher_email_codes").select("verified_at, consumed_at, expires_at").eq("email", schoolEmail).maybeSingle();
       if (emailError) throw emailError;
-      if (!emailRecord?.verified_at || emailRecord.consumed_at || new Date(emailRecord.expires_at).getTime() < Date.now()) return reply({ error: "Сначала подтверди эту рабочую почту кодом из письма." }, 403);
+      if (!emailRecord?.verified_at || emailRecord.consumed_at) return reply({ error: "Сначала подтверди эту рабочую почту кодом из письма." }, 403);
       const { error: insertError } = await db.from("olimp_teacher_verification_requests").insert({ teacher_name: teacherName, school_name: schoolName, school_email: schoolEmail, proof_url: proof.toString(), notes });
       if (insertError) throw insertError;
       const { error: consumeError } = await db.from("olimp_teacher_email_codes").update({ consumed_at: new Date().toISOString() }).eq("email", schoolEmail);
