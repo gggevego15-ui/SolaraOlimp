@@ -38,6 +38,52 @@ html{scroll-behavior:smooth}
 
 @media(max-width:650px){.shell{padding:12px 12px 30px}.panel{border-radius:24px}.role-grid{grid-template-columns:1fr}.role{padding:17px}.code-box{align-items:flex-start;flex-direction:column}.code{letter-spacing:3px}.hero h1{letter-spacing:-1.8px}.quiz-actions{align-items:stretch}.quiz-actions button{flex:1}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 .class-field{order:-3}.field-help{margin:8px 0 0;line-height:1.45;font-size:12px}.form .field:has(#teacherGrade){padding:14px;border:1px solid #cbd0ff;border-radius:18px;background:rgba(255,255,255,.72)}
+
+/* iOS-inspired liquid glass: layered translucency, soft reflections and spring motion */
+:root{--glass:rgba(255,255,255,.48);--line:rgba(255,255,255,.76);--shadow:0 24px 80px rgba(62,76,150,.13)}
+body{background-color:#f2f4fb;background-image:radial-gradient(ellipse at 12% 8%,rgba(178,205,255,.78),transparent 36%),radial-gradient(ellipse at 88% 13%,rgba(224,190,255,.65),transparent 34%),radial-gradient(ellipse at 60% 94%,rgba(173,243,222,.6),transparent 36%),linear-gradient(145deg,#f8f9ff,#edf0fb 55%,#f9f4ff);background-size:140% 140%;animation:ios-background 22s ease-in-out infinite alternate}
+.glass,.top,.eyebrow,.chip,.code-box,.result-row,.review-card,.field input,.field select,.role,.primary,.secondary,.back,.answer{backdrop-filter:blur(30px) saturate(185%);-webkit-backdrop-filter:blur(30px) saturate(185%)}
+.glass{background:linear-gradient(135deg,rgba(255,255,255,.64),rgba(255,255,255,.25) 42%,rgba(245,248,255,.42));border-color:rgba(255,255,255,.85);box-shadow:0 24px 80px rgba(68,81,143,.12),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(255,255,255,.35)}
+.panel{transition:box-shadow .45s ease,transform .45s cubic-bezier(.2,.8,.2,1)}
+.panel:not(.hidden):hover{transform:translateY(-2px);box-shadow:0 32px 100px rgba(68,81,143,.17),inset 0 1px 0 white}
+.primary,.secondary,.back,.role,.answer,.question-jump{transition:transform .35s cubic-bezier(.2,.9,.25,1.35),box-shadow .35s ease,background .35s ease,border-color .35s ease}
+.primary{box-shadow:0 9px 24px rgba(98,111,243,.2),inset 0 1px 0 rgba(255,255,255,.35)}
+.primary:hover,.role:hover{transform:translateY(-3px) scale(1.012);box-shadow:0 15px 34px rgba(98,111,243,.25),inset 0 1px 0 rgba(255,255,255,.5)}
+.secondary:hover,.back:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(74,91,150,.12)}
+.answer{border-color:rgba(255,255,255,.9);background:linear-gradient(135deg,rgba(255,255,255,.76),rgba(255,255,255,.38));box-shadow:inset 0 1px 0 white,0 4px 15px rgba(71,83,135,.035)}
+.answer:hover{transform:translateX(5px) scale(1.006);box-shadow:0 12px 26px rgba(76,92,156,.11)}
+.answer.selected{background:linear-gradient(135deg,rgba(224,230,255,.96),rgba(243,234,255,.82));box-shadow:0 0 0 3px rgba(113,128,255,.1),inset 0 1px 0 white}
+.question-jump{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.question-jump:hover{transform:translateY(-3px) scale(1.06);box-shadow:0 8px 18px rgba(91,108,210,.15)}
+.field input,.field select{background:rgba(255,255,255,.56);border-color:rgba(255,255,255,.9);box-shadow:inset 0 1px 2px rgba(71,84,134,.04)}
+.code-box{background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(244,246,255,.34));border-color:rgba(255,255,255,.9);box-shadow:inset 0 1px 0 white,0 12px 36px rgba(65,78,140,.06)}
+.chip{background:rgba(255,255,255,.5);border-color:rgba(255,255,255,.88);box-shadow:inset 0 1px 0 white}
+.review-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:25px 0 12px;color:var(--muted);font-size:11px;font-weight:900;letter-spacing:1.1px}
+.review-toolbar .secondary{padding:9px 12px;font-size:12px}
+.result-list{gap:12px}
+.review-card{--review-delay:0ms;overflow:hidden;border:1px solid rgba(255,255,255,.86);border-radius:20px;background:linear-gradient(140deg,rgba(255,255,255,.76),rgba(255,255,255,.35));box-shadow:0 8px 28px rgba(70,82,140,.055),inset 0 1px 0 white;animation:review-in .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--review-delay);transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+.review-card:hover{transform:translateY(-2px);box-shadow:0 14px 35px rgba(70,82,140,.11),inset 0 1px 0 white}
+.review-correct{border-left:3px solid rgba(49,177,131,.7)}.review-incorrect{border-left:3px solid rgba(231,111,126,.7)}
+.review-summary{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;list-style:none}
+.review-summary::-webkit-details-marker{display:none}
+.review-number{display:grid;place-items:center;width:36px;height:36px;border-radius:13px;background:rgba(255,255,255,.68);box-shadow:inset 0 1px 0 white;color:#707de2;font-weight:900;font-size:12px}
+.review-title{font-size:14px;font-weight:800;letter-spacing:-.2px}
+.review-status{font-size:11px;font-weight:900;padding:6px 9px;border-radius:99px;background:rgba(255,255,255,.62);white-space:nowrap}
+.review-body{padding:0 17px 18px 66px;animation:review-body-in .28s ease both}
+.review-question{font-size:14px;line-height:1.6;margin:0 0 14px;white-space:pre-line}
+.review-answer{display:flex;justify-content:space-between;align-items:start;gap:14px;padding:10px 12px;margin-top:7px;border-radius:12px;background:rgba(255,255,255,.45);font-size:12px}
+.review-answer span{color:var(--muted)}.review-answer strong{text-align:right;font-weight:800}
+.correct-answer{background:rgba(207,248,230,.47);border:1px solid rgba(96,203,158,.22)}
+.review-explanation{margin-top:13px;padding:14px 15px;border-radius:15px;background:linear-gradient(130deg,rgba(225,231,255,.63),rgba(246,234,255,.48));border:1px solid rgba(255,255,255,.8)}
+.review-explanation strong{font-size:12px}.review-explanation p{font-size:12px;line-height:1.7;color:#515d7e;margin:6px 0 0}
+.review-summary:after{content:"⌄";grid-column:3;grid-row:1;justify-self:end;align-self:end;margin-top:18px;color:#858eb5;font-size:14px;display:none}
+.review-card[open] .review-summary{padding-bottom:8px}
+@keyframes ios-background{0%{background-position:0% 0%,100% 0%,50% 100%,0% 50%}100%{background-position:8% 12%,92% 8%,58% 90%,100% 50%}}
+@keyframes review-in{from{opacity:0;transform:translateY(12px) scale(.99);filter:blur(4px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes review-body-in{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:560px){.review-summary{grid-template-columns:34px minmax(0,1fr);gap:10px;padding:13px}.review-number{width:32px;height:32px}.review-status{grid-column:2;justify-self:start}.review-body{padding:0 13px 15px}.review-answer{flex-direction:column;gap:4px}.review-answer strong{text-align:left}.review-toolbar{align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){body{animation:none!important}.review-card{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -76,7 +122,7 @@ html{scroll-behavior:smooth}
 <p class="hint">Можно открывать любые задачи в любом порядке. Выбранные ответы остаются только в этой попытке и отправляются при завершении олимпиады.</p>
 </section>
 <section class="panel glass hidden" id="resultView">
-<div class="eyebrow"><span class="dot"></span> ЗАНЯТИЕ ЗАВЕРШЕНО</div><h1>Хорошая работа!</h1><p class="lead" id="resultLead">Вот твой результат.</p><div class="result-score" id="scoreDisplay">0 / 10</div><div class="meta"><span class="chip" id="resultSubject">Математика</span><span class="chip" id="resultTime">Время: —</span></div><div class="result-list" id="resultList"></div><div style="margin-top:25px"><button class="primary" data-home>На главную ↗</button></div></section>
+<div class="eyebrow"><span class="dot"></span> ЗАНЯТИЕ ЗАВЕРШЕНО</div><h1>Хорошая работа!</h1><p class="lead" id="resultLead">Вот твой результат.</p><div class="result-score" id="scoreDisplay">0 / 10</div><div class="meta"><span class="chip" id="resultSubject">Математика</span><span class="chip" id="resultTime">Время: —</span></div><div class="review-toolbar"><span>РАЗБОР ОТВЕТОВ</span><button type="button" class="secondary" id="toggleReview">Раскрыть все ↕</button></div><div class="result-list" id="resultList"></div><div style="margin-top:25px"><button class="primary" data-home>На главную ↗</button></div></section>
 </main><footer class="footer">Solara Olimp · Математика · Информатика · Учись думать шире</footer>
 </div><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
@@ -241,6 +287,42 @@ function renderQuestion(){if(!session)return;const i=session.index,q=session.tas
 $('prevQuestion').addEventListener('click',()=>{if(session&&session.index>0){session.index--;renderQuestion()}});
 $('nextQuestion').addEventListener('click',()=>{if(!session)return;if(session.index<9){session.index++;renderQuestion()}else if(confirm('Завершить занятие и посмотреть результат?'))finishQuiz(false)});
 $('quitQuiz').addEventListener('click',()=>{if(confirm('Выйти и завершить занятие сейчас?'))finishQuiz(false)});
+
+function explainTask(q){
+ const question=String(q.q||"").toLowerCase(),topic=String(q.t||"").toLowerCase(),answer=q.a[q.c];
+ if(/\d+\s*[:÷/]\s*\d+\s*\+/.test(question)) return "Сначала выполняем деление, затем сложение. Соблюдай порядок действий.";
+ if(/процент|%/.test(topic+" "+question)) return "Чтобы найти процент от числа, умножь число на процент и раздели на 100. Если речь о скидке или увеличении, отдельно учти изменение.";
+ if(/дроб/.test(topic+" "+question)) return "Сократи дробь или найди нужную часть числа: раздели целое на знаменатель и умножь на числитель.";
+ if(/уравнен|x\s*[−+*/=]|найди x|чему равно x/.test(topic+" "+question)) return "Выполни одинаковые обратные действия с обеими частями уравнения, чтобы оставить неизвестную отдельно, затем проверь подстановкой.";
+ if(/периметр/.test(topic+" "+question)) return "Периметр — сумма длин всех сторон. У прямоугольника можно сложить все четыре стороны или использовать формулу P = 2(a + b).";
+ if(/площад/.test(topic+" "+question)) return "Для площади прямоугольника умножь длину на ширину. Не путай площадь в квадратных единицах с периметром.";
+ if(/угл|треугольник|геометр|диагонал|пятиугольник|шестиугольник|гипотенуз|пифагор/.test(topic+" "+question)) return "Используй свойство соответствующей геометрической фигуры и проверь, что вычисления согласуются с условием.";
+ if(/последовательност|закономерност/.test(topic+" "+question)) return "Сравни соседние элементы: найди повторяющуюся разность, множитель или другое правило, затем примени его к следующему элементу.";
+ if(/двоич|₂|бит|систем.*счислен/.test(topic+" "+question)) return "В двоичной системе разряды соответствуют степеням двойки: справа налево это 1, 2, 4, 8, 16 и далее. Сложи веса разрядов, где стоит 1.";
+ if(/граф|вершин|рёбер|ребер|дейкстр|крускал|тополог/.test(topic+" "+question)) return "Рассмотри структуру графа и условия задачи: вершины обозначают объекты, а рёбра — связи. Выбирай алгоритм по тому, что требуется найти.";
+ if(/сложност|o\(|бинарн.*поиск|линейн.*поиск/.test(topic+" "+question)) return "Оцени, как растёт число операций при увеличении размера входных данных. Линейный проход обычно имеет O(n), а деление диапазона пополам — O(log n).";
+ if(/сортиров/.test(topic+" "+question)) return "Сортировка упорядочивает элементы по выбранному правилу. Сначала проверь результат, затем вспомни характерную сложность используемого алгоритма.";
+ if(/цикл|range\(|повтор/.test(topic+" "+question)) return "Посчитай все итерации цикла по его границам. В Python правая граница range не включается.";
+ if(/стек|очередь|lifo|fifo/.test(topic+" "+question)) return "Стек работает по принципу LIFO: последним пришёл — первым вышел. Очередь работает по FIFO: первым пришёл — первым вышел.";
+ if(/логик|true|false|импликац|xor|and| or |not /.test(topic+" "+question)) return "Проверь логическое выражение по определению операции: AND требует истинности обоих условий, OR — хотя бы одного, NOT меняет значение на противоположное.";
+ if(/комбинатор|способ|перестанов|сочетан/.test(topic+" "+question)) return "Определи, важен ли порядок и разрешены ли повторы. Для перестановок n разных объектов количество вариантов равно n!, а для последовательного выбора перемножают числа доступных вариантов.";
+ if(/среднее/.test(topic+" "+question)) return "Среднее арифметическое получается так: сложи все значения и раздели сумму на количество значений.";
+ if(/делим|делится|остаток|нод|нoд|делител|простое число/.test(topic+" "+question)) return "Проверь делимость или разложи числа на множители. Для остатка используй деление с остатком; для простого числа проверь, что у него ровно два положительных делителя.";
+ if(/производн/.test(topic+" "+question)) return "Примени правило производной к каждому слагаемому. Например, производная xⁿ равна n·xⁿ⁻¹.";
+ if(/интеграл/.test(topic+" "+question)) return "Найди первообразную, а затем подставь верхний и нижний пределы и вычти нижнее значение из верхнего.";
+ if(/алгоритм/.test(topic+" "+question)) return "Алгоритм — конечная последовательность точных шагов. Проследи выполнение по порядку и проверь, приводит ли оно к требуемому результату.";
+ return "Правильный ответ: «"+answer+"». Сопоставь его с условием, выдели ключевое правило и проверь, почему остальные варианты ему не соответствуют.";
+}
+
+
+const toggleReviewButton=$("toggleReview");
+if(toggleReviewButton)toggleReviewButton.addEventListener("click",()=>{
+ const cards=[...$("resultList").querySelectorAll(".review-card")];
+ const shouldOpen=cards.some(card=>!card.open);
+ cards.forEach(card=>card.open=shouldOpen);
+ toggleReviewButton.textContent=shouldOpen?"Свернуть все ↕":"Раскрыть все ↕";
+});
+
 async function finishQuiz(timeUp){
  if(!session||session.finished||session.finishing)return;
  session.finishing=true;clearInterval(timerInterval);
@@ -254,7 +336,21 @@ async function finishQuiz(timeUp){
   $("resultSubject").textContent=session.subject==="math"?"∑ Математика":"⌘ Информатика";
   $("resultTime").textContent="Время: "+spent+" мин";
   $("resultList").replaceChildren();
-  session.tasks.forEach((q,i)=>{const row=document.createElement("div");row.className="result-row";const left=document.createElement("span");left.textContent=(i+1)+". "+q.t;const right=document.createElement("span");const isCorrect=session.answers[i]===correct[i];right.className=isCorrect?"good":"bad";right.textContent=isCorrect?"Верно":session.answers[i]===null?"Нет ответа":"Неверно";row.append(left,right);$("resultList").appendChild(row)});
+  session.tasks.forEach((q,i)=>{
+   const isCorrect=session.answers[i]===correct[i];
+   const review=document.createElement("details");review.className="review-card"+(isCorrect?" review-correct":" review-incorrect");review.style.setProperty("--review-delay",(i*45)+"ms");
+   const summary=document.createElement("summary");summary.className="review-summary";
+   const number=document.createElement("span");number.className="review-number";number.textContent=String(i+1).padStart(2,"0");
+   const title=document.createElement("span");title.className="review-title";title.textContent=q.t;
+   const status=document.createElement("span");status.className="review-status "+(isCorrect?"good":"bad");status.textContent=isCorrect?"Верно":session.answers[i]===null?"Пропуск":"Ошибка";
+   summary.append(number,title,status);
+   const body=document.createElement("div");body.className="review-body";
+   const prompt=document.createElement("p");prompt.className="review-question";prompt.textContent=q.q;
+   const your=document.createElement("div");your.className="review-answer";const yourLabel=document.createElement("span");yourLabel.textContent="Твой ответ";const yourValue=document.createElement("strong");yourValue.textContent=session.answers[i]===null?"Не отвечено":q.a[session.answers[i]];your.append(yourLabel,yourValue);
+   const rightAnswer=document.createElement("div");rightAnswer.className="review-answer correct-answer";const rightLabel=document.createElement("span");rightLabel.textContent="Правильный ответ";const rightValue=document.createElement("strong");rightValue.textContent=q.a[correct[i]];rightAnswer.append(rightLabel,rightValue);
+   const explain=document.createElement("div");explain.className="review-explanation";const explainTitle=document.createElement("strong");explainTitle.textContent="Почему так";const explainText=document.createElement("p");explainText.textContent=explainTask(q);explain.append(explainTitle,explainText);
+   body.append(prompt,your,rightAnswer,explain);review.append(summary,body);$("resultList").appendChild(review);
+  });
   showView("resultView");
  }catch(error){session.finishing=false;notify("Не удалось завершить и сохранить результат: "+error.message);if(Date.now()<session.endsAt)timerInterval=setInterval(updateTimer,1000)}
 }
