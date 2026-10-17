@@ -207,6 +207,28 @@ body{background-image:radial-gradient(ellipse at 7% 2%,rgba(184,207,255,.8),tran
 @media(max-width:720px){.verify-columns{grid-template-columns:1fr}.verify-access-card{position:static}.verify-hero{align-items:flex-start}.verify-symbol{width:48px;height:48px;flex-basis:48px;border-radius:17px}.verify-note{padding:14px}}
 @media(prefers-reduced-motion:reduce){.dock-item,.field input,.field select,.field textarea,.primary,.secondary,.back,.role,.answer{transition:none!important}}
 
+/* Solara Liquid Glass v2: prismatic reflections, tactile controls and depth */
+:root{--specular-x:50%;--specular-y:0%;--glass-edge:rgba(255,255,255,.88)}
+.panel.glass{background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(255,255,255,.36) 45%,rgba(241,244,255,.46));border:1px solid rgba(255,255,255,.8);box-shadow:0 28px 90px rgba(48,61,119,.12),0 4px 16px rgba(70,84,140,.06),inset 0 1px 0 rgba(255,255,255,.96),inset 0 -1px 0 rgba(255,255,255,.45);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);transition:transform .45s var(--ios-spring),box-shadow .45s ease,border-color .35s ease}
+.panel.glass:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;background:radial-gradient(360px circle at var(--specular-x) var(--specular-y),rgba(255,255,255,.72),transparent 62%),linear-gradient(125deg,rgba(255,255,255,.24),transparent 38%,rgba(172,194,255,.08) 70%,rgba(255,255,255,.22));opacity:.9}
+.panel:not(.hidden):hover{border-color:rgba(255,255,255,.98);box-shadow:0 34px 100px rgba(48,61,119,.16),0 8px 24px rgba(70,84,140,.07),inset 0 1px 0 #fff}
+.role,.primary,.secondary,.back,.dock-item{position:relative;overflow:hidden;isolation:isolate;transition:transform .28s var(--ios-spring),box-shadow .3s ease,background .3s ease,border-color .3s ease}
+.role:before,.primary:before,.secondary:before,.back:before{content:"";position:absolute;inset:-1px;pointer-events:none;border-radius:inherit;background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.62) 48%,transparent 70%);transform:translateX(-130%);transition:transform .75s cubic-bezier(.2,.8,.2,1);z-index:-1}
+.role:hover:before,.primary:hover:before,.secondary:hover:before,.back:hover:before{transform:translateX(130%)}
+.role:hover,.secondary:hover,.back:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(54,68,132,.12),inset 0 1px 0 rgba(255,255,255,.9)}
+.role:active,.primary:active,.secondary:active,.back:active,.dock-item:active{transform:scale(.975)}
+.primary{box-shadow:0 12px 26px rgba(42,105,235,.22),inset 0 1px 0 rgba(255,255,255,.45)}
+.primary:hover{box-shadow:0 16px 36px rgba(42,105,235,.3),inset 0 1px 0 rgba(255,255,255,.65)}
+.field input,.field select,.field textarea{transition:border-color .25s ease,box-shadow .25s ease,background .25s ease;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:rgba(10,132,255,.62);box-shadow:0 0 0 4px rgba(10,132,255,.11),0 8px 22px rgba(10,132,255,.07);background:rgba(255,255,255,.88)}
+.role-icon,.dock-icon{transition:transform .45s var(--ios-spring),filter .35s ease}
+.role:hover .role-icon{transform:rotate(-8deg) scale(1.1);filter:drop-shadow(0 5px 8px rgba(83,108,210,.22))}
+.top{backdrop-filter:blur(24px) saturate(175%);-webkit-backdrop-filter:blur(24px) saturate(175%)}
+.eyebrow .dot{box-shadow:0 0 0 4px rgba(80,210,158,.12),0 0 18px rgba(80,210,158,.4)}
+@keyframes glass-breathe{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-3px,0)}}
+.role-grid .role{animation:glass-breathe 7s ease-in-out infinite}
+.role-grid .role:nth-child(2){animation-delay:-3.5s}
+@media(prefers-reduced-motion:reduce){.role-grid .role{animation:none!important}.panel.glass,.role,.primary,.secondary,.back,.dock-item{transition:none!important}}
 </style>
 </head>
 <body>
@@ -222,28 +244,6 @@ body{background-image:radial-gradient(ellipse at 7% 2%,rgba(184,207,255,.8),tran
 </div>
 </section>
 
-<section class="panel glass hidden" id="teacherGateView">
- <div class="view-head"><div class="eyebrow"><span class="dot"></span> ПРОВЕРКА ДОСТУПА</div><button class="back" data-home>← На главную</button></div>
- <div class="verify-hero"><div class="verify-symbol">✓</div><div><h1>Кабинет учителя</h1><p class="lead">Чтобы создавать олимпиады, подтверди, что работаешь в учебном учреждении.</p></div></div>
- <div class="verify-note"><span class="verify-note-icon">⌁</span><div><strong>Проверка вручную</strong><p>Укажи рабочую почту и ссылку на официальную страницу школы или публичный профиль сотрудника. Не загружай паспорт и личные документы.</p></div></div>
- <div class="verify-columns">
-  <form class="verify-card" id="teacherVerifyForm">
-   <div class="verify-card-head"><span class="verify-step">01</span><div><h2>Подать заявку</h2><p>Администрация проверит данные вручную</p></div></div>
-   <div class="field"><label for="verifyTeacherName">ИМЯ И ФАМИЛИЯ</label><input id="verifyTeacherName" name="teacherName" autocomplete="name" minlength="2" maxlength="100" required placeholder="Например, Анна Иванова"></div>
-   <div class="field"><label for="verifySchoolName">ШКОЛА / УЧЕБНОЕ УЧРЕЖДЕНИЕ</label><input id="verifySchoolName" name="schoolName" maxlength="180" required placeholder="Полное название учреждения"></div>
-   <div class="field"><label for="verifySchoolEmail">РАБОЧАЯ ПОЧТА</label><div class="email-code-row"><input id="verifySchoolEmail" name="schoolEmail" type="email" autocomplete="email" maxlength="254" required placeholder="name@school.ru"><button class="secondary email-send-button" id="sendTeacherEmailCode" type="button">Получить код</button></div><p class="hint field-help">Код придёт на эту почту и действует 10 минут.</p></div>
-   <div class="field"><label for="verifyTeacherEmailCode">КОД ИЗ ПИСЬМА</label><div class="email-code-row"><input id="verifyTeacherEmailCode" name="emailCode" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="6 цифр" required disabled><button class="secondary email-send-button" id="confirmTeacherEmailCode" type="button" disabled>Подтвердить</button></div><p class="verify-status hint" id="teacherEmailStatus" role="status" aria-live="polite"></p></div>
-   <div class="field"><label for="verifyProofUrl">ССЫЛКА ДЛЯ ПОДТВЕРЖДЕНИЯ</label><input id="verifyProofUrl" name="proofUrl" type="url" inputmode="url" required placeholder="https://school.ru/teachers/..."><p class="hint field-help">Публичная страница школы или страница, где видна твоя роль. Только HTTPS.</p></div>
-   <div class="field"><label for="verifyNotes">КОММЕНТАРИЙ (НЕОБЯЗАТЕЛЬНО)</label><textarea id="verifyNotes" name="notes" maxlength="1000" rows="3" placeholder="Дополнительная информация без личных документов"></textarea></div>
-   <button class="primary" id="submitTeacherVerification" type="submit">Отправить заявку ↗</button><p class="verify-status hint" id="teacherRequestStatus" role="status" aria-live="polite"></p>
-  </form>
-  <div class="verify-card verify-access-card">
-   <div class="verify-card-head"><span class="verify-step">02</span><div><h2>Уже одобрили?</h2><p>Введи код, который выдала администрация</p></div></div>
-   <form id="teacherAccessForm"><div class="field"><label for="teacherAccessCode">КОД ДОСТУПА УЧИТЕЛЯ</label><input id="teacherAccessCode" name="accessCode" type="password" autocomplete="current-password" minlength="8" maxlength="128" required placeholder="Вставь код доступа"></div><button class="secondary" id="verifyTeacherAccessButton" type="submit">Проверить код →</button><p class="verify-status hint" id="teacherAccessStatus" role="status" aria-live="polite"></p></form>
-   <div class="access-foot"><span class="access-lock">⌑</span><p>Код проверяется на сервере. Без одобренного кода создание занятий недоступно.</p></div>
-  </div>
- </div>
-</section>
 <section class="panel glass hidden" id="teacherView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> КАБИНЕТ УЧИТЕЛЯ</div><button class="back" data-home>← Назад</button></div>
 <h1>Кабинет учителя</h1><p class="lead">Создавай занятия, следи за подключениями и смотри результаты учеников.</p>
@@ -292,16 +292,15 @@ const $=id=>document.getElementById(id);
 const API_URL="https://husjlwgohxtatgguzdjm.supabase.co/functions/v1/olimp-api";
 const API_KEY="sb_publishable_iECwhv5Ljl48x8_v6FasJA_W5jwXNtZ";
 async function api(action,payload={}){const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":API_KEY},body:JSON.stringify({action,...payload})});let data={};try{data=await response.json()}catch(e){}if(!response.ok)throw new Error(data.error||"Ошибка соединения с сервером");return data;}
-const views=['roleView','teacherGateView','teacherView','studentView','quizView','resultView'];
+const views=['roleView','teacherView','studentView','quizView','resultView'];
 let viewTransitionTimer=0,viewTransitionToken=0;
 function syncViewChrome(id){
- $('topStatus').textContent=id==='quizView'?'ЗАНЯТИЕ ИДЁТ':(id==='teacherView'||id==='teacherGateView')?'КАБИНЕТ УЧИТЕЛЯ':id==='studentView'?'КАБИНЕТ УЧЕНИКА':'ПРОСТРАНСТВО ОЛИМПИАД';
+ $('topStatus').textContent=id==='quizView'?'ЗАНЯТИЕ ИДЁТ':(id==='teacherView')?'КАБИНЕТ УЧИТЕЛЯ':id==='studentView'?'КАБИНЕТ УЧЕНИКА':'ПРОСТРАНСТВО ОЛИМПИАД';
  const dock=$('iosDock');
- if(dock){dock.classList.toggle('dock-hidden',id==='quizView');dock.querySelectorAll('[data-nav]').forEach(item=>item.classList.toggle('active',item.dataset.nav===(id==='teacherGateView'?'teacherView':id)||(id==='resultView'&&item.dataset.nav==='studentView')))}
+ if(dock){dock.classList.toggle('dock-hidden',id==='quizView');dock.querySelectorAll('[data-nav]').forEach(item=>item.classList.toggle('active',item.dataset.nav===id||(id==='resultView'&&item.dataset.nav==='studentView')))}
 }
 function showView(id){
  if(!views.includes(id))return;
- if(id==='teacherView'&&!sessionStorage.getItem('solara_teacher_access'))id='teacherGateView';
  const incoming=$(id),currentId=views.find(v=>!$(v).classList.contains('hidden'));
  if(currentId===id){syncViewChrome(id);return}
  const token=++viewTransitionToken;
@@ -321,7 +320,7 @@ function showView(id){
 let toastTimer;function notify(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2600)}
 document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',()=>{if(session&&!session.finished&&!confirm('Выйти из занятия? Текущий прогресс будет потерян.'))return;session=null;showView('roleView')}));
 $('brandHome').addEventListener('click',e=>{e.preventDefault();if(session&&!session.finished&&!confirm('Выйти из занятия? Текущий прогресс будет потерян.'))return;session=null;showView('roleView')});
-$('teacherRole').addEventListener('click',()=>showView('teacherGateView'));$('studentRole').addEventListener('click',()=>showView('studentView'));
+$('teacherRole').addEventListener('click',()=>showView('teacherView'));$('studentRole').addEventListener('click',()=>showView('studentView'));
 const banks={
 math:[
 {t:'Числа',q:'Чему равна сумма 1 + 2 + 3 + … + 10?',a:['45','50','55','60'],c:2},
@@ -367,7 +366,7 @@ $("generateCode").addEventListener("click",async()=>{
  const button=$("generateCode");button.disabled=true;button.textContent="Создаём занятие…";
  try{
   const subject=$("teacherSubject").value,grade=Number($("teacherGrade").value),difficulty=$("teacherDifficulty").value;
-  const data=await api("create",{subject,grade,difficulty,teacherAccessCode:sessionStorage.getItem("solara_teacher_access")||""});
+  const data=await api("create",{subject,grade,difficulty});
   currentCode=data.code;currentTeacherToken=data.teacherToken;
   $("generatedCode").textContent=currentCode;
   $("teacherTokenDisplay").textContent=currentTeacherToken;
@@ -578,83 +577,8 @@ try{
 
 
 
-let teacherEmailVerifiedFor="";
-const teacherEmailInput=$("verifySchoolEmail");
-const teacherEmailCodeInput=$("verifyTeacherEmailCode");
-const teacherEmailStatus=$("teacherEmailStatus");
-const sendTeacherEmailButton=$("sendTeacherEmailCode");
-const confirmTeacherEmailButton=$("confirmTeacherEmailCode");
-teacherEmailInput.addEventListener("input",()=>{
- const current=teacherEmailInput.value.trim().toLowerCase();
- if(current!==teacherEmailVerifiedFor){
-  teacherEmailVerifiedFor="";
-  teacherEmailCodeInput.disabled=true;
-  confirmTeacherEmailButton.disabled=true;
-  teacherEmailCodeInput.value="";
-  teacherEmailStatus.textContent="";
- }
-});
-sendTeacherEmailButton.addEventListener("click",async()=>{
- const email=teacherEmailInput.value.trim().toLowerCase();
- if(!teacherEmailInput.checkValidity()){teacherEmailInput.reportValidity();return}
- sendTeacherEmailButton.disabled=true;sendTeacherEmailButton.textContent="Отправляем…";teacherEmailStatus.textContent="";
- try{
-  const data=await api("request_teacher_email_code",{email});
-  teacherEmailCodeInput.disabled=false;confirmTeacherEmailButton.disabled=false;
-  teacherEmailStatus.textContent=data.message||"Код отправлен. Проверь почту.";
-  teacherEmailCodeInput.focus();
- }catch(err){teacherEmailStatus.textContent=err.message||"Не удалось отправить код."}
- finally{sendTeacherEmailButton.disabled=false;sendTeacherEmailButton.textContent="Отправить ещё"}
-});
-confirmTeacherEmailButton.addEventListener("click",async()=>{
- const email=teacherEmailInput.value.trim().toLowerCase(),code=teacherEmailCodeInput.value.trim();
- if(!/^\d{6}$/.test(code)){teacherEmailCodeInput.reportValidity();teacherEmailStatus.textContent="Введи все 6 цифр из письма.";return}
- confirmTeacherEmailButton.disabled=true;confirmTeacherEmailButton.textContent="Проверяем…";teacherEmailStatus.textContent="";
- try{
-  const data=await api("verify_teacher_email_code",{email,code});
-  if(!data.verified)throw new Error("Код не подтверждён.");
-  teacherEmailVerifiedFor=email;
-  teacherEmailStatus.textContent="✓ Рабочая почта подтверждена.";
-  teacherEmailInput.readOnly=true;teacherEmailCodeInput.readOnly=true;
-  sendTeacherEmailButton.disabled=true;sendTeacherEmailButton.textContent="Почта подтверждена";
-  confirmTeacherEmailButton.textContent="Готово";
- }catch(err){teacherEmailStatus.textContent=err.message||"Код не прошёл проверку.";confirmTeacherEmailButton.disabled=false;confirmTeacherEmailButton.textContent="Подтвердить"}
-});
-$("teacherVerifyForm").addEventListener("submit",async e=>{
- e.preventDefault();
- const button=$("submitTeacherVerification"),status=$("teacherRequestStatus");
- const email=teacherEmailInput.value.trim().toLowerCase();
- if(teacherEmailVerifiedFor!==email){teacherEmailStatus.textContent="Сначала подтверди рабочую почту кодом из письма.";teacherEmailInput.focus();return}
- button.disabled=true;button.textContent="Отправляем заявку…";status.textContent="";
- try{
-  const data=await api("request_teacher_verification",{
-   teacherName:$("verifyTeacherName").value.trim(),schoolName:$("verifySchoolName").value.trim(),
-   schoolEmail:email,proofUrl:$("verifyProofUrl").value.trim(),notes:$("verifyNotes").value.trim()
-  });
-  status.textContent=data.message||"Заявка отправлена на проверку.";
-  $("teacherVerifyForm").reset();teacherEmailInput.readOnly=false;teacherEmailCodeInput.readOnly=false;
-  teacherEmailCodeInput.disabled=true;confirmTeacherEmailButton.disabled=true;sendTeacherEmailButton.disabled=false;sendTeacherEmailButton.textContent="Получить код";
-  teacherEmailVerifiedFor="";teacherEmailStatus.textContent="";
- }catch(err){status.textContent=err.message||"Не удалось отправить заявку."}
- finally{button.disabled=false;button.textContent="Отправить заявку ↗"}
-});
-
-$("teacherAccessForm").addEventListener("submit",async e=>{
- e.preventDefault();
- const button=$("verifyTeacherAccessButton"),status=$("teacherAccessStatus"),code=$("teacherAccessCode").value.trim();
- button.disabled=true;button.textContent="Проверяем…";status.textContent="";
- try{
-  const data=await api("verify_teacher_access",{accessCode:code});
-  if(!data.verified)throw new Error("Не удалось подтвердить код.");
-  sessionStorage.setItem("solara_teacher_access",code);
-  status.textContent="Доступ подтверждён. Открываем кабинет…";
-  showView("teacherView");
- }catch(err){status.textContent=err.message||"Код не прошёл проверку."}
- finally{button.disabled=false;button.textContent="Проверить код →"}
-});
-
 document.querySelectorAll('[data-nav]').forEach(item=>item.addEventListener('click',()=>{
- const target=item.dataset.nav==='teacherView'?'teacherGateView':item.dataset.nav;
+ const target=item.dataset.nav;
  if(target==='roleView'){
   if(session&&!session.finished&&!confirm('Выйти из занятия? Текущий прогресс будет потерян.'))return;
   session=null;
@@ -662,6 +586,7 @@ document.querySelectorAll('[data-nav]').forEach(item=>item.addEventListener('cli
  showView(target);
 }));
 
+document.querySelectorAll(".panel.glass").forEach(panel=>panel.addEventListener("pointermove",event=>{const r=panel.getBoundingClientRect();panel.style.setProperty("--specular-x",((event.clientX-r.left)/r.width*100).toFixed(1)+"%");panel.style.setProperty("--specular-y",((event.clientY-r.top)/r.height*100).toFixed(1)+"%")},{passive:true}));
 showView('roleView');
 
 }, 50);
