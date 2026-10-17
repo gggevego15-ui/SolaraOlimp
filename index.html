@@ -174,6 +174,35 @@ body{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 .panel:not(.hidden):not(.is-leaving){animation:ios-view-in .42s cubic-bezier(.2,.85,.25,1.15) both}
 @media(prefers-reduced-motion:reduce){.panel.is-leaving,.panel:not(.hidden):not(.is-leaving){animation:none!important}}
 
+
+/* iOS 26-inspired refinement: depth, grouped surfaces and specular edges */
+:root{--ios-radius:30px;--ios-spring:cubic-bezier(.22,1,.36,1)}
+body{background-image:radial-gradient(ellipse at 7% 2%,rgba(184,207,255,.8),transparent 33%),radial-gradient(ellipse at 94% 8%,rgba(232,197,255,.72),transparent 32%),radial-gradient(ellipse at 53% 105%,rgba(177,244,225,.62),transparent 36%),linear-gradient(155deg,#f8faff 0%,#edf0fb 48%,#f8f3ff 100%)}
+.panel.glass{border-radius:var(--ios-radius);position:relative;isolation:isolate;overflow:hidden}
+.panel.glass:before{content:"";position:absolute;inset:0 0 auto;height:42%;pointer-events:none;z-index:-1;border-radius:inherit;background:linear-gradient(160deg,rgba(255,255,255,.55),rgba(255,255,255,0) 68%)}
+.top{border:1px solid rgba(255,255,255,.78);background:rgba(255,255,255,.5);box-shadow:0 8px 30px rgba(67,80,145,.07),inset 0 1px 0 rgba(255,255,255,.95)}
+.role,.field input,.field select,.field textarea,.primary,.secondary,.back,.answer,.question-jump,.verify-card{border-radius:22px}
+.field input,.field select,.field textarea{min-height:50px;border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 5px 18px rgba(66,80,140,.045);transition:border-color .25s ease,box-shadow .25s ease,background .25s ease}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:rgba(98,111,243,.58);box-shadow:0 0 0 4px rgba(98,111,243,.12),inset 0 1px 0 white;background:rgba(255,255,255,.82)}
+.primary,.secondary,.back{position:relative;overflow:hidden}
+.primary:after,.secondary:after,.role:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(115deg,rgba(255,255,255,.34),transparent 36%,rgba(255,255,255,.08) 65%,transparent);opacity:.75;transition:opacity .25s ease}
+.primary:hover:after,.secondary:hover:after,.role:hover:after{opacity:1}
+.primary:active,.secondary:active,.back:active,.role:active,.answer:active{transform:scale(.975);transition-duration:.12s}
+.dock-item{transition:transform .35s var(--ios-spring),background .3s ease,color .3s ease}.dock-item:active{transform:scale(.91)}
+.verify-hero{display:flex;align-items:center;gap:18px;margin:8px 0 22px}.verify-hero h1{margin:0 0 6px}.verify-hero .lead{margin:0}
+.verify-symbol{width:58px;height:58px;flex:0 0 58px;display:grid;place-items:center;border-radius:21px;color:#4d60d8;font-size:27px;font-weight:800;background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(208,220,255,.55));border:1px solid rgba(255,255,255,.95);box-shadow:0 10px 28px rgba(84,101,190,.15),inset 0 1px 0 white}
+.verify-note{display:flex;gap:13px;align-items:flex-start;padding:16px 18px;margin:0 0 22px;border:1px solid rgba(255,255,255,.85);border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.7),rgba(231,237,255,.4));box-shadow:inset 0 1px 0 white}
+.verify-note-icon{display:grid;place-items:center;width:32px;height:32px;flex:0 0 32px;border-radius:12px;background:rgba(98,111,243,.12);color:#5667dc;font-size:22px}
+.verify-note strong{font-size:14px}.verify-note p,.verify-card-head p,.access-foot p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+.verify-columns{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:16px;align-items:start}
+.verify-card{min-width:0;padding:clamp(16px,2.5vw,24px);background:linear-gradient(145deg,rgba(255,255,255,.7),rgba(243,246,255,.42));border:1px solid rgba(255,255,255,.9);box-shadow:0 12px 36px rgba(65,78,137,.07),inset 0 1px 0 white}
+.verify-card-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:20px}.verify-step{display:grid;place-items:center;width:36px;height:36px;flex:0 0 36px;border-radius:13px;background:linear-gradient(145deg,#fff,rgba(207,216,255,.72));color:#5665d9;font-weight:800;font-size:12px;box-shadow:0 4px 12px rgba(83,99,177,.1)}
+.verify-card h2{font-size:19px;margin:2px 0 0}.verify-card .field{margin-bottom:15px}.verify-card .field label{font-size:10px;letter-spacing:.09em}.verify-card .field-help{font-size:12px}.verify-card .primary,.verify-card .secondary{width:100%;min-height:50px}
+.verify-access-card{position:sticky;top:18px}.access-foot{display:flex;gap:10px;align-items:flex-start;border-top:1px solid rgba(120,132,180,.14);padding-top:16px;margin-top:20px}.access-lock{width:30px;height:30px;display:grid;place-items:center;flex:0 0 30px;border-radius:11px;background:rgba(87,106,219,.1);color:#5b6de1}
+.verify-status:not(:empty){padding:10px 12px;border-radius:13px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);margin-top:12px}
+@media(max-width:720px){.verify-columns{grid-template-columns:1fr}.verify-access-card{position:static}.verify-hero{align-items:flex-start}.verify-symbol{width:48px;height:48px;flex-basis:48px;border-radius:17px}.verify-note{padding:14px}}
+@media(prefers-reduced-motion:reduce){.dock-item,.field input,.field select,.field textarea,.primary,.secondary,.back,.role,.answer{transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -187,6 +216,28 @@ body{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 <button class="role" id="teacherRole"><span class="role-icon">✦</span><span><h2>Я учитель</h2><p>Создать код для занятия и поделиться им с учениками</p></span><span class="arrow">↗</span></button>
 <button class="role" id="studentRole"><span class="role-icon">⌘</span><span><h2>Я ученик</h2><p>Ввести код, выбрать предмет и начать тренировку</p></span><span class="arrow">↗</span></button>
 </div>
+</section>
+
+<section class="panel glass hidden" id="teacherGateView">
+ <div class="view-head"><div class="eyebrow"><span class="dot"></span> ПРОВЕРКА ДОСТУПА</div><button class="back" data-home>← На главную</button></div>
+ <div class="verify-hero"><div class="verify-symbol">✓</div><div><h1>Кабинет учителя</h1><p class="lead">Чтобы создавать олимпиады, подтверди, что работаешь в учебном учреждении.</p></div></div>
+ <div class="verify-note"><span class="verify-note-icon">⌁</span><div><strong>Проверка вручную</strong><p>Укажи рабочую почту и ссылку на официальную страницу школы или публичный профиль сотрудника. Не загружай паспорт и личные документы.</p></div></div>
+ <div class="verify-columns">
+  <form class="verify-card" id="teacherVerifyForm">
+   <div class="verify-card-head"><span class="verify-step">01</span><div><h2>Подать заявку</h2><p>Администрация проверит данные вручную</p></div></div>
+   <div class="field"><label for="verifyTeacherName">ИМЯ И ФАМИЛИЯ</label><input id="verifyTeacherName" name="teacherName" autocomplete="name" minlength="2" maxlength="100" required placeholder="Например, Анна Иванова"></div>
+   <div class="field"><label for="verifySchoolName">ШКОЛА / УЧЕБНОЕ УЧРЕЖДЕНИЕ</label><input id="verifySchoolName" name="schoolName" maxlength="180" required placeholder="Полное название учреждения"></div>
+   <div class="field"><label for="verifySchoolEmail">РАБОЧАЯ ПОЧТА</label><input id="verifySchoolEmail" name="schoolEmail" type="email" autocomplete="email" maxlength="254" required placeholder="name@school.ru"></div>
+   <div class="field"><label for="verifyProofUrl">ССЫЛКА ДЛЯ ПОДТВЕРЖДЕНИЯ</label><input id="verifyProofUrl" name="proofUrl" type="url" inputmode="url" required placeholder="https://school.ru/teachers/..."><p class="hint field-help">Публичная страница школы или страница, где видна твоя роль. Только HTTPS.</p></div>
+   <div class="field"><label for="verifyNotes">КОММЕНТАРИЙ (НЕОБЯЗАТЕЛЬНО)</label><textarea id="verifyNotes" name="notes" maxlength="1000" rows="3" placeholder="Дополнительная информация без личных документов"></textarea></div>
+   <button class="primary" id="submitTeacherVerification" type="submit">Отправить заявку ↗</button><p class="verify-status hint" id="teacherRequestStatus" role="status" aria-live="polite"></p>
+  </form>
+  <div class="verify-card verify-access-card">
+   <div class="verify-card-head"><span class="verify-step">02</span><div><h2>Уже одобрили?</h2><p>Введи код, который выдала администрация</p></div></div>
+   <form id="teacherAccessForm"><div class="field"><label for="teacherAccessCode">КОД ДОСТУПА УЧИТЕЛЯ</label><input id="teacherAccessCode" name="accessCode" type="password" autocomplete="current-password" minlength="8" maxlength="128" required placeholder="Вставь код доступа"></div><button class="secondary" id="verifyTeacherAccessButton" type="submit">Проверить код →</button><p class="verify-status hint" id="teacherAccessStatus" role="status" aria-live="polite"></p></form>
+   <div class="access-foot"><span class="access-lock">⌑</span><p>Код проверяется на сервере. Без одобренного кода создание занятий недоступно.</p></div>
+  </div>
+ </div>
 </section>
 <section class="panel glass hidden" id="teacherView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> КАБИНЕТ УЧИТЕЛЯ</div><button class="back" data-home>← Назад</button></div>
@@ -236,15 +287,16 @@ const $=id=>document.getElementById(id);
 const API_URL="https://husjlwgohxtatgguzdjm.supabase.co/functions/v1/olimp-api";
 const API_KEY="sb_publishable_iECwhv5Ljl48x8_v6FasJA_W5jwXNtZ";
 async function api(action,payload={}){const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":API_KEY},body:JSON.stringify({action,...payload})});let data={};try{data=await response.json()}catch(e){}if(!response.ok)throw new Error(data.error||"Ошибка соединения с сервером");return data;}
-const views=['roleView','teacherView','studentView','quizView','resultView'];
+const views=['roleView','teacherGateView','teacherView','studentView','quizView','resultView'];
 let viewTransitionTimer=0,viewTransitionToken=0;
 function syncViewChrome(id){
- $('topStatus').textContent=id==='quizView'?'ЗАНЯТИЕ ИДЁТ':id==='teacherView'?'КАБИНЕТ УЧИТЕЛЯ':id==='studentView'?'КАБИНЕТ УЧЕНИКА':'ПРОСТРАНСТВО ОЛИМПИАД';
+ $('topStatus').textContent=id==='quizView'?'ЗАНЯТИЕ ИДЁТ':(id==='teacherView'||id==='teacherGateView')?'КАБИНЕТ УЧИТЕЛЯ':id==='studentView'?'КАБИНЕТ УЧЕНИКА':'ПРОСТРАНСТВО ОЛИМПИАД';
  const dock=$('iosDock');
  if(dock){dock.classList.toggle('dock-hidden',id==='quizView');dock.querySelectorAll('[data-nav]').forEach(item=>item.classList.toggle('active',item.dataset.nav===id||(id==='resultView'&&item.dataset.nav==='studentView')))}
 }
 function showView(id){
  if(!views.includes(id))return;
+ if(id==='teacherView'&&!sessionStorage.getItem('solara_teacher_access'))id='teacherGateView';
  const incoming=$(id),currentId=views.find(v=>!$(v).classList.contains('hidden'));
  if(currentId===id){syncViewChrome(id);return}
  const token=++viewTransitionToken;
@@ -264,7 +316,7 @@ function showView(id){
 let toastTimer;function notify(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2600)}
 document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',()=>{if(session&&!session.finished&&!confirm('Выйти из занятия? Текущий прогресс будет потерян.'))return;session=null;showView('roleView')}));
 $('brandHome').addEventListener('click',e=>{e.preventDefault();if(session&&!session.finished&&!confirm('Выйти из занятия? Текущий прогресс будет потерян.'))return;session=null;showView('roleView')});
-$('teacherRole').addEventListener('click',()=>showView('teacherView'));$('studentRole').addEventListener('click',()=>showView('studentView'));
+$('teacherRole').addEventListener('click',()=>showView('teacherGateView'));$('studentRole').addEventListener('click',()=>showView('studentView'));
 const banks={
 math:[
 {t:'Числа',q:'Чему равна сумма 1 + 2 + 3 + … + 10?',a:['45','50','55','60'],c:2},
@@ -310,7 +362,7 @@ $("generateCode").addEventListener("click",async()=>{
  const button=$("generateCode");button.disabled=true;button.textContent="Создаём занятие…";
  try{
   const subject=$("teacherSubject").value,grade=Number($("teacherGrade").value),difficulty=$("teacherDifficulty").value;
-  const data=await api("create",{subject,grade,difficulty});
+  const data=await api("create",{subject,grade,difficulty,teacherAccessCode:sessionStorage.getItem("solara_teacher_access")||""});
   currentCode=data.code;currentTeacherToken=data.teacherToken;
   $("generatedCode").textContent=currentCode;
   $("teacherTokenDisplay").textContent=currentTeacherToken;
@@ -519,8 +571,37 @@ try{
 }catch(e){}
 
 
+
+$("teacherVerifyForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const button=$("submitTeacherVerification"),status=$("teacherRequestStatus");
+ button.disabled=true;button.textContent="Отправляем заявку…";status.textContent="";
+ try{
+  const data=await api("request_teacher_verification",{
+   teacherName:$("verifyTeacherName").value.trim(),schoolName:$("verifySchoolName").value.trim(),
+   schoolEmail:$("verifySchoolEmail").value.trim(),proofUrl:$("verifyProofUrl").value.trim(),notes:$("verifyNotes").value.trim()
+  });
+  status.textContent=data.message||"Заявка отправлена на проверку.";
+  $("teacherVerifyForm").reset();
+ }catch(err){status.textContent=err.message||"Не удалось отправить заявку."}
+ finally{button.disabled=false;button.textContent="Отправить заявку ↗"}
+});
+$("teacherAccessForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const button=$("verifyTeacherAccessButton"),status=$("teacherAccessStatus"),code=$("teacherAccessCode").value.trim();
+ button.disabled=true;button.textContent="Проверяем…";status.textContent="";
+ try{
+  const data=await api("verify_teacher_access",{accessCode:code});
+  if(!data.verified)throw new Error("Не удалось подтвердить код.");
+  sessionStorage.setItem("solara_teacher_access",code);
+  status.textContent="Доступ подтверждён. Открываем кабинет…";
+  showView("teacherView");
+ }catch(err){status.textContent=err.message||"Код не прошёл проверку."}
+ finally{button.disabled=false;button.textContent="Проверить код →"}
+});
+
 document.querySelectorAll('[data-nav]').forEach(item=>item.addEventListener('click',()=>{
- const target=item.dataset.nav;
+ const target=item.dataset.nav==='teacherView'?'teacherGateView':item.dataset.nav;
  if(target==='roleView'){
   if(session&&!session.finished&&!confirm('Выйти из занятия? Текущий прогресс будет потерян.'))return;
   session=null;
