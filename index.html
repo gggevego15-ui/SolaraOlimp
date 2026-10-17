@@ -78,6 +78,9 @@ html{scroll-behavior:smooth}
 </main><footer class="footer">Solara Olimp · Математика · Информатика · Учись думать шире</footer>
 </div><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
+// Let the browser paint the static homepage before initializing app logic.
+setTimeout(()=>{
+
 const $=id=>document.getElementById(id);
 const API_URL="https://husjlwgohxtatgguzdjm.supabase.co/functions/v1/olimp-api";
 const API_KEY="sb_publishable_iECwhv5Ljl48x8_v6FasJA_W5jwXNtZ";
@@ -263,6 +266,8 @@ try{
  }
 }catch(e){}
 showView('roleView');
+
+}, 50);
 </script>
 </body>
 </html>
