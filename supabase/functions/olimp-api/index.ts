@@ -52,6 +52,10 @@ info:[
 const reply = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: corsHeaders });
 
+async function sha256Hex(value: string) {
+  const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value.trim()));
+  return [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 function randomCode(subject: string) {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const bytes = crypto.getRandomValues(new Uint8Array(5));
@@ -230,7 +234,41 @@ Deno.serve(async (req: Request) => {
     const body = await req.json();
     const action = body?.action;
 
+    if (action === "request_teacher_verification") {
+      const teacherName = String(body.teacherName ?? "").trim().replace(/\s+/g, " ");
+      const schoolName = String(body.schoolName ?? "").trim();
+      const schoolEmail = String(body.schoolEmail ?? "").trim().toLowerCase();
+      const proofUrl = String(body.proofUrl ?? "").trim();
+      const notes = String(body.notes ?? "").trim();
+      if (teacherName.length < 2 || teacherName.length > 100) return reply({ error: "Укажи имя и фамилию (2–100 символов)." }, 400);
+      if (schoolName.length < 2 || schoolName.length > 180) return reply({ error: "Укажи название школы или учебного учреждения." }, 400);
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(schoolEmail) || schoolEmail.length > 254) return reply({ error: "Проверь адрес электронной почты." }, 400);
+      if (notes.length > 1000) return reply({ error: "Комментарий слишком длинный." }, 400);
+      let proof: URL;
+      try { proof = new URL(proofUrl); } catch { return reply({ error: "Укажи ссылку на официальную страницу учреждения или публичный профиль сотрудника." }, 400); }
+      if (proof.protocol !== "https:" || proof.username || proof.password) return reply({ error: "Ссылка на подтверждение должна начинаться с https://." }, 400);
+      const { error } = await db.from("olimp_teacher_verification_requests").insert({ teacher_name: teacherName, school_name: schoolName, school_email: schoolEmail, proof_url: proof.toString(), notes });
+      if (error) throw error;
+      return reply({ submitted: true, message: "Заявка отправлена на ручную проверку. Доступ появится после подтверждения администрацией." }, 201);
+    }
+
+    if (action === "verify_teacher_access") {
+      const accessCode = String(body.accessCode ?? "").trim();
+      if (accessCode.length < 8 || accessCode.length > 128) return reply({ error: "Введи код доступа, который выдала администрация Solara Olimp." }, 400);
+      const codeHash = await sha256Hex(accessCode);
+      const { data, error } = await db.from("olimp_teacher_access_codes").select("id, teacher_email").eq("code_hash", codeHash).eq("active", true).maybeSingle();
+      if (error) throw error;
+      if (!data) return reply({ error: "Код не найден или отключён. Сначала отправь заявку на подтверждение учителя." }, 403);
+      return reply({ verified: true, teacherEmail: data.teacher_email });
+    }
+
     if (action === "create") {
+      const accessCode = String(body.teacherAccessCode ?? "").trim();
+      if (accessCode.length < 8 || accessCode.length > 128) return reply({ error: "Сначала подтверди статус учителя." }, 403);
+      const codeHash = await sha256Hex(accessCode);
+      const { data: teacherAccess, error: teacherAccessError } = await db.from("olimp_teacher_access_codes").select("id").eq("code_hash", codeHash).eq("active", true).maybeSingle();
+      if (teacherAccessError) throw teacherAccessError;
+      if (!teacherAccess) return reply({ error: "Код доступа учителя недействителен или отключён." }, 403);
       const subject = body.subject;
       const grade = Number(body.grade);
       const difficulty = body.difficulty;
