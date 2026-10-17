@@ -292,7 +292,7 @@ let viewTransitionTimer=0,viewTransitionToken=0;
 function syncViewChrome(id){
  $('topStatus').textContent=id==='quizView'?'ЗАНЯТИЕ ИДЁТ':(id==='teacherView'||id==='teacherGateView')?'КАБИНЕТ УЧИТЕЛЯ':id==='studentView'?'КАБИНЕТ УЧЕНИКА':'ПРОСТРАНСТВО ОЛИМПИАД';
  const dock=$('iosDock');
- if(dock){dock.classList.toggle('dock-hidden',id==='quizView');dock.querySelectorAll('[data-nav]').forEach(item=>item.classList.toggle('active',item.dataset.nav===id||(id==='resultView'&&item.dataset.nav==='studentView')))}
+ if(dock){dock.classList.toggle('dock-hidden',id==='quizView');dock.querySelectorAll('[data-nav]').forEach(item=>item.classList.toggle('active',item.dataset.nav===(id==='teacherGateView'?'teacherView':id)||(id==='resultView'&&item.dataset.nav==='studentView')))}
 }
 function showView(id){
  if(!views.includes(id))return;
