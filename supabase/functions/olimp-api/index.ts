@@ -234,25 +234,77 @@ Deno.serve(async (req: Request) => {
     const body = await req.json();
     const action = body?.action;
 
+    if (action === "request_teacher_email_code") {
+      const email = String(body.email ?? "").trim().toLowerCase();
+      if (email.length > 254 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return reply({ error: "Введи корректный адрес рабочей почты." }, 400);
+      const resendKey = Deno.env.get("RESEND_API_KEY");
+      const emailFrom = Deno.env.get("EMAIL_FROM");
+      if (!resendKey || !emailFrom) return reply({ error: "Отправка почты ещё не настроена администратором. Попробуй позже." }, 503);
+      const { data: prior, error: priorError } = await db.from("olimp_teacher_email_codes").select("last_sent_at").eq("email", email).maybeSingle();
+      if (priorError) throw priorError;
+      if (prior?.last_sent_at && Date.now() - new Date(prior.last_sent_at).getTime() < 60_000) return reply({ error: "Подожди минуту перед повторной отправкой кода." }, 429);
+      const digits = new Uint32Array(1); crypto.getRandomValues(digits);
+      const code = String(digits[0] % 1_000_000).padStart(6, "0");
+      const expiresAt = new Date(Date.now() + 10 * 60_000).toISOString();
+      const codeHash = await sha256Hex(`${email}|${code}|${serviceKey}`);
+      const { error: saveError } = await db.from("olimp_teacher_email_codes").upsert({ email, code_hash: codeHash, expires_at: expiresAt, attempts: 0, last_sent_at: new Date().toISOString(), verified_at: null, consumed_at: null }, { onConflict: "email" });
+      if (saveError) throw saveError;
+      const sent = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ from: emailFrom, to: [email], subject: "Код подтверждения Solara Olimp", text: `Твой код подтверждения: ${code}\\n\\nОн действует 10 минут. Никому не сообщай этот код. Если ты не запрашивал его, просто проигнорируй письмо.`, html: `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:28px;border-radius:22px;background:#f4f6ff;color:#20243a"><p style="color:#5b68d9;font-weight:bold">SOLARA OLIMP</p><h1 style="font-size:24px">Подтверждение почты</h1><p>Введи этот код на странице Solara Olimp:</p><div style="font-size:34px;font-weight:800;letter-spacing:9px;padding:20px;background:white;border-radius:16px;text-align:center">${code}</div><p>Код действует 10 минут. Не сообщай его другим.</p><p style="color:#777;font-size:12px">Если ты не запрашивал код, проигнорируй это письмо.</p></div>` })
+      });
+      if (!sent.ok) {
+        const errText = await sent.text();
+        await db.from("olimp_teacher_email_codes").delete().eq("email", email).eq("code_hash", codeHash);
+        console.error("Resend delivery failed", sent.status, errText.slice(0, 300));
+        return reply({ error: "Не удалось отправить письмо. Проверь адрес или попробуй позже." }, 502);
+      }
+      return reply({ sent: true, message: "Код отправлен. Проверь входящие и папку «Спам»." });
+    }
+
+    if (action === "verify_teacher_email_code") {
+      const email = String(body.email ?? "").trim().toLowerCase();
+      const code = String(body.code ?? "").trim();
+      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || !/^\\d{6}$/.test(code)) return reply({ error: "Введи адрес почты и шестизначный код из письма." }, 400);
+      const { data: record, error } = await db.from("olimp_teacher_email_codes").select("code_hash, expires_at, attempts, consumed_at").eq("email", email).maybeSingle();
+      if (error) throw error;
+      if (!record || record.consumed_at || new Date(record.expires_at).getTime() < Date.now() || record.attempts >= 5) return reply({ error: "Код истёк или больше недоступен. Запроси новый." }, 400);
+      const candidate = await sha256Hex(`${email}|${code}|${serviceKey}`);
+      if (candidate !== record.code_hash) {
+        const nextAttempts = record.attempts + 1;
+        await db.from("olimp_teacher_email_codes").update({ attempts: nextAttempts }).eq("email", email);
+        return reply({ error: nextAttempts >= 5 ? "Слишком много попыток. Запроси новый код." : "Неверный код. Проверь письмо и попробуй ещё раз." }, 400);
+      }
+      const { error: updateError } = await db.from("olimp_teacher_email_codes").update({ verified_at: new Date().toISOString() }).eq("email", email);
+      if (updateError) throw updateError;
+      return reply({ verified: true, message: "Рабочая почта подтверждена." });
+    }
+
     if (action === "request_teacher_verification") {
-      const teacherName = String(body.teacherName ?? "").trim().replace(/\s+/g, " ");
+      const teacherName = String(body.teacherName ?? "").trim().replace(/\\s+/g, " ");
       const schoolName = String(body.schoolName ?? "").trim();
       const schoolEmail = String(body.schoolEmail ?? "").trim().toLowerCase();
       const proofUrl = String(body.proofUrl ?? "").trim();
       const notes = String(body.notes ?? "").trim();
       if (teacherName.length < 2 || teacherName.length > 100) return reply({ error: "Укажи имя и фамилию (2–100 символов)." }, 400);
       if (schoolName.length < 2 || schoolName.length > 180) return reply({ error: "Укажи название школы или учебного учреждения." }, 400);
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(schoolEmail) || schoolEmail.length > 254) return reply({ error: "Проверь адрес электронной почты." }, 400);
+      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(schoolEmail) || schoolEmail.length > 254) return reply({ error: "Проверь адрес электронной почты." }, 400);
       if (notes.length > 1000) return reply({ error: "Комментарий слишком длинный." }, 400);
       let proof: URL;
       try { proof = new URL(proofUrl); } catch { return reply({ error: "Укажи ссылку на официальную страницу учреждения или публичный профиль сотрудника." }, 400); }
       if (proof.protocol !== "https:" || proof.username || proof.password) return reply({ error: "Ссылка на подтверждение должна начинаться с https://." }, 400);
-      const { error } = await db.from("olimp_teacher_verification_requests").insert({ teacher_name: teacherName, school_name: schoolName, school_email: schoolEmail, proof_url: proof.toString(), notes });
-      if (error) throw error;
-      return reply({ submitted: true, message: "Заявка отправлена на ручную проверку. Доступ появится после подтверждения администрацией." }, 201);
+      const { data: emailRecord, error: emailError } = await db.from("olimp_teacher_email_codes").select("verified_at, consumed_at, expires_at").eq("email", schoolEmail).maybeSingle();
+      if (emailError) throw emailError;
+      if (!emailRecord?.verified_at || emailRecord.consumed_at || new Date(emailRecord.expires_at).getTime() < Date.now()) return reply({ error: "Сначала подтверди эту рабочую почту кодом из письма." }, 403);
+      const { error: insertError } = await db.from("olimp_teacher_verification_requests").insert({ teacher_name: teacherName, school_name: schoolName, school_email: schoolEmail, proof_url: proof.toString(), notes });
+      if (insertError) throw insertError;
+      const { error: consumeError } = await db.from("olimp_teacher_email_codes").update({ consumed_at: new Date().toISOString() }).eq("email", schoolEmail);
+      if (consumeError) throw consumeError;
+      return reply({ submitted: true, message: "Почта подтверждена, заявка отправлена на ручную проверку." }, 201);
     }
 
-    if (action === "verify_teacher_access") {
+        if (action === "verify_teacher_access") {
       const accessCode = String(body.accessCode ?? "").trim();
       if (accessCode.length < 8 || accessCode.length > 128) return reply({ error: "Введи код доступа, который выдала администрация Solara Olimp." }, 400);
       const codeHash = await sha256Hex(accessCode);
