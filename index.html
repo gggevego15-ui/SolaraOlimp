@@ -231,7 +231,7 @@ body{background-image:radial-gradient(ellipse at 7% 2%,rgba(184,207,255,.8),tran
 @media(prefers-reduced-motion:reduce){.role-grid .role{animation:none!important}.panel.glass,.role,.primary,.secondary,.back,.dock-item{transition:none!important}}
 
 /* Performance pass: preserve the glass look while reducing GPU-heavy blur and repaints */
-:root{--glass-blur:16px;--parallax-x:0;--parallax-y:0}
+:root{--glass-blur:16px;--parallax-x:0px;--parallax-y:0px}
 body{background-size:auto;background-attachment:scroll;animation:none!important}
 body:before,body:after{filter:blur(12px);opacity:.45;mix-blend-mode:normal;will-change:auto;animation:float 24s ease-in-out infinite alternate}
 .top,.glass,.panel,.role,.code-box,.chip,.result-row,.review-card,.field input,.field select,.answer,.question-jump,.timer,.eyebrow{backdrop-filter:blur(var(--glass-blur)) saturate(155%);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(155%)}
@@ -240,7 +240,7 @@ body:before,body:after{filter:blur(12px);opacity:.45;mix-blend-mode:normal;will-
 .panel,.panel.glass{animation:panel-arrive-lite .42s var(--ios-spring) both;transition:transform .35s var(--ios-spring),border-color .25s ease}
 .panel:after{opacity:.48}
 .panel.glass:before{background:linear-gradient(125deg,rgba(255,255,255,.24),transparent 38%,rgba(172,194,255,.06) 70%,rgba(255,255,255,.16));opacity:.7}
-.panel:not(.hidden):hover{transform:translate3d(calc(var(--parallax-x)*2px),calc(var(--parallax-y)*-2px - 1px),0);box-shadow:0 18px 48px rgba(55,70,126,.13),inset 0 1px 0 #fff}
+.panel:not(.hidden):hover{transform:translate3d(var(--parallax-x),var(--parallax-y),0);box-shadow:0 18px 48px rgba(55,70,126,.13),inset 0 1px 0 #fff}
 .role,.primary,.secondary,.back,.answer,.question-jump,.code-box,.result-row{transition:transform .28s var(--ios-spring),background-color .25s ease,border-color .25s ease}
 .role-grid .role{animation:glass-breathe 9s ease-in-out infinite}
 .role:hover{transform:translateY(-3px) scale(1.008);box-shadow:0 12px 26px rgba(86,104,183,.12),inset 0 1px 0 white}
@@ -631,8 +631,8 @@ try{
    px=event.clientX;py=event.clientY;
    frame=requestAnimationFrame(()=>{
     const r=shell.getBoundingClientRect();
-    shell.style.setProperty("--parallax-x",(((px-r.left)/r.width)-.5).toFixed(3));
-    shell.style.setProperty("--parallax-y",(((py-r.top)/r.height)-.5).toFixed(3));
+    shell.style.setProperty("--parallax-x",((((px-r.left)/r.width)-.5)*2).toFixed(2)+"px");
+    shell.style.setProperty("--parallax-y",((((py-r.top)/r.height)-.5)*-2).toFixed(2)+"px");
     frame=0;
    });
   },{passive:true});
