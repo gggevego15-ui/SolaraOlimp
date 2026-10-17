@@ -207,7 +207,7 @@ async function loadOneTeacherSession(item,status,list){
   if(!data.participants.length){const empty=document.createElement("p");empty.className="hint";empty.textContent="Пока ученики не подключались.";list.appendChild(empty);return}
   data.participants.forEach((p,i)=>{
    const row=document.createElement("div");row.className="result-row";
-   const left=document.createElement("span");left.textContent=(p.student_name||("Ученик "+(i+1)))+" · "+new Date(p.joined_at).toLocaleString("ru-RU");
+   const left=document.createElement("span");left.textContent=(p.rank?"#"+p.rank+" · ":"")+(p.student_name||("Ученик "+(i+1)))+" · "+new Date(p.joined_at).toLocaleString("ru-RU");
    const right=document.createElement("span");right.className=p.score===null?"":"good";
    right.textContent=p.score===null?(p.finished_at?"Завершено":"В процессе"):p.score+" / 10";
    if(p.elapsed_seconds!==null&&p.elapsed_seconds!==undefined&&p.score!==null)right.textContent+=" · "+Math.floor(p.elapsed_seconds/60)+" мин";
