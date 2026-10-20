@@ -788,6 +788,101 @@ html[data-solara-theme="dark"] .error{color:#ff9db3!important}
 }
 </style>
 
+<style id="solara-dark-theme-060">
+/* 0.6.0 — balanced dark palette: softer luminance, consistent surfaces, controlled accents */
+html[data-solara-theme="dark"]{
+ color-scheme:dark;
+ --ink:#edf0f7;--muted:#aab3c6;--blue:#a5b2ef;--violet:#b8a8df;
+ --glass:rgba(27,33,47,.86);--line:rgba(180,192,216,.15);--shadow:0 20px 54px rgba(0,0,0,.24);
+}
+html[data-solara-theme="dark"] body{
+ background:radial-gradient(ellipse at 12% 0%,rgba(83,101,157,.13),transparent 42%),radial-gradient(ellipse at 92% 14%,rgba(113,87,146,.10),transparent 38%),#111520!important;
+ color:#edf0f7!important;
+}
+html[data-solara-theme="dark"] body:before{
+ background:radial-gradient(ellipse at 12% 12%,rgba(116,133,190,.08),transparent 42%),radial-gradient(ellipse at 88% 36%,rgba(148,123,180,.055),transparent 38%)!important;opacity:.72!important;
+}
+html[data-solara-theme="dark"] .top,
+html[data-solara-theme="dark"] .panel.glass{
+ background:linear-gradient(145deg,rgba(32,39,55,.92),rgba(25,31,45,.94))!important;
+ border:1px solid rgba(181,193,216,.14)!important;
+ box-shadow:0 18px 48px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.055)!important;
+ color:#edf0f7!important;
+}
+html[data-solara-theme="dark"] .panel.glass:before{
+ background:linear-gradient(130deg,rgba(255,255,255,.025),transparent 48%),radial-gradient(ellipse at 10% 0%,rgba(145,160,211,.065),transparent 46%)!important;
+}
+html[data-solara-theme="dark"] h1,html[data-solara-theme="dark"] h2,html[data-solara-theme="dark"] h3,
+html[data-solara-theme="dark"] .brand,html[data-solara-theme="dark"] strong{color:#eef1f8!important}
+html[data-solara-theme="dark"] p,html[data-solara-theme="dark"] .lead,html[data-solara-theme="dark"] .hint,
+html[data-solara-theme="dark"] .footer,html[data-solara-theme="dark"] label,
+html[data-solara-theme="dark"] .update-entry-meta{color:#aeb7c9!important}
+html[data-solara-theme="dark"] .gradient{
+ background:linear-gradient(100deg,#a4b0e9,#c0a9d9)!important;background-clip:text!important;-webkit-background-clip:text!important;
+}
+html[data-solara-theme="dark"] .role,html[data-solara-theme="dark"] .code-box,html[data-solara-theme="dark"] .result-row,
+html[data-solara-theme="dark"] .review-card,html[data-solara-theme="dark"] .field input,
+html[data-solara-theme="dark"] .field select,html[data-solara-theme="dark"] .field textarea,
+html[data-solara-theme="dark"] .answer,html[data-solara-theme="dark"] .question-jump,
+html[data-solara-theme="dark"] .timer,html[data-solara-theme="dark"] .chip,
+html[data-solara-theme="dark"] .eyebrow,html[data-solara-theme="dark"] .insight-card,
+html[data-solara-theme="dark"] .review-filter{
+ background:linear-gradient(145deg,rgba(43,51,69,.82),rgba(34,41,57,.90))!important;
+ border:1px solid rgba(180,192,214,.13)!important;color:#e6eaf3!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 5px 16px rgba(0,0,0,.09)!important;
+}
+html[data-solara-theme="dark"] .role:hover,html[data-solara-theme="dark"] .answer:hover,
+html[data-solara-theme="dark"] .review-filter:hover{border-color:rgba(166,180,224,.27)!important;background:linear-gradient(145deg,rgba(49,58,78,.88),rgba(38,46,63,.93))!important}
+html[data-solara-theme="dark"] .field input:focus,html[data-solara-theme="dark"] .field select:focus,
+html[data-solara-theme="dark"] .field textarea:focus{border-color:rgba(151,168,221,.48)!important;box-shadow:0 0 0 3px rgba(127,145,202,.10)!important;outline:none}
+html[data-solara-theme="dark"] .field input::placeholder,html[data-solara-theme="dark"] .field textarea::placeholder{color:#8994aa!important}
+html[data-solara-theme="dark"] .field select option{background:#252c3d;color:#edf0f7}
+html[data-solara-theme="dark"] .primary{
+ background:linear-gradient(115deg,#6477bb,#756cae)!important;border:1px solid rgba(207,215,242,.20)!important;color:#fff!important;
+ box-shadow:0 6px 18px rgba(60,72,120,.22),inset 0 1px 0 rgba(255,255,255,.16)!important;
+}
+html[data-solara-theme="dark"] .primary:hover{background:linear-gradient(115deg,#7184c8,#8177b8)!important}
+html[data-solara-theme="dark"] .secondary,html[data-solara-theme="dark"] .back{
+ background:linear-gradient(140deg,rgba(64,75,99,.48),rgba(47,56,76,.52))!important;
+ border:1px solid rgba(180,192,214,.15)!important;color:#e7ebf4!important;
+}
+html[data-solara-theme="dark"] .ios-dock{
+ background:linear-gradient(140deg,rgba(32,39,55,.96),rgba(25,31,45,.97) 58%,rgba(34,34,51,.95))!important;
+ border:1px solid rgba(184,195,217,.17)!important;
+ box-shadow:0 14px 38px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.08)!important;
+ backdrop-filter:blur(24px) saturate(135%)!important;-webkit-backdrop-filter:blur(24px) saturate(135%)!important;
+}
+html[data-solara-theme="dark"] .ios-dock:after{background:linear-gradient(110deg,transparent 18%,rgba(255,255,255,.045) 35%,transparent 52%)!important;opacity:.65}
+html[data-solara-theme="dark"] .dock-item{color:#aeb7ca!important}
+html[data-solara-theme="dark"] .dock-item.active{color:#f3f5fb!important}
+html[data-solara-theme="dark"] .dock-liquid{
+ background:linear-gradient(145deg,rgba(126,146,204,.36),rgba(102,117,171,.31) 52%,rgba(151,126,180,.27))!important;
+ border:1px solid rgba(205,214,236,.24)!important;
+ box-shadow:0 4px 15px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -2px 5px rgba(6,10,30,.12)!important;
+}
+html[data-solara-theme="dark"] .dock-liquid:before{background:linear-gradient(125deg,rgba(255,255,255,.10),transparent 35%,rgba(167,180,220,.08) 68%,rgba(255,255,255,.045))!important}
+html[data-solara-theme="dark"] #solara-theme-toggle{background:linear-gradient(145deg,#30394d,#252d40)!important;border-color:rgba(183,195,217,.17)!important;color:#eef1f8!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)!important}
+html[data-solara-theme="dark"] .toast{background:rgba(33,40,56,.98)!important;border-color:rgba(180,192,214,.17)!important;color:#eef1f8!important;box-shadow:0 12px 32px rgba(0,0,0,.28)!important}
+html[data-solara-theme="dark"] .updates-hero,html[data-solara-theme="dark"] .update-entry,
+html[data-solara-theme="dark"] .update-entry-content,html[data-solara-theme="dark"] .update-entry-featured .update-entry-content{
+ background:linear-gradient(145deg,rgba(37,45,63,.88),rgba(29,36,52,.92))!important;
+ border-color:rgba(180,192,214,.13)!important;box-shadow:0 9px 24px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+html[data-solara-theme="dark"] .update-entry-content p,html[data-solara-theme="dark"] .update-fix-list{color:#b1bbce!important}
+html[data-solara-theme="dark"] .update-pills span,html[data-solara-theme="dark"] .update-tag{
+ background:rgba(126,144,194,.12)!important;border-color:rgba(173,187,220,.15)!important;color:#c3cde3!important;
+}
+html[data-solara-theme="dark"] .update-tag-new{background:rgba(144,139,194,.16)!important;color:#d3c9f0!important;border-color:rgba(184,174,221,.21)!important}
+html[data-solara-theme="dark"] .correct,html[data-solara-theme="dark"] .success{color:#91d9b5!important}
+html[data-solara-theme="dark"] .error{color:#eaa0ad!important}
+html[data-solara-theme="dark"] #solara-update-modal{background:rgba(12,16,25,.72)!important}
+html[data-solara-theme="dark"] #solara-update-modal .update-card{background:linear-gradient(145deg,#2b3448,#222a3b)!important;border-color:rgba(190,201,222,.19)!important;color:#edf0f7!important;box-shadow:0 24px 70px rgba(0,0,0,.42)!important}
+html[data-solara-theme="dark"] #solara-update-modal .update-kicker,html[data-solara-theme="dark"] #solara-update-modal .update-date{color:#aeb8cc!important}
+html[data-solara-theme="dark"] #solara-update-modal .update-list li{color:#d8deea!important}
+html[data-solara-theme="dark"] #solara-update-modal .update-check{background:rgba(137,153,207,.17)!important;color:#c5d0f3!important}
+html[data-solara-theme="dark"] #solara-update-modal .update-dismiss{background:linear-gradient(115deg,#6477bb,#756cae)!important}
+@media(prefers-reduced-transparency:reduce){html[data-solara-theme="dark"] .top,html[data-solara-theme="dark"] .panel.glass,html[data-solara-theme="dark"] .ios-dock{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}
+</style>
 <style id="solara-transition-performance-fix">
 /* Keep the dock mounted; animate lightweight transforms instead of expensive layout properties */
 .ios-dock,.ios-dock.dock-hidden{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;position:fixed!important;z-index:10001!important}
@@ -823,12 +918,12 @@ html[data-solara-theme="dark"] .error{color:#ff9db3!important}
   <div class="update-card">
     <div class="update-kicker">Solara Olimp · обновление</div>
     <h2 id="solara-update-title">Что нового?</h2>
-    <div class="update-date">Обновление от 20 октября 2026</div>
+    <div class="update-date">Версия 0.6.0 · 20 октября 2026</div>
     <ul class="update-list">
-      <li><span class="update-check">✓</span><span>Обновлён интерфейс в стиле iOS Liquid Glass.</span></li>
-      <li><span class="update-check">✓</span><span>Улучшена работа интерфейса на слабых устройствах и телефонах.</span></li>
-      <li><span class="update-check">✓</span><span>В результатах олимпиады появился более подробный разбор ошибок.</span></li>
-      <li><span class="update-check">✓</span><span>Добавлен журнал версий с исправлениями и бейджем новых обновлений.</span></li>
+      <li><span class="update-check">✓</span><span>Переработана тёмная тема: цвета и контраст стали ровнее.</span></li>
+      <li><span class="update-check">✓</span><span>Смягчены акценты, блики и градиенты без потери Liquid Glass.</span></li>
+      <li><span class="update-check">✓</span><span>Унифицированы карточки, поля, кнопки и нижняя навигация.</span></li>
+      <li><span class="update-check">✓</span><span>Журнал версий обновлён до 0.6.0.</span></li>
     </ul>
     <button class="update-dismiss" id="solara-update-dismiss" type="button">Понятно, продолжить</button>
   </div>
@@ -882,7 +977,17 @@ html[data-solara-theme="dark"] .error{color:#ff9db3!important}
   <article class="update-entry update-entry-featured">
    <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
    <div class="update-entry-content">
-    <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 0.5.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 0.6.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <h2>Сбалансированная тёмная тема</h2>
+    <p>Переработана палитра тёмного режима: выровнена яркость поверхностей, смягчены неоновые акценты и улучшена читаемость текста. Стеклянные панели, кнопки, поля, навигация и журнал теперь используют согласованные оттенки.</p>
+    <ul class="update-fix-list"><li>Исправлено: отдельные блоки выглядели слишком яркими или почти чёрными.</li><li>Исправлено: контраст кнопок и вложенных карточек был неравномерным.</li><li>Улучшено: тёмное оформление окна обновления, журнала и нижней панели.</li><li>Сохранено: Liquid Glass, мягкие градиенты и лёгкие блики без чрезмерного свечения.</li></ul>
+    <div class="update-pills"><span>Тёмная тема</span><span>Контраст</span><span>Liquid Glass</span></div>
+   </div>
+  </article>
+  <article class="update-entry update-entry-featured">
+   <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
+   <div class="update-entry-content">
+    <div class="update-entry-meta"><span class="update-tag">ВЕРСИЯ 0.5.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
     <h2>Большое обновление Liquid Glass</h2>
     <p>Волна проходит снизу вверх отдельным слоем, а экран не обрезается по краям. Нижняя панель закреплена над анимацией, а активная капсула повторно рассчитывает положение после смены вкладки.</p>
     <ul class="update-fix-list"><li>Исправлено: панель навигации могла перекрываться слоем перехода.</li><li>Исправлено: капсула могла запаздывать при переключении вкладки.</li><li>Улучшено: анимации стали согласованнее с настройкой уменьшения движения.</li><li>Добавлено: бейдж NEW у журнала изменений; он исчезает после открытия обновлений.</li></ul>
@@ -1063,14 +1168,14 @@ function syncViewChrome(id){
   let seen='';
   try{seen=localStorage.getItem('solara_updates_seen_version')||''}catch(e){}
   if(id==='updatesView'){
-   try{localStorage.setItem('solara_updates_seen_version','0.5.0')}catch(e){}
+   try{localStorage.setItem('solara_updates_seen_version','0.6.0')}catch(e){}
    if(badge)badge.classList.add('is-seen');
    const updatesButton=dock.querySelector('[data-nav="updatesView"]');
    if(updatesButton){updatesButton.setAttribute('aria-label','Последние обновления');updatesButton.setAttribute('title','Последние обновления')}
   }else{
-   if(badge)badge.classList.toggle('is-seen',seen==='0.5.0');
+   if(badge)badge.classList.toggle('is-seen',seen==='0.6.0');
    const updatesButton=dock.querySelector('[data-nav="updatesView"]');
-   if(updatesButton&&seen!=='0.5.0'){updatesButton.setAttribute('aria-label','Последние обновления — есть новое');updatesButton.setAttribute('title','Последние обновления · есть новое')}
+   if(updatesButton&&seen!=='0.6.0'){updatesButton.setAttribute('aria-label','Последние обновления — есть новое');updatesButton.setAttribute('title','Последние обновления · есть новое')}
   }
   requestAnimationFrame(()=>{syncDockLiquid();dock.classList.add('dock-mounted')});
  }
@@ -1459,7 +1564,7 @@ showView('roleView');
 
 <script id="solara-update-announcement">
 (function(){
-  const version = "2026-10-20";
+  const version = "2026-10-20-v060";
   const storageKey = "solara_seen_update_" + version;
   const modal = document.getElementById("solara-update-modal");
   const dismiss = document.getElementById("solara-update-dismiss");
