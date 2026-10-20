@@ -981,13 +981,16 @@ html[data-solara-theme="dark"] .update-tag,html[data-solara-theme="dark"] .updat
 </style>
 
 <style id="solara-060-final-fix">
-/* 0.6.0 hotfix: disable the persistent colored wave completely. */
-.solara-liquid-wave-overlay,.solara-liquid-wave-overlay.is-running,.solara-liquid-wave-overlay::before,.solara-liquid-wave-overlay.is-running::before,.solara-liquid-wave-overlay .wave-ribbon,.solara-liquid-wave-overlay .wave-glint{display:none!important;visibility:hidden!important;opacity:0!important;animation:none!important;transition:none!important}
-::view-transition-group(solara-screen){animation-duration:.24s!important;animation-timing-function:ease-out!important}
-::view-transition-old(solara-screen){animation:solara-final-fade-out .12s ease-in both!important;filter:none!important;clip-path:none!important}
-::view-transition-new(solara-screen){animation:solara-final-fade-in .22s ease-out both!important;filter:none!important;clip-path:none!important}
-@keyframes solara-final-fade-out{from{opacity:1}to{opacity:0}}
-@keyframes solara-final-fade-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+/* 0.6.0 transition fix: keep the liquid wave, but swap screens while it fully covers them. */
+.solara-liquid-wave-overlay{z-index:9998!important;pointer-events:none!important;isolation:isolate}
+.solara-liquid-wave-overlay:not(.is-running){display:none!important;visibility:hidden!important;opacity:0!important;animation:none!important}
+.solara-liquid-wave-overlay.is-running{display:block!important;visibility:visible!important;opacity:1!important;animation:solara-wave-overlay-fade .62s ease-out both!important}
+.solara-liquid-wave-overlay.is-running .wave-ribbon-back{animation:solara-wave-back .62s cubic-bezier(.16,.72,.16,1) both!important}
+.solara-liquid-wave-overlay.is-running .wave-ribbon-front{animation:solara-wave-front .62s cubic-bezier(.16,.72,.16,1) both!important}
+.solara-liquid-wave-overlay.is-running .wave-glint{animation:solara-wave-glint .62s cubic-bezier(.16,.72,.16,1) both!important}
+.solara-liquid-wave-overlay::before,.solara-liquid-wave-overlay.is-running::before{display:none!important;content:none!important}
+::view-transition-group(solara-screen),::view-transition-old(solara-screen),::view-transition-new(solara-screen){animation:none!important}
+@media(prefers-reduced-motion:reduce){.solara-liquid-wave-overlay,.solara-liquid-wave-overlay.is-running,.wave-ribbon,.wave-glint{display:none!important;animation:none!important}}
 html[data-solara-theme="dark"] .role-icon{background:#252c3a!important;border-color:rgba(142,154,177,.09)!important;color:#77839a!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.018),0 2px 6px rgba(0,0,0,.08)!important}
 html[data-solara-theme="dark"] #teacherRole .role-icon,html[data-solara-theme="dark"] #studentRole .role-icon{background:#252c3a!important;color:#77839a!important}
 html[data-solara-theme="dark"] .role-icon *,html[data-solara-theme="dark"] .icon,html[data-solara-theme="dark"] .icon svg,html[data-solara-theme="dark"] .teacher-icon,html[data-solara-theme="dark"] .student-icon,html[data-solara-theme="dark"] .subject-icon,html[data-solara-theme="dark"] .icon-box,html[data-solara-theme="dark"] .ios-dock .dock-item svg,html[data-solara-theme="dark"] .dock-item svg,html[data-solara-theme="dark"] .dock-item .icon,html[data-solara-theme="dark"] .arrow,html[data-solara-theme="dark"] .update-entry-dot,html[data-solara-theme="dark"] .update-pills span{filter:grayscale(.38) saturate(.32) brightness(.58)!important;opacity:.68!important}
@@ -997,7 +1000,7 @@ html[data-solara-theme="dark"] .role:hover .role-icon{background:#2a3140!importa
 
 </head>
 <body>
-<!-- Liquid wave overlay removed: it caused a purple ribbon to linger after transitions. -->
+<div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
 
 
 <div id="solara-update-modal" role="dialog" aria-modal="true" aria-labelledby="solara-update-title">
@@ -1266,7 +1269,7 @@ function syncViewChrome(id){
   requestAnimationFrame(()=>{syncDockLiquid();dock.classList.add('dock-mounted')});
  }
 }
-let solaraWaveTimer=0;
+let solaraWaveTimer=0,solaraWaveCleanupTimer=0;
 function showView(id){
  if(!views.includes(id))return;
  const currentId=views.find(v=>!$(v).classList.contains('hidden'));
@@ -1274,6 +1277,8 @@ function showView(id){
  const token=++viewTransitionToken;
  clearTimeout(viewTransitionTimer);
  clearTimeout(solaraWaveTimer);
+ clearTimeout(solaraWaveCleanupTimer);
+ const overlay=$('solara-liquid-wave-overlay');
  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  const applyView=()=>{
   if(token!==viewTransitionToken)return;
@@ -1286,12 +1291,26 @@ function showView(id){
   window.scrollTo({top:0,behavior:'auto'});
   requestAnimationFrame(syncDockLiquid);
  };
- // No decorative wave overlay: use only the native soft screen transition.
- if(!reduced&&document.startViewTransition&&currentId){
-  try{
-   document.startViewTransition(()=>applyView());
-   return;
-  }catch(e){}
+ if(!reduced&&overlay&&currentId){
+  // Raise the liquid wave over the old screen, swap screens near full coverage,
+  // then let the same wave leave. Never run a second native crossfade underneath.
+  overlay.classList.remove('is-running');
+  void overlay.offsetWidth;
+  overlay.classList.add('is-running');
+  solaraWaveTimer=setTimeout(applyView,310);
+  solaraWaveCleanupTimer=setTimeout(()=>{
+   overlay.classList.remove('is-running');
+   overlay.style.animation='none';
+   overlay.style.opacity='0';
+   overlay.style.visibility='hidden';
+   requestAnimationFrame(()=>{overlay.style.animation='';overlay.style.opacity='';overlay.style.visibility='';});
+  },680);
+  return;
+ }
+ if(overlay){
+  overlay.classList.remove('is-running');
+  overlay.style.opacity='0';
+  overlay.style.visibility='hidden';
  }
  applyView();
 }
