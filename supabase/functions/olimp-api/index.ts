@@ -55,7 +55,8 @@ const reply = (body: unknown, status = 200) =>
 function randomCode(subject: string) {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const bytes = crypto.getRandomValues(new Uint8Array(5));
-  return ({math:"M",info:"I",physics:"P",geography:"G",history:"H",chemistry:"C",rus:"R"} as Record<string,string>)[subject] ?? "R" + [...bytes].map(b => chars[b % chars.length]).join("");
+  const prefix = ({math:"M",info:"I",physics:"P",geography:"G",history:"H",chemistry:"C",rus:"R"} as Record<string,string>)[subject] ?? "R";
+  return prefix + [...bytes].map(b => chars[b % chars.length]).join("");
 }
 function shuffle<T>(items: T[]): T[] {
   const out = [...items];
