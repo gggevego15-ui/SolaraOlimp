@@ -561,35 +561,48 @@ html.low-power .ios-dock .dock-liquid:after{filter:none}
 }
 
 
-/* Liquid-wave transition with continuous screen coverage: never expose an empty bottom edge */
+/* Lightweight, seamless liquid transition: opaque screen cover prevents flashes */
 .panel:not(.hidden){view-transition-name:solara-screen}
-::view-transition-group(solara-screen){animation-duration:.74s;animation-timing-function:cubic-bezier(.2,.75,.2,1);overflow:visible}
-::view-transition-image-pair(solara-screen){isolation:isolate;overflow:visible;background:transparent}
-::view-transition-old(solara-screen){animation:solara-liquid-out .74s cubic-bezier(.2,.75,.2,1) both;backface-visibility:hidden}
-::view-transition-new(solara-screen){animation:solara-liquid-wave-in .74s cubic-bezier(.18,.78,.18,1) both;backface-visibility:hidden;filter:url(#solara-liquid-ripple)}
-@keyframes solara-liquid-out{
- 0%,68%{opacity:1;filter:blur(0) brightness(1);transform:none;clip-path:inset(0)}
- 88%{opacity:.96;filter:blur(1px) brightness(1.04);transform:none;clip-path:inset(0)}
- 100%{opacity:0;filter:blur(3px) brightness(1.06);transform:none;clip-path:inset(0)}
+::view-transition-group(solara-screen){animation-duration:.42s;animation-timing-function:cubic-bezier(.22,.72,.18,1)}
+::view-transition-image-pair(solara-screen){isolation:isolate;background:transparent}
+::view-transition-old(solara-screen){animation:solara-screen-handoff .42s ease both;backface-visibility:hidden}
+::view-transition-new(solara-screen){animation:solara-liquid-reveal .46s cubic-bezier(.2,.78,.2,1) both;backface-visibility:hidden}
+@keyframes solara-screen-handoff{
+ 0%,72%{opacity:1;filter:none;clip-path:inset(0);transform:translateZ(0)}
+ 100%{opacity:0;filter:blur(1px);clip-path:inset(0);transform:translateZ(0)}
 }
-@keyframes solara-liquid-wave-in{
- 0%{opacity:1;clip-path:circle(0% at 50% 100%);filter:url(#solara-liquid-ripple) blur(2px) saturate(1.55);transform:none}
- 24%{opacity:1;clip-path:circle(44% at 50% 100%);filter:url(#solara-liquid-ripple) blur(1.2px) saturate(1.4);transform:none}
- 55%{opacity:1;clip-path:circle(92% at 50% 100%);filter:url(#solara-liquid-ripple) blur(.4px) saturate(1.15);transform:none}
- 78%{opacity:1;clip-path:circle(140% at 50% 100%);filter:url(#solara-liquid-ripple) blur(0) saturate(1.04);transform:none}
- 100%{opacity:1;clip-path:circle(150% at 50% 100%);filter:none;transform:none}
+@keyframes solara-liquid-reveal{
+ 0%{opacity:1;clip-path:inset(0);filter:none;transform:translateZ(0)}
+ 12%{opacity:1;clip-path:inset(0);filter:brightness(1.015);transform:translateZ(0)}
+ 38%{opacity:1;clip-path:inset(0);filter:brightness(1.01);transform:translateZ(0)}
+ 100%{opacity:1;clip-path:inset(0);filter:none;transform:translateZ(0)}
 }
+/* The wave is a lightweight overlay; it never clips the actual screen or its bottom edge. */
+.solara-liquid-wave-overlay{position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;contain:strict;opacity:0;background:transparent}
+.solara-liquid-wave-overlay::before{content:"";position:absolute;left:-18%;right:-18%;top:calc(100% - 2px);height:28vh;min-height:150px;max-height:340px;border-radius:50% 50% 0 0 / 18% 18% 0 0;background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(174,210,255,.12) 24%,rgba(137,167,255,.05) 58%,transparent);box-shadow:0 -10px 32px rgba(164,198,255,.12);filter:blur(12px);transform:translateY(0) scaleX(1.02)}
+.solara-liquid-wave-overlay.is-running{opacity:1;animation:solara-wave-overlay-fade .44s ease-out both}
+.solara-liquid-wave-overlay.is-running::before{animation:solara-wave-overlay-rise .44s cubic-bezier(.18,.78,.2,1) both}
+@keyframes solara-wave-overlay-rise{
+ 0%{transform:translateY(0) scaleX(1.02);filter:blur(12px)}
+ 36%{transform:translateY(-24vh) scaleX(1.01);filter:blur(7px)}
+ 68%{transform:translateY(-56vh) scaleX(1);filter:blur(5px)}
+ 100%{transform:translateY(-112vh) scaleX(1);filter:blur(3px)}
+}
+@keyframes solara-wave-overlay-fade{0%{opacity:0}10%,70%{opacity:1}100%{opacity:0}}
 @media(max-width:640px){
- ::view-transition-group(solara-screen){animation-duration:.62s}
- ::view-transition-new(solara-screen){animation-duration:.64s}
+ ::view-transition-group(solara-screen){animation-duration:.32s}
+ ::view-transition-old(solara-screen),::view-transition-new(solara-screen){animation-duration:.34s}
+ .solara-liquid-wave-overlay.is-running,.solara-liquid-wave-overlay.is-running::before{animation-duration:.34s}
 }
 @media(prefers-reduced-motion:reduce){
  ::view-transition-group(solara-screen),::view-transition-old(solara-screen),::view-transition-new(solara-screen){animation:none!important;filter:none!important;clip-path:none!important}
  .panel:not(.hidden){view-transition-name:none}
+ .solara-liquid-wave-overlay{display:none!important}
 }
 </style>
 </head>
 <body>
+<div class="solara-liquid-wave-overlay" aria-hidden="true"></div>
 <svg class="solara-filter-defs" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none"><defs><filter id="solara-liquid-ripple" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.018 0.032" numOctaves="2" seed="8" result="waterNoise"><animate attributeName="baseFrequency" values="0.026 0.045;0.018 0.032;0.008 0.014" dur="0.72s" fill="freeze"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="waterNoise" scale="26" xChannelSelector="R" yChannelSelector="G"><animate attributeName="scale" values="30;19;0" dur="0.72s" fill="freeze"/></feDisplacementMap></filter></defs></svg>
 
 <div id="solara-update-modal" role="dialog" aria-modal="true" aria-labelledby="solara-update-title">
@@ -755,12 +768,14 @@ function syncViewChrome(id){
  const dock=$('iosDock');
  if(dock){dock.classList.toggle('dock-hidden',id==='quizView');dock.querySelectorAll('[data-nav]').forEach(item=>item.classList.toggle('active',item.dataset.nav===id||(id==='resultView'&&item.dataset.nav==='studentView')));requestAnimationFrame(syncDockLiquid)}
 }
+let solaraWaveTimer=0;
 function showView(id){
  if(!views.includes(id))return;
  const currentId=views.find(v=>!$(v).classList.contains('hidden'));
  if(currentId===id){syncViewChrome(id);return}
  const token=++viewTransitionToken;
  clearTimeout(viewTransitionTimer);
+ clearTimeout(solaraWaveTimer);
  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  const applyView=()=>{
   if(token!==viewTransitionToken)return;
@@ -773,16 +788,22 @@ function showView(id){
   window.scrollTo({top:0,behavior:'auto'});
   requestAnimationFrame(syncDockLiquid);
  };
- // Native View Transitions keeps both screens out of normal layout during the animation.
- if(!reduced&&document.startViewTransition&&currentId){
-  document.startViewTransition(()=>applyView());
-  return;
- }
+ // Keep the native transition minimal: the wave overlay is separate from the page,
+ // so neither panel gets clipped and the viewport never reveals an empty bottom edge.
  if(!reduced&&currentId){
-  const current=$(currentId);
-  current.classList.add('is-leaving');
-  viewTransitionTimer=setTimeout(applyView,100);
-  return;
+  const wave=document.querySelector('.solara-liquid-wave-overlay');
+  if(wave){
+   wave.classList.remove('is-running');
+   void wave.offsetWidth;
+   wave.classList.add('is-running');
+   solaraWaveTimer=setTimeout(()=>wave.classList.remove('is-running'),500);
+  }
+ }
+ if(!reduced&&document.startViewTransition&&currentId){
+  try{
+   document.startViewTransition(()=>applyView());
+   return;
+  }catch(e){}
  }
  applyView();
 }
