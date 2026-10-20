@@ -2594,5 +2594,16 @@ html[data-solara-theme="dark"] .ios-dock .dock-item.active {background:rgba(153,
 @media(prefers-reduced-motion:reduce) {.ios-dock,.ios-dock .dock-item,.ios-dock .dock-label {transition:none!important}}
 </style>
 
+
+<style id="solara-dock-alignment-nudge">
+/* Slight left correction so the floating mini-tabs align visually with the page. */
+@media (hover:hover) and (min-width:651px) {
+  .ios-dock { left:calc(50% - 16px)!important; }
+}
+@media (hover:none), (max-width:650px) {
+  .ios-dock { left:6px!important; right:18px!important; }
+}
+</style>
+
 </body>
 </html>
