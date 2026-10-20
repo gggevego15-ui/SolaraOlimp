@@ -565,6 +565,25 @@ html[data-solara-theme="dark"] #notesText{background:rgba(255,255,255,.055)!impo
 html[data-solara-theme="dark"] .notes-hint{color:#b7bfdc}
 @media(max-width:520px){.question-notes{padding:12px;border-radius:18px}.notes-launch{padding:8px 11px}#notesCanvas{height:185px}.notes-tools{width:100%}.notes-tool{flex:1;padding:7px 8px}}
 @media(prefers-reduced-motion:reduce){.notes-tool{transition:none}}
+
+/* Solara Olimp 1.0.0 — refined Liquid Glass, readable contrast, adaptive performance */
+:root{--solara-glass-edge:rgba(255,255,255,.72);--solara-glass-shine:rgba(255,255,255,.42);--solara-glass-depth:0 18px 48px rgba(71,83,145,.12),inset 0 1px 0 rgba(255,255,255,.78)}
+.top,.panel.glass,.ios-dock,.update-card,.update-entry,.role,.result-row,.review-card,.insight-card,.question-jump,.timer,.chip,.toast,.field input,.field select,.field textarea,.answer,.secondary,.back,#solara-theme-toggle{-webkit-backdrop-filter:blur(22px) saturate(155%);backdrop-filter:blur(22px) saturate(155%)}
+.panel.glass,.role,.result-row,.review-card,.insight-card,.update-entry,.field input,.field select,.field textarea,.answer,.secondary,.back,#solara-theme-toggle{transition:background-color .24s ease,border-color .24s ease,box-shadow .24s ease,transform .24s cubic-bezier(.2,.8,.2,1),color .2s ease}
+.panel.glass,.update-entry,.review-card,.insight-card,.result-row{position:relative;isolation:isolate}
+.panel.glass:after,.update-entry:after,.review-card:after,.insight-card:after,.result-row:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;background:linear-gradient(132deg,rgba(255,255,255,.14),transparent 28%,transparent 68%,rgba(164,177,255,.055))}
+button.primary,button.secondary,button.back,#solara-theme-toggle,.dock-item,.role{-webkit-tap-highlight-color:transparent}
+button.primary,.secondary,.back,#solara-theme-toggle{box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 24px rgba(53,65,128,.09)}
+@media(hover:hover) and (pointer:fine){.panel.glass:hover,.update-entry:hover,.review-card:hover,.insight-card:hover,.result-row:hover{border-color:rgba(157,171,255,.42);box-shadow:0 22px 58px rgba(66,78,145,.15),inset 0 1px 0 rgba(255,255,255,.65)}.secondary:hover,.back:hover,#solara-theme-toggle:hover{transform:translateY(-1px)}}
+html[data-solara-theme="dark"]{--solara-glass-edge:rgba(255,255,255,.17);--solara-glass-shine:rgba(255,255,255,.085);--solara-glass-depth:0 20px 56px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.10)}
+html[data-solara-theme="dark"] .top,html[data-solara-theme="dark"] .panel.glass,html[data-solara-theme="dark"] .ios-dock,html[data-solara-theme="dark"] .update-card{-webkit-backdrop-filter:blur(28px) saturate(160%);backdrop-filter:blur(28px) saturate(160%)}
+html[data-solara-theme="dark"] .role,html[data-solara-theme="dark"] .code-box,html[data-solara-theme="dark"] .result-row,html[data-solara-theme="dark"] .review-card,html[data-solara-theme="dark"] .field input,html[data-solara-theme="dark"] .field select,html[data-solara-theme="dark"] .field textarea,html[data-solara-theme="dark"] .answer,html[data-solara-theme="dark"] .question-jump,html[data-solara-theme="dark"] .timer,html[data-solara-theme="dark"] .chip,html[data-solara-theme="dark"] .eyebrow,html[data-solara-theme="dark"] .insight-card,html[data-solara-theme="dark"] .review-filter{color:#f1f3ff!important}
+html[data-solara-theme="dark"] .field label,html[data-solara-theme="dark"] label,html[data-solara-theme="dark"] .field .hint,html[data-solara-theme="dark"] .field small{color:#c3cbe5}
+html[data-solara-theme="dark"] .field input::placeholder,html[data-solara-theme="dark"] .field textarea::placeholder{color:#a2abc9;opacity:1}
+html[data-solara-theme="dark"] .field input:focus,html[data-solara-theme="dark"] .field select:focus,html[data-solara-theme="dark"] .field textarea:focus{border-color:rgba(165,178,255,.72)!important;box-shadow:0 0 0 3px rgba(130,145,255,.16),inset 0 1px 0 rgba(255,255,255,.08)!important}
+html[data-solara-theme="dark"] .panel.glass:after,html[data-solara-theme="dark"] .update-entry:after,html[data-solara-theme="dark"] .review-card:after,html[data-solara-theme="dark"] .insight-card:after,html[data-solara-theme="dark"] .result-row:after{background:linear-gradient(132deg,rgba(255,255,255,.055),transparent 32%,transparent 70%,rgba(157,143,255,.045))}
+html.low-power .top,html.low-power .panel.glass,html.low-power .ios-dock,html.low-power .update-card,html.low-power .role,html.low-power .result-row,html.low-power .review-card,html.low-power .insight-card,html.low-power .field input,html.low-power .field select,html.low-power .field textarea,html.low-power .answer{-webkit-backdrop-filter:blur(10px) saturate(125%);backdrop-filter:blur(10px) saturate(125%)}
+@media(prefers-reduced-transparency:reduce){.top,.panel.glass,.ios-dock,.update-card,.update-entry,.role,.result-row,.review-card,.insight-card,.question-jump,.timer,.chip,.toast,.field input,.field select,.field textarea,.answer,.secondary,.back,#solara-theme-toggle{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
 </style>
 
 <style id="solara-liquid-dock-refraction">
@@ -1254,11 +1273,11 @@ html[data-solara-theme="dark"] .field input:disabled{
   <article class="update-entry update-entry-featured">
    <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
    <div class="update-entry-content">
-    <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 0.9.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
-    <h2>Химия — новый предмет</h2>
-    <p>Добавлены занятия по химии: вещества, строение атома, формулы, реакции, растворы, количество вещества и органическая химия. Для занятий доступны три уровня сложности.</p>
-    <ul class="update-fix-list"><li>Добавлены отдельные банки базовых, олимпиадных и продвинутых заданий.</li><li>Коды химии начинаются с C; проверка предмета работает при создании и подключении.</li><li>Химия доступна учителю и ученику.</li></ul>
-    <div class="update-pills"><span>Химия</span><span>Реакции</span><span>0.9.0</span></div>
+    <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 1.0.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <h2>Solara Olimp 1.0.0 — Liquid Glass</h2>
+    <p>Первый стабильный релиз: более выразительный стеклянный интерфейс, мягкие блики и глубина слоёв без отказа от читаемости и скорости.</p>
+    <ul class="update-fix-list"><li>Обновлены панели, поля, карточки и кнопки: полупрозрачные слои, тонкие световые границы и аккуратные отражения.</li><li>В тёмной теме усилен контраст текста и состояний ввода.</li><li>Учитываются настройки уменьшения движения и режим экономии ресурсов.</li></ul>
+    <div class="update-pills"><span>Liquid Glass</span><span>Контраст</span><span>1.0.0</span></div>
    </div>
   </article>
   <article class="update-entry">
@@ -2006,7 +2025,7 @@ showView('roleView');
 
 <script id="solara-update-announcement">
 (function(){
-  const version = "2026-10-20-v070";
+  const version = "2026-10-20-v100";
   const storageKey = "solara_seen_update_" + version;
   const modal = document.getElementById("solara-update-modal");
   const dismiss = document.getElementById("solara-update-dismiss");
