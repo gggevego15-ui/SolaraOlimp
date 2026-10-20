@@ -399,6 +399,39 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{
 @media(prefers-reduced-transparency:reduce){#solara-update-modal{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(8,12,24,.72)}#solara-update-modal .update-card{background:#f4f6fc}}
 @media(max-width:480px){#solara-update-modal{padding:14px}#solara-update-modal .update-card{padding:22px;border-radius:23px}}
 </style>
+
+<style id="solara-liquid-glass-premium">
+/* Premium Liquid Glass: restrained highlights and lightweight motion */
+#solara-update-modal.is-visible{animation:solaraBackdropIn .38s cubic-bezier(.2,.75,.25,1) both}
+#solara-update-modal .update-card{position:relative;isolation:isolate;overflow:hidden;border:1px solid rgba(255,255,255,.78);background:linear-gradient(145deg,rgba(255,255,255,.91),rgba(240,244,255,.78) 54%,rgba(225,232,255,.72));box-shadow:0 30px 90px rgba(8,16,48,.30),inset 0 1px 0 rgba(255,255,255,.95);backdrop-filter:blur(22px) saturate(155%);-webkit-backdrop-filter:blur(22px) saturate(155%);animation:solaraCardSpring .62s cubic-bezier(.16,1,.3,1) both}
+#solara-update-modal .update-card:before{content:"";position:absolute;z-index:-1;pointer-events:none;inset:-1px;background:radial-gradient(ellipse at 10% 0%,rgba(255,255,255,.96),transparent 42%),radial-gradient(ellipse at 100% 12%,rgba(143,158,255,.23),transparent 38%);opacity:.95}
+#solara-update-modal .update-card:after{content:"";position:absolute;z-index:-1;pointer-events:none;top:-45%;left:-70%;width:65%;height:190%;transform:rotate(20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent);animation:solaraGlassSweep 1.05s .12s ease-out both}
+#solara-update-modal .update-kicker{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid rgba(115,130,220,.16);border-radius:999px;background:rgba(255,255,255,.48);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);letter-spacing:.1em}
+#solara-update-modal .update-kicker:before{content:"✦";display:grid;place-items:center;width:20px;height:20px;border-radius:7px;background:linear-gradient(145deg,#8b9bff,#b9a0ff);color:white;box-shadow:0 3px 10px rgba(106,119,237,.24)}
+#solara-update-modal h2{letter-spacing:-.045em;background:linear-gradient(100deg,#1c2540 10%,#5968d7 78%,#9279db);-webkit-background-clip:text;background-clip:text;color:transparent}
+#solara-update-modal .update-list li{padding:10px 11px;border:1px solid rgba(255,255,255,.7);border-radius:15px;background:rgba(255,255,255,.38);box-shadow:inset 0 1px 0 rgba(255,255,255,.72);transition:transform .2s ease,background .2s ease}
+#solara-update-modal .update-list li:hover{transform:translateY(-1px);background:rgba(255,255,255,.62)}
+#solara-update-modal .update-check{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 4px 12px rgba(105,126,255,.13);background:linear-gradient(145deg,rgba(140,154,255,.24),rgba(181,155,255,.2))}
+#solara-update-modal .update-dismiss{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.42);background:linear-gradient(115deg,#27365f,#4d59b8 55%,#7162c8);box-shadow:0 9px 22px rgba(57,69,153,.23),inset 0 1px 0 rgba(255,255,255,.23);transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+#solara-update-modal .update-dismiss:hover{transform:translateY(-2px);filter:brightness(1.06);box-shadow:0 13px 28px rgba(57,69,153,.3),inset 0 1px 0 rgba(255,255,255,.28)}
+#solara-update-modal .update-dismiss:active{transform:scale(.985)}
+/* Bring the same soft, layered glass finish to the main app surfaces */
+.top{border-color:rgba(255,255,255,.78)!important;background:linear-gradient(135deg,rgba(255,255,255,.74),rgba(242,245,255,.48))!important;box-shadow:0 12px 38px rgba(65,77,145,.08),inset 0 1px 0 rgba(255,255,255,.92)!important}
+.panel.glass{border-color:rgba(255,255,255,.78)!important;box-shadow:0 24px 70px rgba(61,73,145,.11),inset 0 1px 0 rgba(255,255,255,.88)!important}
+.panel.glass:before{opacity:.72}
+.role,.code-box,.result-row,.review-card,.field input,.field select,.field textarea,.answer,.question-jump,.timer{border-color:rgba(255,255,255,.78)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.78),0 7px 22px rgba(65,77,145,.055)}
+.role:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 14px 32px rgba(88,101,190,.13)!important}
+.primary,.secondary,.back{box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 7px 20px rgba(65,77,145,.09)}
+@keyframes solaraBackdropIn{from{opacity:0;backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0)}to{opacity:1;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}}
+@keyframes solaraCardSpring{0%{opacity:0;transform:translateY(24px) scale(.94);filter:blur(8px)}65%{opacity:1;transform:translateY(-3px) scale(1.012);filter:blur(0)}82%{transform:translateY(1px) scale(.998)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes solaraGlassSweep{0%{left:-70%;opacity:0}18%{opacity:.9}100%{left:135%;opacity:0}}
+@media(prefers-reduced-motion:reduce){#solara-update-modal.is-visible,#solara-update-modal .update-card,#solara-update-modal .update-card:after{animation:none!important}#solara-update-modal .update-list li,#solara-update-modal .update-dismiss{transition:none!important}}
+@media(prefers-reduced-transparency:reduce){#solara-update-modal .update-card{backdrop-filter:none;-webkit-backdrop-filter:none;background:#f4f6fc}.top,.panel.glass{background:#f4f6fc!important}}
+@media(max-width:480px){#solara-update-modal .update-card{max-height:calc(100dvh - 28px);overflow-y:auto}}
+html.low-power #solara-update-modal .update-card{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+html.low-power #solara-update-modal.is-visible,html.low-power #solara-update-modal .update-card,html.low-power #solara-update-modal .update-card:after{animation:none!important}
+html.low-power #solara-update-modal .update-list li,html.low-power #solara-update-modal .update-dismiss{transition:none!important}
+</style>
 </head>
 <body>
 
