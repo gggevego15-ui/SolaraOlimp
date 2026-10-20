@@ -2646,5 +2646,36 @@ html[data-solara-theme="dark"] .ios-dock .dock-item.active{color:#f4f6ff!importa
 @media(prefers-reduced-motion:reduce){.ios-dock,.ios-dock .dock-item,.ios-dock .dock-label{transition:none!important}}
 </style>
 
+
+<style id="solara-dark-select-contrast-hotfix">
+/* Final override: native select controls and their option popups must stay readable in dark mode. */
+html[data-solara-theme="dark"] body .form .field,
+html[data-solara-theme="dark"] body .form .field.class-field,
+html[data-solara-theme="dark"] body .form .field:has(#teacherGrade),
+html[data-solara-theme="dark"] body .form .field:has(#studentGrade){color:#f7f8ff!important}
+html[data-solara-theme="dark"] body .form .field label,
+html[data-solara-theme="dark"] body .form .field .hint,
+html[data-solara-theme="dark"] body .form .field .field-help{
+  color:#dce3ff!important;-webkit-text-fill-color:#dce3ff!important;opacity:1!important
+}
+html[data-solara-theme="dark"] body .form .field select,
+html[data-solara-theme="dark"] body select#teacherGrade,
+html[data-solara-theme="dark"] body select#studentGrade,
+html[data-solara-theme="dark"] body select#teacherSubject,
+html[data-solara-theme="dark"] body select#teacherDifficulty{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;background-color:#20263b!important;
+  background-image:linear-gradient(145deg,#252c43,#1a2033)!important;
+  border:1px solid rgba(190,202,255,.38)!important;border-radius:14px!important;
+  text-shadow:none!important;opacity:1!important;color-scheme:dark!important
+}
+html[data-solara-theme="dark"] body .form .field select option,
+html[data-solara-theme="dark"] body select#teacherGrade option,
+html[data-solara-theme="dark"] body select#studentGrade option,
+html[data-solara-theme="dark"] body select#teacherSubject option,
+html[data-solara-theme="dark"] body select#teacherDifficulty option{color:#f7f8ff!important;background:#171d2d!important}
+html[data-solara-theme="dark"] body .form .field select option:checked{color:#fff!important;background:#4c5eb7!important}
+html[data-solara-theme="dark"] body .form .field select:focus-visible{outline:2px solid #a9b5ff!important;outline-offset:2px!important;box-shadow:0 0 0 4px rgba(133,151,255,.2)!important}
+</style>
+
 </body>
 </html>
