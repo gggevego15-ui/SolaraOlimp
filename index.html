@@ -1275,6 +1275,29 @@ html[data-solara-theme="dark"] .question-visual-fallback{background:radial-gradi
 }
 </style>
 
+
+<style id="solara-bottom-layout-stability">
+/* Bottom layout stability: prevent the floating dock from clipping, overlapping, or shifting on narrow screens. */
+html{min-height:100%;scroll-padding-bottom:calc(124px + env(safe-area-inset-bottom,0px))}
+body{min-height:100%;padding-bottom:calc(124px + env(safe-area-inset-bottom,0px))!important}
+.ios-dock{box-sizing:border-box;bottom:calc(14px + env(safe-area-inset-bottom,0px))!important;max-width:calc(100vw - 24px);transform:translate3d(-50%,0,0);overflow:visible;isolation:isolate}
+.ios-dock>.dock-item{min-width:0;flex:0 1 auto;white-space:nowrap}
+.ios-dock>.dock-liquid{pointer-events:none;max-width:100%}
+@media(max-width:650px){
+ body{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))!important}
+ .ios-dock,.ios-dock.dock-hidden{left:12px;right:12px;width:auto!important;max-width:none!important;bottom:calc(9px + env(safe-area-inset-bottom,0px))!important;transform:translate3d(0,0,0);gap:3px;padding:6px;justify-content:stretch}
+ .ios-dock>.dock-item{flex:1 1 0;min-width:0;height:48px;padding:0 5px;gap:4px;justify-content:center;border-radius:16px}
+ .ios-dock>.dock-item.active{padding-inline:5px}
+ .ios-dock .dock-icon{width:23px;height:23px;flex:0 0 23px}
+ .ios-dock .dock-icon svg{width:21px;height:21px}
+ .ios-dock .dock-label{display:none!important}
+ .ios-dock .dock-update-badge{position:absolute;top:2px;right:2px;font-size:8px;line-height:1;padding:3px 4px}
+ .ios-dock .dock-liquid{max-width:100%;border-radius:16px!important}
+}
+@media(max-width:360px){.ios-dock{left:8px;right:8px;padding:5px;gap:2px}.ios-dock>.dock-item{height:45px;padding-inline:3px}.ios-dock .dock-icon{width:21px;height:21px;flex-basis:21px}.ios-dock .dock-icon svg{width:20px;height:20px}}
+@media(prefers-reduced-motion:reduce){.ios-dock{transform:translateX(-50%)}@media(max-width:650px){.ios-dock{transform:none}}}
+</style>
+
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
