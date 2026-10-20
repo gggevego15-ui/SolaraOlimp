@@ -274,6 +274,7 @@ body:before,body:after{filter:blur(12px);opacity:.45;mix-blend-mode:normal;will-
 .update-fix-list{display:grid;gap:8px;margin:13px 0 0;padding:0 0 0 18px;color:var(--muted,#727d99);font-size:12px;line-height:1.65}.update-fix-list li::marker{color:#7b8cf0}.update-entry-content{overflow:hidden}
 .solara-liquid-wave-overlay{position:fixed!important;inset:0!important;z-index:9998!important;pointer-events:none!important;overflow:hidden!important;contain:strict;opacity:0;background:transparent}
 .solara-liquid-wave-overlay.is-running{opacity:1;animation:solara-wave-overlay-fade .82s ease-in-out both}
+.solara-liquid-wave-overlay::before,.solara-liquid-wave-overlay.is-running::before{content:none!important;animation:none!important;display:none!important}
 .wave-ribbon{position:absolute;left:-12%;width:124%;height:122vh;bottom:-124vh;pointer-events:none;will-change:bottom,transform}
 .wave-ribbon-back{border-radius:48% 52% 0 0 / 7% 10% 0 0;background:linear-gradient(165deg,rgba(193,210,255,.12),rgba(146,169,255,.22) 32%,rgba(215,203,255,.22) 66%,rgba(255,255,255,.18));box-shadow:0 -16px 45px rgba(153,178,255,.2);filter:blur(7px)}
 .wave-ribbon-front{border-radius:44% 56% 0 0 / 9% 12% 0 0;background:linear-gradient(165deg,rgba(255,255,255,.55),rgba(191,211,255,.32) 26%,rgba(149,164,255,.22) 52%,rgba(213,197,255,.15) 76%,rgba(255,255,255,.1));box-shadow:0 -2px 0 rgba(255,255,255,.6),0 -16px 48px rgba(162,186,255,.22),inset 0 2px 0 rgba(255,255,255,.62);backdrop-filter:blur(4px) saturate(140%);-webkit-backdrop-filter:blur(4px) saturate(140%)}
