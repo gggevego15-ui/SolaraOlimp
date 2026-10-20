@@ -1061,6 +1061,66 @@ html[data-solara-theme="dark"] .role:hover .role-icon{background:#2a3140!importa
 })();
 </script>
 
+
+<style id="solara-dark-form-contrast-fix">
+/* Dark theme: readable class selector and form controls without flattening the glass UI. */
+html[data-solara-theme="dark"] .field label{
+  color:#d9e0fb!important;
+  text-shadow:0 1px 1px rgba(0,0,0,.12);
+}
+html[data-solara-theme="dark"] .field-help,
+html[data-solara-theme="dark"] .hint{
+  color:#aeb8d5!important;
+}
+html[data-solara-theme="dark"] .form .field:has(#teacherGrade){
+  background:linear-gradient(135deg,rgba(45,51,76,.76),rgba(28,33,53,.72))!important;
+  border-color:rgba(170,184,255,.24)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 12px 30px rgba(0,0,0,.12)!important;
+}
+html[data-solara-theme="dark"] .field input,
+html[data-solara-theme="dark"] .field select,
+html[data-solara-theme="dark"] .field textarea{
+  color:#f4f6ff!important;
+  -webkit-text-fill-color:#f4f6ff;
+  background:linear-gradient(145deg,rgba(34,40,61,.94),rgba(25,30,48,.92))!important;
+  border-color:rgba(175,188,232,.24)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 5px 16px rgba(0,0,0,.08)!important;
+}
+html[data-solara-theme="dark"] .field input:hover,
+html[data-solara-theme="dark"] .field select:hover,
+html[data-solara-theme="dark"] .field textarea:hover{
+  border-color:rgba(177,190,255,.42)!important;
+}
+html[data-solara-theme="dark"] .field input:focus,
+html[data-solara-theme="dark"] .field select:focus,
+html[data-solara-theme="dark"] .field textarea:focus{
+  border-color:rgba(158,174,255,.78)!important;
+  box-shadow:0 0 0 3px rgba(125,145,255,.17),inset 0 1px 0 rgba(255,255,255,.07),0 8px 24px rgba(0,0,0,.12)!important;
+  outline:none!important;
+}
+html[data-solara-theme="dark"] .field input::placeholder,
+html[data-solara-theme="dark"] .field textarea::placeholder{
+  color:#9aa6c7!important;
+  -webkit-text-fill-color:#9aa6c7;
+  opacity:1;
+}
+html[data-solara-theme="dark"] .field select option{
+  color:#f1f4ff!important;
+  background:#1b2134!important;
+}
+html[data-solara-theme="dark"] .field select:disabled,
+html[data-solara-theme="dark"] .field input:disabled{
+  color:#a7b0ca!important;
+  -webkit-text-fill-color:#a7b0ca;
+  opacity:.8;
+}
+@media(prefers-reduced-motion:reduce){
+  html[data-solara-theme="dark"] .field input,
+  html[data-solara-theme="dark"] .field select,
+  html[data-solara-theme="dark"] .field textarea{transition:none!important}
+}
+</style>
+
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
