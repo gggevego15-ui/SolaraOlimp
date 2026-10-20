@@ -381,8 +381,40 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{
 .low-power .panel.glass:before,.low-power .panel.glass:after,.low-power .dock-glow{display:none!important}
 .low-power .panel,.low-power .role,.low-power .primary,.low-power .secondary,.low-power .back,.low-power .answer,.low-power .question-jump,.low-power .code-box,.low-power .result-row{transition:none!important}
 </style>
+
+<style id="solara-update-announcement-style">
+#solara-update-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,12,24,.48);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#solara-update-modal.is-visible{display:flex;animation:solaraUpdateFade .22s ease-out}
+#solara-update-modal .update-card{width:min(100%,440px);padding:26px;border:1px solid rgba(255,255,255,.55);border-radius:28px;background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(239,244,255,.74));box-shadow:0 24px 80px rgba(10,20,50,.25);color:#172033}
+#solara-update-modal .update-kicker{font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#6877a2}
+#solara-update-modal h2{font-size:clamp(24px,5vw,31px);line-height:1.1;margin:10px 0}
+#solara-update-modal .update-date{font-size:13px;color:#68738d;margin-bottom:18px}
+#solara-update-modal .update-list{display:grid;gap:11px;margin:18px 0 22px;padding:0;list-style:none}
+#solara-update-modal .update-list li{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5}
+#solara-update-modal .update-check{display:grid;place-items:center;flex:0 0 23px;height:23px;border-radius:8px;background:rgba(105,126,255,.14);color:#5968dc;font-weight:900}
+#solara-update-modal .update-dismiss{width:100%;min-height:46px;border:0;border-radius:15px;background:#202b4c;color:white;font:inherit;font-weight:750;cursor:pointer;transition:transform .18s ease,opacity .18s ease}
+#solara-update-modal .update-dismiss:hover{transform:translateY(-1px);opacity:.93}
+@keyframes solaraUpdateFade{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){#solara-update-modal.is-visible{animation:none}#solara-update-modal .update-dismiss{transition:none}}
+@media(prefers-reduced-transparency:reduce){#solara-update-modal{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(8,12,24,.72)}#solara-update-modal .update-card{background:#f4f6fc}}
+@media(max-width:480px){#solara-update-modal{padding:14px}#solara-update-modal .update-card{padding:22px;border-radius:23px}}
+</style>
 </head>
 <body>
+
+<div id="solara-update-modal" role="dialog" aria-modal="true" aria-labelledby="solara-update-title">
+  <div class="update-card">
+    <div class="update-kicker">Solara Olimp · обновление</div>
+    <h2 id="solara-update-title">Что нового?</h2>
+    <div class="update-date">Обновление от 20 октября 2026</div>
+    <ul class="update-list">
+      <li><span class="update-check">✓</span><span>Обновлён интерфейс в стиле iOS Liquid Glass.</span></li>
+      <li><span class="update-check">✓</span><span>Улучшена работа интерфейса на слабых устройствах и телефонах.</span></li>
+      <li><span class="update-check">✓</span><span>В результатах олимпиады появился более подробный разбор ошибок.</span></li>
+    </ul>
+    <button class="update-dismiss" id="solara-update-dismiss" type="button">Понятно, продолжить</button>
+  </div>
+</div>
 <div class="shell">
 <header class="top"><a class="brand" href="#" id="brandHome"><span class="logo">∑</span>Solara<span>Olimp.</span></a><div class="status" id="topStatus">ПРОСТРАНСТВО ОЛИМПИАД</div></header>
 <main>
@@ -797,6 +829,30 @@ showView('roleView');
  if(connection&&typeof connection.addEventListener==="function"){
   connection.addEventListener("change",function(){document.documentElement.classList.toggle("low-power",!!connection.saveData||!!(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||!!(navigator.deviceMemory&&navigator.deviceMemory<=4)||!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches));});
  }
+})();
+</script>
+
+<script id="solara-update-announcement">
+(function(){
+  const version = "2026-10-20";
+  const storageKey = "solara_seen_update_" + version;
+  const modal = document.getElementById("solara-update-modal");
+  const dismiss = document.getElementById("solara-update-dismiss");
+  if (!modal || !dismiss) return;
+  let alreadySeen = false;
+  try { alreadySeen = localStorage.getItem(storageKey) === "1"; } catch(e) {}
+  if (!alreadySeen) {
+    modal.classList.add("is-visible");
+    document.documentElement.style.overflow = "hidden";
+  }
+  function closeAnnouncement(){
+    modal.classList.remove("is-visible");
+    document.documentElement.style.overflow = "";
+    try { localStorage.setItem(storageKey, "1"); } catch(e) {}
+  }
+  dismiss.addEventListener("click", closeAnnouncement);
+  modal.addEventListener("click", function(e){ if(e.target === modal) closeAnnouncement(); });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape" && modal.classList.contains("is-visible")) closeAnnouncement(); });
 })();
 </script>
 </body>
