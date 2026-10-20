@@ -322,7 +322,7 @@ Deno.serve(async (req: Request) => {
       const subject = body.subject;
       const grade = Number(body.grade);
       const difficulty = body.difficulty;
-      if (subject !== "math" && subject !== "info" && subject !== "rus") return reply({ error: "Выбери предмет." }, 400);
+      if (subject !== "math" && subject !== "info" && subject !== "rus" && subject !== "physics") return reply({ error: "Выбери предмет." }, 400);
       if (!Number.isInteger(grade) || grade < 5 || grade > 11) return reply({ error: "Выбери класс с 5-го по 11-й." }, 400);
       if (!["basic", "olympiad", "advanced"].includes(difficulty)) return reply({ error: "Выбери уровень сложности." }, 400);
       for (let attempt = 0; attempt < 8; attempt++) {
@@ -341,7 +341,7 @@ Deno.serve(async (req: Request) => {
       const subject = body.subject;
       const grade = Number(body.grade);
       const studentName = String(body.studentName ?? "").trim().replace(/\s+/g, " ");
-      if (!/^[MIR][A-HJ-NP-Z2-9]{5}$/.test(code)) return reply({ error: "Такого формата кода нет." }, 400);
+      if (!/^[MIRP][A-HJ-NP-Z2-9]{5}$/.test(code)) return reply({ error: "Такого формата кода нет." }, 400);
       if (subject !== "math" && subject !== "info" && subject !== "rus") return reply({ error: "Выбери предмет." }, 400);
       if (!Number.isInteger(grade) || grade < 5 || grade > 11) return reply({ error: "Выбери класс с 5-го по 11-й." }, 400);
       if (studentName.length < 2 || studentName.length > 40 || !/^[\p{L}\p{M}0-9 .’'_-]+$/u.test(studentName)) {
