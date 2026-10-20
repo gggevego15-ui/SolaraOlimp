@@ -909,6 +909,36 @@ html[data-solara-theme="dark"] #solara-update-modal .update-dismiss{background:l
 @media(max-width:640px){.ios-dock,.ios-dock.dock-hidden{width:calc(100% - 22px)!important;max-width:calc(100vw - 22px)!important;bottom:max(8px,env(safe-area-inset-bottom,0px))!important}}
 @media(prefers-reduced-motion:reduce){.solara-liquid-wave-overlay,.solara-liquid-wave-overlay.is-running{display:none!important;animation:none!important}::view-transition-old(solara-screen),::view-transition-new(solara-screen){animation:none!important}}
 </style>
+<style id="solara-dark-role-icons-060">
+/* 0.6.0 refinement: teacher/student symbols should feel calm, not neon */
+html[data-solara-theme="dark"] .role-icon{
+ background:linear-gradient(145deg,#3b455b,#323b4f)!important;
+ border:1px solid rgba(180,193,218,.18)!important;
+ color:#c5cfe4!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 4px 12px rgba(0,0,0,.12)!important;
+ text-shadow:none!important;
+ filter:none!important;
+}
+html[data-solara-theme="dark"] #teacherRole .role-icon{
+ background:linear-gradient(145deg,#3d465f,#333d53)!important;
+ color:#c4cdea!important;
+}
+html[data-solara-theme="dark"] #studentRole .role-icon{
+ background:linear-gradient(145deg,#394b50,#303f45)!important;
+ color:#c0d7d1!important;
+}
+html[data-solara-theme="dark"] .role:hover .role-icon{
+ border-color:rgba(184,198,224,.28)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 5px 14px rgba(0,0,0,.15)!important;
+}
+html[data-solara-theme="dark"] .role:hover #teacherRole .role-icon{background:linear-gradient(145deg,#424c65,#37425a)!important}
+html[data-solara-theme="dark"] .role h2{color:#edf0f7!important}
+html[data-solara-theme="dark"] .role p{color:#aab4c8!important}
+@media(prefers-reduced-transparency:reduce){
+ html[data-solara-theme="dark"] .role-icon{background:#374055!important}
+ html[data-solara-theme="dark"] #studentRole .role-icon{background:#354449!important}
+}
+</style>
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
@@ -980,7 +1010,7 @@ html[data-solara-theme="dark"] #solara-update-modal .update-dismiss{background:l
     <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 0.6.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
     <h2>Сбалансированная тёмная тема</h2>
     <p>Переработана палитра тёмного режима: выровнена яркость поверхностей, смягчены неоновые акценты и улучшена читаемость текста. Стеклянные панели, кнопки, поля, навигация и журнал теперь используют согласованные оттенки.</p>
-    <ul class="update-fix-list"><li>Исправлено: отдельные блоки выглядели слишком яркими или почти чёрными.</li><li>Исправлено: контраст кнопок и вложенных карточек был неравномерным.</li><li>Улучшено: тёмное оформление окна обновления, журнала и нижней панели.</li><li>Сохранено: Liquid Glass, мягкие градиенты и лёгкие блики без чрезмерного свечения.</li></ul>
+    <ul class="update-fix-list"><li>Исправлено: отдельные блоки выглядели слишком яркими или почти чёрными.</li><li>Исправлено: контраст кнопок и вложенных карточек был неравномерным.</li><li>Смягчены иконки «Я учитель» и «Я ученик» в тёмной теме — приглушённые оттенки вместо ярких заливок.</li><li>Улучшено: тёмное оформление окна обновления, журнала и нижней панели.</li><li>Сохранено: Liquid Glass, мягкие градиенты и лёгкие блики без чрезмерного свечения.</li></ul>
     <div class="update-pills"><span>Тёмная тема</span><span>Контраст</span><span>Liquid Glass</span></div>
    </div>
   </article>
