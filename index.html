@@ -788,6 +788,32 @@ html[data-solara-theme="dark"] .error{color:#ff9db3!important}
 }
 </style>
 
+<style id="solara-transition-performance-fix">
+/* Keep the dock mounted; animate lightweight transforms instead of expensive layout properties */
+.ios-dock,.ios-dock.dock-hidden{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;position:fixed!important;z-index:10001!important}
+.ios-dock{bottom:max(12px,env(safe-area-inset-bottom,0px))!important;transform:translate3d(-50%,0,0)!important;isolation:isolate}
+.ios-dock .dock-liquid{z-index:0!important;pointer-events:none!important}.ios-dock .dock-item{position:relative;z-index:1}
+.solara-liquid-wave-overlay{display:block!important;position:fixed!important;inset:0!important;z-index:9998!important;pointer-events:none!important;overflow:hidden!important;contain:layout paint style!important;opacity:0!important}
+.solara-liquid-wave-overlay.is-running{display:block!important;opacity:1!important;animation:solara-wave-overlay-fade .62s ease-out both!important}
+.solara-liquid-wave-overlay.is-running .wave-ribbon-back{animation:solara-wave-back .62s cubic-bezier(.16,.72,.16,1) both!important}
+.solara-liquid-wave-overlay.is-running .wave-ribbon-front{animation:solara-wave-front .62s cubic-bezier(.16,.72,.16,1) both!important}
+.solara-liquid-wave-overlay.is-running .wave-glint{animation:solara-wave-glint .62s cubic-bezier(.16,.72,.16,1) both!important}
+.wave-ribbon{will-change:transform!important;bottom:auto!important;top:100%!important;height:125vh!important;filter:none!important}
+.wave-ribbon-back{background:linear-gradient(165deg,rgba(193,210,255,.10),rgba(146,169,255,.20) 32%,rgba(215,203,255,.19) 66%,rgba(255,255,255,.16))!important;box-shadow:0 -10px 28px rgba(153,178,255,.16)!important}
+.wave-ribbon-front{background:linear-gradient(165deg,rgba(255,255,255,.44),rgba(191,211,255,.27) 26%,rgba(149,164,255,.19) 52%,rgba(213,197,255,.12) 76%,rgba(255,255,255,.08))!important;backdrop-filter:blur(3px) saturate(130%)!important;-webkit-backdrop-filter:blur(3px) saturate(130%)!important}
+.wave-glint{will-change:transform,opacity!important;bottom:auto!important;top:100%!important}
+@keyframes solara-wave-back{0%{transform:translate3d(-2%,0,0) rotate(-2deg)}38%{transform:translate3d(1%,-52vh,0) rotate(1deg)}58%{transform:translate3d(-1%,-105vh,0) rotate(-.6deg)}100%{transform:translate3d(2%,-150vh,0) rotate(1deg)}}
+@keyframes solara-wave-front{0%{transform:translate3d(3%,0,0) rotate(1.5deg)}34%{transform:translate3d(-1%,-58vh,0) rotate(-1deg)}55%{transform:translate3d(1%,-112vh,0) rotate(.6deg)}100%{transform:translate3d(-2%,-155vh,0) rotate(-1deg)}}
+@keyframes solara-wave-glint{0%{transform:translate3d(0,0,0) rotate(-1deg);opacity:0}34%{transform:translate3d(0,-48vh,0) rotate(-1deg);opacity:.18}55%{transform:translate3d(0,-103vh,0) rotate(-1deg);opacity:.9}100%{transform:translate3d(0,-145vh,0) rotate(-1deg);opacity:0}}
+@keyframes solara-wave-overlay-fade{0%,100%{opacity:0}8%,78%{opacity:1}}
+::view-transition-group(solara-screen){animation-duration:.34s!important;animation-timing-function:cubic-bezier(.22,.72,.18,1)!important}
+::view-transition-old(solara-screen){animation:solara-blur-out .24s ease-in both!important;filter:none!important}
+::view-transition-new(solara-screen){animation:solara-blur-in .34s cubic-bezier(.2,.78,.2,1) both!important;filter:none!important}
+@keyframes solara-blur-out{0%{opacity:1;filter:blur(0);transform:scale(1)}70%{opacity:.25;filter:blur(7px);transform:scale(.99)}100%{opacity:0;filter:blur(10px);transform:scale(.985)}}
+@keyframes solara-blur-in{0%{opacity:0;filter:blur(10px);transform:scale(1.012)}55%{opacity:.85;filter:blur(3px);transform:scale(1.003)}100%{opacity:1;filter:blur(0);transform:scale(1)}}
+@media(max-width:640px){.ios-dock,.ios-dock.dock-hidden{width:calc(100% - 22px)!important;max-width:calc(100vw - 22px)!important;bottom:max(8px,env(safe-area-inset-bottom,0px))!important}}
+@media(prefers-reduced-motion:reduce){.solara-liquid-wave-overlay,.solara-liquid-wave-overlay.is-running{display:none!important;animation:none!important}::view-transition-old(solara-screen),::view-transition-new(solara-screen){animation:none!important}}
+</style>
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
