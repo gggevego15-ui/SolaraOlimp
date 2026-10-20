@@ -1193,6 +1193,88 @@ html[data-solara-theme="dark"] .field input:disabled{
 }
 </style>
 
+
+<style id="solara-liquid-glass-refinement">
+/* Premium Liquid Glass: depth and readable contrast without expensive always-on effects */
+:root{--solara-glass-edge:rgba(255,255,255,.72);--solara-glass-highlight:rgba(255,255,255,.68)}
+.top,.panel.glass,.ios-dock,.question-notes,.notes-launch,.question-visual,.role,.answer,.field input,.field select,.field textarea,.code-box,.timer,.chip,.question-jump,.review-card,.result-row,.insight-card{
+  -webkit-backdrop-filter:blur(16px) saturate(145%);
+  backdrop-filter:blur(16px) saturate(145%);
+}
+.top,.panel.glass,.ios-dock,.question-notes,.question-visual{
+  position:relative;
+  isolation:isolate;
+  border-color:rgba(255,255,255,.58);
+  box-shadow:0 18px 48px rgba(62,77,139,.12),inset 0 1px 0 rgba(255,255,255,.72);
+}
+.top:after,.panel.glass:after,.ios-dock:after,.question-notes:after,.question-visual:after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
+  background:linear-gradient(125deg,rgba(255,255,255,.22),transparent 34%,transparent 68%,rgba(255,255,255,.045));
+  opacity:.8;
+}
+.top>*,.panel.glass>*,.ios-dock>*,.question-notes>*,.question-visual>*{position:relative;z-index:1}
+button,.primary,.secondary,.back,.notes-tool,.notes-close,.role,.answer,.question-jump{
+  transition:transform .2s cubic-bezier(.2,.75,.25,1),box-shadow .2s ease,border-color .2s ease,background-color .2s ease;
+}
+button:hover,.primary:hover,.secondary:hover,.back:hover,.notes-tool:hover,.question-jump:hover{transform:translateY(-1px)}
+button:active,.primary:active,.secondary:active,.back:active,.notes-tool:active,.question-jump:active{transform:scale(.985)}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible,button:focus-visible,a:focus-visible{
+  outline:2px solid rgba(132,151,255,.9);outline-offset:3px;
+}
+html[data-solara-theme="dark"]{
+  --solara-glass-edge:rgba(204,215,255,.2);
+  --solara-glass-highlight:rgba(255,255,255,.09);
+}
+html[data-solara-theme="dark"] .top,
+html[data-solara-theme="dark"] .panel.glass,
+html[data-solara-theme="dark"] .ios-dock,
+html[data-solara-theme="dark"] .question-notes,
+html[data-solara-theme="dark"] .question-visual{
+  border-color:rgba(205,215,255,.16)!important;
+  box-shadow:0 20px 54px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+html[data-solara-theme="dark"] .top:after,
+html[data-solara-theme="dark"] .panel.glass:after,
+html[data-solara-theme="dark"] .ios-dock:after,
+html[data-solara-theme="dark"] .question-notes:after,
+html[data-solara-theme="dark"] .question-visual:after{
+  background:linear-gradient(125deg,rgba(255,255,255,.075),transparent 38%,transparent 70%,rgba(170,185,255,.035));
+}
+html[data-solara-theme="dark"] .field input,
+html[data-solara-theme="dark"] .field select,
+html[data-solara-theme="dark"] .field textarea,
+html[data-solara-theme="dark"] .role,
+html[data-solara-theme="dark"] .answer,
+html[data-solara-theme="dark"] .code-box,
+html[data-solara-theme="dark"] .timer,
+html[data-solara-theme="dark"] .chip,
+html[data-solara-theme="dark"] .question-jump,
+html[data-solara-theme="dark"] .review-card,
+html[data-solara-theme="dark"] .result-row,
+html[data-solara-theme="dark"] .insight-card{
+  color:#f4f6ff!important;
+  border-color:rgba(210,220,255,.17)!important;
+  background-color:rgba(26,30,49,.78)!important;
+}
+html[data-solara-theme="dark"] .field input::placeholder,
+html[data-solara-theme="dark"] .field textarea::placeholder{color:#b7c0df!important;opacity:1}
+html[data-solara-theme="dark"] .question-visual-caption,
+html[data-solara-theme="dark"] .question-visual-caption strong{color:#e4e9ff}
+html[data-solara-theme="dark"] .question-visual-fallback{background:radial-gradient(ellipse at 50% 45%,rgba(125,145,255,.16),transparent 70%)}
+@media(max-width:640px){
+  .top,.panel.glass,.ios-dock,.question-notes,.notes-launch,.question-visual,.role,.answer,.field input,.field select,.field textarea,.code-box,.timer,.chip,.question-jump,.review-card,.result-row,.insight-card{
+    -webkit-backdrop-filter:blur(10px) saturate(125%);
+    backdrop-filter:blur(10px) saturate(125%);
+  }
+  .top,.panel.glass,.ios-dock,.question-notes,.question-visual{box-shadow:0 12px 32px rgba(62,77,139,.10),inset 0 1px 0 rgba(255,255,255,.58)}
+  html[data-solara-theme="dark"] .top,html[data-solara-theme="dark"] .panel.glass,html[data-solara-theme="dark"] .ios-dock,html[data-solara-theme="dark"] .question-notes,html[data-solara-theme="dark"] .question-visual{box-shadow:0 12px 32px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.08)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .top,.panel.glass,.ios-dock,.question-notes,.notes-launch,.question-visual,button,.primary,.secondary,.back,.notes-tool,.notes-close,.role,.answer,.question-jump{transition:none!important;animation:none!important}
+  button:hover,.primary:hover,.secondary:hover,.back:hover,.notes-tool:hover,.question-jump:hover,button:active,.primary:active,.secondary:active,.back:active,.notes-tool:active,.question-jump:active{transform:none!important}
+}
+</style>
+
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
