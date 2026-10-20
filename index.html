@@ -671,6 +671,21 @@ function syncDockLiquid(){
  window.addEventListener('orientationchange',()=>setTimeout(syncDockLiquid,80),{passive:true});
  document.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(syncDockLiquid),{once:true});
  setTimeout(syncDockLiquid,80);
+ // Re-measure the active button after font loading, responsive layout, or dock resizing.
+ if('ResizeObserver' in window){
+  let dockMeasureFrame=0;
+  const scheduleDockMeasure=()=>{
+   cancelAnimationFrame(dockMeasureFrame);
+   dockMeasureFrame=requestAnimationFrame(syncDockLiquid);
+  };
+  const dockObserver=new ResizeObserver(scheduleDockMeasure);
+  const dock=$('iosDock');
+  if(dock){
+   dockObserver.observe(dock);
+   dock.querySelectorAll('.dock-item').forEach(item=>dockObserver.observe(item));
+  }
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(scheduleDockMeasure).catch(()=>{});
+ }
 })();
 
 function syncViewChrome(id){
