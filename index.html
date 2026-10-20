@@ -1359,6 +1359,47 @@ html[data-solara-theme="dark"] .field textarea::placeholder{
   opacity:1!important;
 }
 </style>
+
+<style id="solara-grade-field-layout-fix">
+/* Keep the class selector and its helper text fully visible in both themes. */
+#teacherGrade,
+#studentGrade,
+.field select#teacherGrade,
+.field select#studentGrade {
+  box-sizing: border-box !important;
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 54px !important;
+  height: auto !important;
+  padding: 13px 15px !important;
+  line-height: 1.45 !important;
+  text-align: left !important;
+  vertical-align: middle !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+}
+.form .field.class-field,
+.form .field:has(#teacherGrade) {
+  min-width: 0;
+  height: auto;
+  align-content: start;
+}
+.form .field.class-field .field-help,
+.form .field:has(#teacherGrade) .hint {
+  display: block;
+  max-width: 100%;
+  margin: 8px 0 0;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+#teacherGrade option,
+#studentGrade option {
+  line-height: 1.4;
+}
+</style>
+
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
