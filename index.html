@@ -1327,14 +1327,15 @@ function showView(id){
   overlay.classList.remove('is-running');
   void overlay.offsetWidth;
   overlay.classList.add('is-running');
-  solaraWaveTimer=setTimeout(applyView,310);
+  const waveDuration=window.matchMedia("(max-width:640px)").matches?720:820;
+  solaraWaveTimer=setTimeout(applyView,Math.round(waveDuration*.5));
   solaraWaveCleanupTimer=setTimeout(()=>{
    overlay.classList.remove('is-running');
    overlay.style.animation='none';
    overlay.style.opacity='0';
    overlay.style.visibility='hidden';
    requestAnimationFrame(()=>{overlay.style.animation='';overlay.style.opacity='';overlay.style.visibility='';});
-  },680);
+  },waveDuration+120);
   return;
  }
  if(overlay){
