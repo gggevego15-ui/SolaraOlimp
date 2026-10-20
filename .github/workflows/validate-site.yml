@@ -1,0 +1,56 @@
+name: Validate Solara Olimp
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Extract inline JavaScript
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          html = Path("index.html").read_text(encoding="utf-8")
+          scripts = re.findall(r"<script\\b[^>]*>([\\s\\S]*?)</script\\s*>", html, re.I)
+          if not scripts:
+              raise SystemExit("No inline JavaScript found in index.html")
+          Path("/tmp/solara-inline.js").write_text("\\n".join(scripts), encoding="utf-8")
+          print(f"Extracted {len(scripts)} inline script block(s)")
+          PY
+      - name: Check JavaScript syntax
+        run: node --check /tmp/solara-inline.js
+      - name: Check quiz review features
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html = Path("index.html").read_text(encoding="utf-8")
+          required = [
+              'id="resultInsights"',
+              'id="reviewFilters"',
+              'data-review-filter="incorrect"',
+              'data-review-filter="unanswered"',
+              "function explainMistake(",
+              "function renderResultInsights(",
+              "function applyReviewFilter(",
+          ]
+          missing = [item for item in required if item not in html]
+          if missing:
+              raise SystemExit("Missing quiz review features: " + ", ".join(missing))
+          print("Quiz review UI and explanation functions are present")
+          PY
