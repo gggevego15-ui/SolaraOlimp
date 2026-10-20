@@ -549,6 +549,7 @@ html[data-solara-theme="dark"] .field .hint{color:#b7bfdc!important}
 .notes-hint{font-size:12px;color:var(--muted);margin:9px 2px 0}
 html[data-solara-theme="dark"] .question-notes{background:linear-gradient(145deg,rgba(31,35,56,.9),rgba(20,23,39,.86));border-color:rgba(255,255,255,.13)}
 html[data-solara-theme="dark"] .notes-tool{background:rgba(255,255,255,.08);color:#f2f4ff;border-color:rgba(255,255,255,.15)}
+html[data-solara-theme="dark"] #notesText{background:rgba(255,255,255,.055)!important;color:#f2f4ff!important;border-color:rgba(255,255,255,.17)!important}html[data-solara-theme="dark"] #notesText::placeholder{color:#aab2d0!important}
 html[data-solara-theme="dark"] .notes-hint{color:#b7bfdc}
 @media(max-width:520px){.question-notes{padding:12px;border-radius:18px}#notesCanvas{height:185px}.notes-tools{width:100%}.notes-tool{flex:1;padding:7px 8px}}
 @media(prefers-reduced-motion:reduce){.notes-tool{transition:none}}
@@ -1220,7 +1221,7 @@ html[data-solara-theme="dark"] .field input:disabled{
   <button type="button" class="notes-tool" id="notesEraser" aria-pressed="false" title="Стирать отдельные линии">⌫ Ластик</button>
   <button type="button" class="notes-tool" id="notesClear" title="Очистить заметки этой задачи">Очистить</button>
  </div></div>
- <canvas id="notesCanvas" width="1000" height="260" aria-label="Поле для рукописных заметок" role="img"></canvas>
+ <label class="notes-title" for="notesText" style="display:block;margin:12px 0 8px">Текстовые заметки</label><textarea id="notesText" rows="3" placeholder="Пиши вычисления, формулы и идеи…" style="display:block;width:100%;resize:vertical;padding:12px 14px;border:1px solid rgba(125,139,183,.28);border-radius:13px;background:rgba(255,255,255,.72);color:var(--ink);font:inherit;line-height:1.5;outline-offset:3px"></textarea><canvas id="notesCanvas" width="1000" height="260" aria-label="Поле для рукописных заметок" role="img"></canvas>
  <div class="notes-hint">На компьютере рисуй мышью, на телефоне — пальцем. Цвета: только красный и чёрный.</div>
 </div>
 <div class="quiz-actions"><button class="secondary" id="prevQuestion">← Назад</button><button class="primary" id="nextQuestion">Следующая задача →</button></div>
@@ -1722,6 +1723,7 @@ const notesCanvas=$("notesCanvas");
 let notesColor="#e53945",notesErasing=false,notesDrawing=false,notesLast=null,notesContext=notesCanvas?.getContext("2d");
 function notesStorageKey(){return "solara-notes:"+String(session?.code||"session")+":"+String(session?.studentName||"student")+":"+String(session?.index??0)}
 function setupNotesCanvas(){
+ const textArea=$("notesText");if(textArea){try{textArea.value=localStorage.getItem(notesStorageKey()+":text")||""}catch(_){textArea.value=""}textArea.oninput=()=>{try{localStorage.setItem(notesStorageKey()+":text",textArea.value)}catch(_){}}}
  if(!notesCanvas||!notesContext)return;
  notesContext.lineCap="round";notesContext.lineJoin="round";
  const key=notesStorageKey();let saved=null;try{saved=localStorage.getItem(key)}catch(_){}
@@ -1734,7 +1736,7 @@ function setNotesTool(color,eraser){notesColor=color;notesErasing=eraser;$("note
 $("notesRed")?.addEventListener("click",()=>setNotesTool("#e53945",false));
 $("notesBlack")?.addEventListener("click",()=>setNotesTool("#161616",false));
 $("notesEraser")?.addEventListener("click",()=>setNotesTool(notesColor,true));
-$("notesClear")?.addEventListener("click",()=>{if(!notesCanvas||!notesContext)return;notesContext.clearRect(0,0,notesCanvas.width,notesCanvas.height);try{localStorage.removeItem(notesStorageKey())}catch(_){}});
+$("notesClear")?.addEventListener("click",()=>{if(!notesCanvas||!notesContext)return;notesContext.clearRect(0,0,notesCanvas.width,notesCanvas.height);try{localStorage.removeItem(notesStorageKey());localStorage.removeItem(notesStorageKey()+":text")}catch(_){}const textArea=$("notesText");if(textArea)textArea.value="";});
 notesCanvas?.addEventListener("pointerdown",e=>{if(!session||!notesContext)return;notesDrawing=true;notesLast=notesPoint(e);notesCanvas.setPointerCapture?.(e.pointerId);notesContext.beginPath();notesContext.moveTo(notesLast.x,notesLast.y);notesContext.globalCompositeOperation=notesErasing?"destination-out":"source-over";notesContext.strokeStyle=notesColor;notesContext.lineWidth=notesErasing?24:4.5;notesContext.lineTo(notesLast.x+.1,notesLast.y+.1);notesContext.stroke();e.preventDefault()});
 notesCanvas?.addEventListener("pointermove",e=>{if(!notesDrawing||!notesContext)return;const p=notesPoint(e);notesContext.globalCompositeOperation=notesErasing?"destination-out":"source-over";notesContext.strokeStyle=notesColor;notesContext.lineWidth=notesErasing?24:4.5;notesContext.beginPath();notesContext.moveTo(notesLast.x,notesLast.y);notesContext.lineTo(p.x,p.y);notesContext.stroke();notesLast=p;e.preventDefault()});
 function finishNotesDrawing(){if(!notesDrawing)return;notesDrawing=false;notesLast=null;if(notesContext)notesContext.globalCompositeOperation="source-over";saveNotesCanvas()}
