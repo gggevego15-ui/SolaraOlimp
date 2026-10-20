@@ -579,7 +579,7 @@ async function finishQuiz(timeUp){
   $("resultList").replaceChildren();
   session.tasks.forEach((q,i)=>{
    const isCorrect=session.answers[i]===correct[i];
-   const review=document.createElement("details");review.className="review-card"+(isCorrect?" review-correct":" review-incorrect");review.style.setProperty("--review-delay",(i*45)+"ms");
+   const review=document.createElement("details");review.className="review-card"+(isCorrect?" review-correct":session.answers[i]===null?" review-unanswered":" review-incorrect");review.style.setProperty("--review-delay",(i*45)+"ms");
    const summary=document.createElement("summary");summary.className="review-summary";
    const number=document.createElement("span");number.className="review-number";number.textContent=String(i+1).padStart(2,"0");
    const title=document.createElement("span");title.className="review-title";title.textContent=q.t;
