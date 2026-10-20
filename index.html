@@ -1000,6 +1000,67 @@ html[data-solara-theme="dark"] .role:hover .role-icon{background:#2a3140!importa
 @media(prefers-reduced-motion:reduce){::view-transition-group(solara-screen),::view-transition-old(solara-screen),::view-transition-new(solara-screen){animation:none!important}}
 </style>
 
+
+<style id="solara-liquid-glass-transition-optimization">
+/* Liquid Glass wave: preserve the premium look while animating compositor transforms. */
+.wave-ribbon{bottom:-124vh;will-change:auto;transform:translate3d(0,0,0)}
+.wave-ribbon-front{bottom:-130vh}
+.wave-glint{bottom:-2px;will-change:auto}
+.solara-liquid-wave-overlay.is-running .wave-ribbon,
+.solara-liquid-wave-overlay.is-running .wave-glint{will-change:transform,opacity}
+.solara-liquid-wave-overlay.is-running .wave-ribbon-back{animation-name:solara-wave-back-gpu}
+.solara-liquid-wave-overlay.is-running .wave-ribbon-front{animation-name:solara-wave-front-gpu}
+.solara-liquid-wave-overlay.is-running .wave-glint{animation-name:solara-wave-glint-gpu}
+@keyframes solara-wave-back-gpu{
+  0%{transform:translate3d(-4%,0,0) rotate(-2deg)}
+  32%{transform:translate3d(2%,-76vh,0) rotate(1.5deg)}
+  52%{transform:translate3d(-1%,-112vh,0) rotate(-.7deg)}
+  74%{transform:translate3d(2%,-158vh,0) rotate(1deg)}
+  100%{transform:translate3d(-3%,-248vh,0) rotate(-1deg)}
+}
+@keyframes solara-wave-front-gpu{
+  0%{transform:translate3d(5%,0,0) rotate(2deg)}
+  30%{transform:translate3d(-2%,-68vh,0) rotate(-1.2deg)}
+  48%{transform:translate3d(1%,-122vh,0) rotate(.8deg)}
+  70%{transform:translate3d(-2%,-172vh,0) rotate(-1deg)}
+  100%{transform:translate3d(4%,-260vh,0) rotate(1.5deg)}
+}
+@keyframes solara-wave-glint-gpu{
+  0%{transform:translate3d(0,0,0);opacity:0}
+  26%{transform:translate3d(0,-10vh,0);opacity:.1}
+  47%{transform:translate3d(0,-93vh,0);opacity:1}
+  65%{transform:translate3d(0,-114vh,0);opacity:.8}
+  100%{transform:translate3d(0,-127vh,0);opacity:0}
+}
+.solara-liquid-wave-overlay.is-running .wave-ribbon-front{
+  border-top:1px solid rgba(255,255,255,.72);
+  box-shadow:0 -2px 0 rgba(255,255,255,.66),0 -18px 48px rgba(162,186,255,.24),inset 0 2px 0 rgba(255,255,255,.72),inset 0 14px 28px rgba(255,255,255,.10);
+}
+@media(max-width:640px){
+  .wave-ribbon-back{filter:blur(4px)}
+  .wave-ribbon-front{-webkit-backdrop-filter:blur(2px) saturate(125%);backdrop-filter:blur(2px) saturate(125%)}
+}
+.low-power .wave-ribbon{filter:none!important}
+.low-power .wave-ribbon-front{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.low-power .wave-ribbon-back{box-shadow:0 -8px 22px rgba(153,178,255,.16)}
+@media(prefers-reduced-transparency:reduce){
+  .wave-ribbon-front{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:linear-gradient(165deg,rgba(255,255,255,.92),rgba(191,211,255,.82) 45%,rgba(213,197,255,.72))}
+}
+@media(prefers-reduced-motion:reduce){
+  .solara-liquid-wave-overlay,.solara-liquid-wave-overlay.is-running,.wave-ribbon,.wave-glint{display:none!important;animation:none!important;will-change:auto!important}
+}
+</style>
+<script id="solara-adaptive-performance">
+(()=>{
+ const root=document.documentElement;
+ const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+ const constrained=(Number(navigator.deviceMemory)>0&&Number(navigator.deviceMemory)<=4)
+   ||(Number(navigator.hardwareConcurrency)>0&&Number(navigator.hardwareConcurrency)<=4)
+   ||!!(connection&&connection.saveData);
+ if(constrained)root.classList.add('low-power');
+})();
+</script>
+
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
