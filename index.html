@@ -1164,7 +1164,7 @@ html[data-solara-theme="dark"] .field input:disabled{
 <section class="panel glass hidden" id="studentView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> КАБИНЕТ УЧЕНИКА</div><button class="back" data-home>← Назад</button></div>
 <h1>Готов к вызову?</h1><p class="lead">Выбери предмет и введи код от учителя. После старта у тебя будет 60 минут на 10 задач.</p>
-<form class="form" id="joinForm"><div class="field"><label for="studentName">ТВОЁ ИМЯ</label><input id="studentName" autocomplete="name" maxlength="40" minlength="2" placeholder="Например, Аня Иванова" required></div><div class="field"><label for="studentGrade">ТВОЙ КЛАСС — ВЫБЕРИ КАК В КОДЕ ОТ УЧИТЕЛЯ</label><select id="studentGrade" required><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div><div class="field"><label for="studentSubject">ПРЕДМЕТ</label><select id="studentSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option><option value="geography">География</option><option value="history">История</option><option value="chemistry">Химия</option></select></div><div class="field"><label for="studentCode">КОД ЗАНЯТИЯ</label><input id="studentCode" autocomplete="off" maxlength="8" placeholder="Например, M4K8Q2" required></div><button class="primary" type="submit">Проверить код и начать ↗</button><p class="hint">Имя появится в кабинете учителя рядом с результатом. Таймер запускается при начале занятия.</p></form>
+<form class="form" id="joinForm"><div class="field"><label for="studentName">ТВОЁ ИМЯ</label><input id="studentName" autocomplete="name" maxlength="40" minlength="2" placeholder="Например, Аня Иванова" required></div><div class="field"><label for="studentGrade">ТВОЙ КЛАСС — ВЫБЕРИ КАК В КОДЕ ОТ УЧИТЕЛЯ</label><select id="studentGrade" required><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div><div class="field"><label for="studentSubject">ПРЕДМЕТ</label><select id="studentSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option><option value="geography">География</option><option value="history">История</option><option value="chemistry">Химия</option></select></div><div class="field"><label for="studentCode">КОД ЗАНЯТИЯ</label><input id="studentCode" autocomplete="off" maxlength="6" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="Например, M4K8Q2" aria-describedby="joinStatus" required></div><button class="primary" type="submit">Проверить код и начать ↗</button><p class="hint" id="joinStatus" role="status" aria-live="polite" style="display:none;color:var(--blue);font-weight:650"></p><p class="hint">Имя появится в кабинете учителя рядом с результатом. Таймер запускается при начале занятия.</p></form>
 </section>
 <section class="panel glass hidden" id="quizView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> ЗАНЯТИЕ В ПРОЦЕССЕ</div><button class="back" id="quitQuiz">Выйти</button></div>
@@ -1528,6 +1528,7 @@ $("generateCode").addEventListener("click",async()=>{
  try{
   const subject=$("teacherSubject").value,grade=Number($("teacherGrade").value),difficulty=$("teacherDifficulty").value;
   const data=await api("create",{subject,grade,difficulty});
+  if(!/^[MIRPGHC][A-HJ-NP-Z2-9]{5}$/.test(String(data.code||""))||!data.teacherToken)throw new Error("Сервер вернул некорректный код. Обнови страницу и создай занятие ещё раз.");
   currentCode=data.code;currentTeacherToken=data.teacherToken;
   $("generatedCode").textContent=currentCode;
   $("teacherTokenDisplay").textContent=currentTeacherToken;
@@ -1609,14 +1610,17 @@ async function loadOneTeacherSession(item,status,list){
 }
 $("openTeacherDashboard").addEventListener("click",()=>{$("teacherDashboard").classList.toggle("hidden");if(!$("teacherDashboard").classList.contains("hidden"))renderTeacherSessions()});
 $("refreshTeacherDashboard").addEventListener("click",()=>renderTeacherSessions());
-$("studentCode").addEventListener("input",e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"")});
+const joinStatus=$("joinStatus");
+function showJoinStatus(message,isError=false){joinStatus.textContent=message;joinStatus.style.display="block";joinStatus.style.color=isError?"#d94b62":"var(--blue)";}
+$("studentCode").addEventListener("input",e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);joinStatus.style.display="none"});
 $("joinForm").addEventListener("submit",async e=>{
  e.preventDefault();const code=$("studentCode").value.trim().toUpperCase(),subject=$("studentSubject").value,grade=$("studentGrade").value,studentName=$("studentName").value.trim().replace(/\s+/g," "),button=e.submitter||$("joinForm").querySelector("button[type=submit]");
- if(studentName.length<2||studentName.length>40){notify("Имя должно содержать от 2 до 40 символов");return}
- if(code.length!==6){notify("Код должен содержать 6 символов");return}
- button.disabled=true;button.textContent="Проверяем код…";
- try{const data=await api("join",{code,subject,studentName,grade});data.grade=grade;startQuiz(data)}
- catch(error){notify(error.message||"Не удалось подключиться к занятию")}
+ joinStatus.style.display="none";
+ if(studentName.length<2||studentName.length>40){showJoinStatus("Введи имя от 2 до 40 символов.",true);notify("Введи имя от 2 до 40 символов");$("studentName").focus();return}
+ if(!/^[MIRPGHC][A-HJ-NP-Z2-9]{5}$/.test(code)){showJoinStatus("Код должен состоять из 6 символов. Если у учителя показана одна буква или старый код — попроси создать новое занятие.",true);notify("Проверь код: нужно 6 символов");$("studentCode").focus();return}
+ button.disabled=true;button.textContent="Проверяем код…";showJoinStatus("Проверяем код и подключаемся к занятию…");
+ try{const data=await api("join",{code,subject,studentName,grade});if(!Array.isArray(data.tasks)||data.tasks.length!==10||!data.participantToken)throw new Error("Код принят, но сервер не вернул задания. Попроси учителя создать новый код.");data.grade=grade;startQuiz(data)}
+ catch(error){const message=error.message||"Не удалось подключиться к занятию";showJoinStatus(message,true);notify(message)}
  finally{button.disabled=false;button.textContent="Проверить код и начать ↗"}
 });
 function startQuiz(data){
