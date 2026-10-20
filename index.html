@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#edf0ff">
-<meta name="description" content="Solara Olimp — олимпиады по математике, информатике и русскому языку.">
+<meta name="description" content="Solara Olimp — школьные олимпиады по математике, информатике, русскому языку, физике, географии, истории и химии.">
 <title>Solara Olimp — школьные олимпиады</title>
 <style>
 :root{--ink:#202744;--muted:#727d99;--blue:#626ff3;--violet:#9a7bf5;--glass:rgba(255,255,255,.57);--line:rgba(255,255,255,.88);--shadow:0 22px 70px #5d69a51b}
@@ -1035,13 +1035,13 @@ html[data-solara-theme="dark"] .role:hover .role-icon{background:#2a3140!importa
 <div class="form" style="margin-bottom:22px"><button class="secondary" id="openTeacherDashboard">▤ Мои занятия и результаты</button><button class="secondary" id="refreshTeacherDashboard">↻ Обновить</button></div>
 <div id="teacherDashboard" class="hidden" style="margin-bottom:26px"><h2>Мои занятия</h2><p class="hint" id="dashboardStatus">Загрузка…</p><div id="dashboardSessions" style="display:grid;gap:12px"></div></div>
 <h2 style="margin-top:10px">Создать новое занятие</h2><p class="lead">Выбери предмет и создай уникальный код для нового набора задач.</p>
-<div class="form"><div class="field class-field"><label for="teacherGrade">КЛАСС — СНАЧАЛА ВЫБЕРИ КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select><p class="hint field-help">Этот класс будет указан в коде занятия. Ученики должны выбрать тот же класс, когда вводят код.</p></div><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option></select></div><div class="field"><label for="teacherDifficulty">УРОВЕНЬ СЛОЖНОСТИ</label><select id="teacherDifficulty"><option value="basic">Базовый</option><option value="olympiad" selected>Олимпиадный</option><option value="advanced">Продвинутый</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
+<div class="form"><div class="field class-field"><label for="teacherGrade">КЛАСС — СНАЧАЛА ВЫБЕРИ КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select><p class="hint field-help">Этот класс будет указан в коде занятия. Ученики должны выбрать тот же класс, когда вводят код.</p></div><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option><option value="geography">География</option><option value="history">История</option><option value="chemistry">Химия</option></select></div><div class="field"><label for="teacherDifficulty">УРОВЕНЬ СЛОЖНОСТИ</label><select id="teacherDifficulty"><option value="basic">Базовый</option><option value="olympiad" selected>Олимпиадный</option><option value="advanced">Продвинутый</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
 <div class="hidden" id="generated"><div class="code-box"><div><div class="hint">НАСТОЯЩИЙ КОД ЗАНЯТИЯ</div><div class="code" id="generatedCode">—</div></div><button class="secondary" id="copyCode">Копировать код</button></div><div class="meta"><span class="chip" id="generatedSubject">∑ Математика</span><span class="chip" id="generatedGrade">7 класс</span><span class="chip" id="generatedDifficulty">Олимпиадный</span><span class="chip">10 задач</span><span class="chip">60 минут на ученика</span></div><p class="hint">Код сохранён в базе. Все ученики, которые введут его, получат один и тот же набор из 10 задач.</p><div class="field" style="margin-top:18px"><label for="teacherTokenDisplay">СЕКРЕТНЫЙ КЛЮЧ УЧИТЕЛЯ — СОХРАНИ ЕГО</label><div class="code-box"><div class="code" id="teacherTokenDisplay" style="font-size:13px;letter-spacing:0;overflow-wrap:anywhere">—</div><button class="secondary" id="copyTeacherToken">Копировать ключ</button></div><p class="hint">Этот ключ нужен для просмотра результатов. Не отправляй его ученикам.</p></div><button class="secondary" id="showResults" style="margin-top:12px">Посмотреть результаты учеников</button><div class="hidden" id="teacherResults" style="margin-top:16px"></div><button class="primary" id="newCode" style="margin-top:16px">Создать ещё одно занятие</button></div>
 </section>
 <section class="panel glass hidden" id="studentView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> КАБИНЕТ УЧЕНИКА</div><button class="back" data-home>← Назад</button></div>
 <h1>Готов к вызову?</h1><p class="lead">Выбери предмет и введи код от учителя. После старта у тебя будет 60 минут на 10 задач.</p>
-<form class="form" id="joinForm"><div class="field"><label for="studentName">ТВОЁ ИМЯ</label><input id="studentName" autocomplete="name" maxlength="40" minlength="2" placeholder="Например, Аня Иванова" required></div><div class="field"><label for="studentGrade">ТВОЙ КЛАСС — ВЫБЕРИ КАК В КОДЕ ОТ УЧИТЕЛЯ</label><select id="studentGrade" required><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div><div class="field"><label for="studentSubject">ПРЕДМЕТ</label><select id="studentSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option></select></div><div class="field"><label for="studentCode">КОД ЗАНЯТИЯ</label><input id="studentCode" autocomplete="off" maxlength="8" placeholder="Например, M4K8Q2" required></div><button class="primary" type="submit">Проверить код и начать ↗</button><p class="hint">Имя появится в кабинете учителя рядом с результатом. Таймер запускается при начале занятия.</p></form>
+<form class="form" id="joinForm"><div class="field"><label for="studentName">ТВОЁ ИМЯ</label><input id="studentName" autocomplete="name" maxlength="40" minlength="2" placeholder="Например, Аня Иванова" required></div><div class="field"><label for="studentGrade">ТВОЙ КЛАСС — ВЫБЕРИ КАК В КОДЕ ОТ УЧИТЕЛЯ</label><select id="studentGrade" required><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div><div class="field"><label for="studentSubject">ПРЕДМЕТ</label><select id="studentSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option><option value="geography">География</option><option value="history">История</option><option value="chemistry">Химия</option></select></div><div class="field"><label for="studentCode">КОД ЗАНЯТИЯ</label><input id="studentCode" autocomplete="off" maxlength="8" placeholder="Например, M4K8Q2" required></div><button class="primary" type="submit">Проверить код и начать ↗</button><p class="hint">Имя появится в кабинете учителя рядом с результатом. Таймер запускается при начале занятия.</p></form>
 </section>
 <section class="panel glass hidden" id="quizView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> ЗАНЯТИЕ В ПРОЦЕССЕ</div><button class="back" id="quitQuiz">Выйти</button></div>
@@ -1066,7 +1066,35 @@ html[data-solara-theme="dark"] .role:hover .role-icon{background:#2a3140!importa
   <article class="update-entry update-entry-featured">
    <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
    <div class="update-entry-content">
-    <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 0.6.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 0.9.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <h2>Химия — новый предмет</h2>
+    <p>Добавлены занятия по химии: вещества, строение атома, формулы, реакции, растворы, количество вещества и органическая химия. Для занятий доступны три уровня сложности.</p>
+    <ul class="update-fix-list"><li>Добавлены отдельные банки базовых, олимпиадных и продвинутых заданий.</li><li>Коды химии начинаются с C; проверка предмета работает при создании и подключении.</li><li>Химия доступна учителю и ученику.</li></ul>
+    <div class="update-pills"><span>Химия</span><span>Реакции</span><span>0.9.0</span></div>
+   </div>
+  </article>
+  <article class="update-entry">
+   <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
+   <div class="update-entry-content">
+    <div class="update-entry-meta"><span class="update-tag">ВЕРСИЯ 0.8.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <h2>История — новый предмет</h2>
+    <p>Добавлены задания по Древнему миру, Древней Руси, Средневековью, реформам, историческим источникам и событиям XX века.</p>
+    <div class="update-pills"><span>История</span><span>Источники</span><span>Хронология</span></div>
+   </div>
+  </article>
+  <article class="update-entry">
+   <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
+   <div class="update-entry-content">
+    <div class="update-entry-meta"><span class="update-tag">ВЕРСИЯ 0.7.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <h2>География — новый предмет</h2>
+    <p>Добавлены задания по картам, масштабу, материкам, океанам, координатам, климату, рельефу, населению и геоинформационным системам.</p>
+    <div class="update-pills"><span>География</span><span>Карты</span><span>Климат</span></div>
+   </div>
+  </article>
+  <article class="update-entry update-entry-featured">
+   <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
+   <div class="update-entry-content">
+    <div class="update-entry-meta"><span class="update-tag">ВЕРСИЯ 0.6.0</span><time datetime="2026-10-20">20 октября 2026</time></div>
     <h2>Сбалансированная тёмная тема</h2>
     <p>Переработана палитра тёмного режима: выровнена яркость поверхностей, смягчены неоновые акценты и улучшена читаемость текста. Стеклянные панели, кнопки, поля, навигация и журнал теперь используют согласованные оттенки.</p>
     <ul class="update-fix-list"><li>Исправлено: отдельные блоки выглядели слишком яркими или почти чёрными.</li><li>Исправлено: контраст кнопок и вложенных карточек был неравномерным.</li><li>Смягчены иконки «Я учитель» и «Я ученик» в тёмной теме — приглушённые оттенки вместо ярких заливок.</li><li>Улучшено: тёмное оформление окна обновления, журнала и нижней панели.</li><li>Сохранено: Liquid Glass, мягкие градиенты и лёгкие блики без чрезмерного свечения.</li></ul>
@@ -1136,7 +1164,7 @@ html[data-solara-theme="dark"] .role:hover .role-icon{background:#2a3140!importa
  <div class="updates-footer"><span class="updates-footer-mark">✦</span><span>Ты видишь актуальный журнал изменений Solara Olimp.</span></div>
  <div class="updates-actions"><button class="primary" data-home>Вернуться на главную ↗</button></div>
 </section>
-</main><footer class="footer">Solara Olimp · Математика · Информатика · Русский язык · Учись думать шире</footer>
+</main><footer class="footer">Solara Olimp · Математика · Информатика · Русский язык · Физика · География · История · Химия · Учись думать шире</footer>
 </div>
 <nav class="ios-dock" id="iosDock" aria-label="Основная навигация">
  <div class="dock-glow" aria-hidden="true"></div>
@@ -1163,7 +1191,7 @@ setTimeout(()=>{
 const $=id=>document.getElementById(id);
 const API_URL="https://husjlwgohxtatgguzdjm.supabase.co/functions/v1/olimp-api";
 const API_KEY="sb_publishable_iECwhv5Ljl48x8_v6FasJA_W5jwXNtZ";
-function subjectName(subject,upper=false){const names={math:"Математика",info:"Информатика",rus:"Русский язык",physics:"Физика"};const value=names[subject]||"Неизвестный предмет";return upper?value.toLocaleUpperCase("ru-RU"):value;}
+function subjectName(subject,upper=false){const names={math:"Математика",info:"Информатика",rus:"Русский язык",physics:"Физика",geography:"География",history:"История",chemistry:"Химия"};const value=names[subject]||"Неизвестный предмет";return upper?value.toLocaleUpperCase("ru-RU"):value;}
 async function api(action,payload={}){const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":API_KEY},body:JSON.stringify({action,...payload})});let data={};try{data=await response.json()}catch(e){}if(!response.ok)throw new Error(data.error||"Ошибка соединения с сервером");return data;}
 const views=['roleView','teacherView','studentView','quizView','resultView','updatesView'];
 let viewTransitionTimer=0,viewTransitionToken=0;
@@ -1379,7 +1407,7 @@ $("generateCode").addEventListener("click",async()=>{
   currentCode=data.code;currentTeacherToken=data.teacherToken;
   $("generatedCode").textContent=currentCode;
   $("teacherTokenDisplay").textContent=currentTeacherToken;
-  $("generatedSubject").textContent=(subject==="math"?"∑ ":subject==="info"?"⌘ ":subject==="physics"?"⚛ ":"Аа ")+subjectName(subject);
+  $("generatedSubject").textContent=(subject==="math"?"∑ ":subject==="info"?"⌘ ":subject==="physics"?"⚛ ":subject==="geography"?"⌖ ":subject==="history"?"◷ ":subject==="chemistry"?"⚗ ":"Аа ")+subjectName(subject);
   $("generatedGrade").textContent=grade+" класс";
   $("generatedDifficulty").textContent=({basic:"Базовый",olympiad:"Олимпиадный",advanced:"Продвинутый"})[difficulty];
   $("teacherResults").classList.add("hidden");$("teacherResults").replaceChildren();
@@ -1575,10 +1603,10 @@ try{
  const saved=JSON.parse(localStorage.getItem("solara_last_teacher_session")||"null");
  const history=JSON.parse(localStorage.getItem("solara_teacher_sessions")||"[]");
  if(saved&&saved.code&&saved.teacherToken&&Array.isArray(history)&&!history.some(x=>x.code===saved.code)){history.unshift(saved);localStorage.setItem("solara_teacher_sessions",JSON.stringify(history))}
- if(saved&&/^[MIRP][A-HJ-NP-Z2-9]{5}$/.test(saved.code)&&saved.teacherToken){
+ if(saved&&/^[MIRPGHC][A-HJ-NP-Z2-9]{5}$/.test(saved.code)&&saved.teacherToken){
   currentCode=saved.code;currentTeacherToken=saved.teacherToken;
   $("generatedCode").textContent=currentCode;$("teacherTokenDisplay").textContent=currentTeacherToken;
-  $("generatedSubject").textContent=(saved.subject==="math"?"∑ ":saved.subject==="info"?"⌘ ":saved.subject==="physics"?"⚛ ":"Аа ")+subjectName(saved.subject);
+  $("generatedSubject").textContent=(saved.subject==="math"?"∑ ":saved.subject==="info"?"⌘ ":saved.subject==="physics"?"⚛ ":saved.subject==="geography"?"⌖ ":saved.subject==="history"?"◷ ":saved.subject==="chemistry"?"⚗ ":"Аа ")+subjectName(saved.subject);
   $("teacherSubject").value=saved.subject;$("teacherGrade").value=String(saved.grade||7);$("generatedGrade").textContent=(saved.grade||7)+" класс";$("generated").classList.remove("hidden");
  }
 }catch(e){}
