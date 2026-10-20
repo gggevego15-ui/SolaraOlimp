@@ -526,6 +526,39 @@ html[data-solara-theme="dark"] .ios-dock .dock-liquid:before{background:radial-g
 html.low-power .ios-dock .dock-liquid:after{filter:none}
 @media(prefers-reduced-motion:reduce){.ios-dock .dock-liquid,.ios-dock .dock-liquid:after{transition:none!important}}
 @media(max-width:650px){.ios-dock .dock-liquid{border-radius:18px!important}}
+
+
+
+/* App-like page transitions: coordinated slide, glass blur and spring settle */
+@keyframes solara-screen-enter-forward{
+ 0%{opacity:0;transform:translate3d(34px,8px,0) scale(.975);filter:blur(9px)}
+ 65%{opacity:1;transform:translate3d(-3px,0,0) scale(1.003);filter:blur(1px)}
+ 100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+}
+@keyframes solara-screen-enter-backward{
+ 0%{opacity:0;transform:translate3d(-34px,8px,0) scale(.975);filter:blur(9px)}
+ 65%{opacity:1;transform:translate3d(3px,0,0) scale(1.003);filter:blur(1px)}
+ 100%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+}
+@keyframes solara-screen-exit-forward{
+ 0%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+ 100%{opacity:0;transform:translate3d(-24px,-3px,0) scale(.985);filter:blur(6px)}
+}
+@keyframes solara-screen-exit-backward{
+ 0%{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+ 100%{opacity:0;transform:translate3d(24px,-3px,0) scale(.985);filter:blur(6px)}
+}
+.panel.solara-page-enter.solara-page-forward{z-index:2;animation:solara-screen-enter-forward .34s cubic-bezier(.2,.8,.2,1) both!important;will-change:transform,opacity,filter}
+.panel.solara-page-enter.solara-page-backward{z-index:2;animation:solara-screen-enter-backward .34s cubic-bezier(.2,.8,.2,1) both!important;will-change:transform,opacity,filter}
+.panel.solara-page-exit.solara-page-forward{z-index:1;animation:solara-screen-exit-forward .22s cubic-bezier(.4,0,1,1) both!important;pointer-events:none;will-change:transform,opacity,filter}
+.panel.solara-page-exit.solara-page-backward{z-index:1;animation:solara-screen-exit-backward .22s cubic-bezier(.4,0,1,1) both!important;pointer-events:none;will-change:transform,opacity,filter}
+@media(prefers-reduced-motion:reduce){
+ .panel.solara-page-enter,.panel.solara-page-exit{animation:none!important;filter:none!important;transform:none!important;will-change:auto!important}
+}
+@media(max-width:650px){
+ .panel.solara-page-enter.solara-page-forward,.panel.solara-page-enter.solara-page-backward{animation-duration:.29s!important}
+ .panel.solara-page-exit.solara-page-forward,.panel.solara-page-exit.solara-page-backward{animation-duration:.18s!important}
+}
 </style>
 </head>
 <body>
@@ -700,16 +733,32 @@ function showView(id){
  const token=++viewTransitionToken;
  clearTimeout(viewTransitionTimer);
  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- const switchView=()=>{
+ const current=currentId?$(currentId):null;
+ const backwards=currentId&&views.indexOf(id)<views.indexOf(currentId);
+ const cleanup=()=>{
   if(token!==viewTransitionToken)return;
-  views.forEach(v=>{const panel=$(v);panel.classList.remove('is-leaving');panel.classList.toggle('hidden',v!==id)});
+  views.forEach(v=>{
+   const panel=$(v);
+   panel.classList.remove('is-leaving','solara-page-exit','solara-page-enter','solara-page-forward','solara-page-backward');
+   panel.classList.toggle('hidden',v!==id);
+  });
   syncViewChrome(id);
-  window.scrollTo({top:0,behavior:reduced?'auto':'smooth'});
  };
- if(!currentId||reduced){switchView();return}
- const current=$(currentId);
- current.classList.add('is-leaving');
- viewTransitionTimer=setTimeout(switchView,125);
+ if(!current||reduced){
+  cleanup();
+  window.scrollTo({top:0,behavior:'auto'});
+  return;
+ }
+ // Exit and entrance run together so the screen feels like a real app, not a delayed swap.
+ views.forEach(v=>{const panel=$(v);panel.classList.remove('solara-page-exit','solara-page-enter','solara-page-forward','solara-page-backward','is-leaving');if(v!==id&&v!==currentId)panel.classList.add('hidden')});
+ incoming.classList.remove('hidden');
+ const direction=backwards?'solara-page-backward':'solara-page-forward';
+ current.classList.add('solara-page-exit',direction);
+ incoming.classList.add('solara-page-enter',direction);
+ syncViewChrome(id);
+ requestAnimationFrame(syncDockLiquid);
+ window.scrollTo({top:0,behavior:'smooth'});
+ viewTransitionTimer=setTimeout(cleanup,360);
 }
 let toastTimer;function notify(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2600)}
 document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',()=>{if(session&&!session.finished&&!confirm('Выйти из занятия? Текущий прогресс будет потерян.'))return;session=null;showView('roleView')}));
