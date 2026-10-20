@@ -262,6 +262,7 @@ body:before,body:after{filter:blur(12px);opacity:.45;mix-blend-mode:normal;will-
 @keyframes review-in-lite{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:650px){:root{--glass-blur:12px}.top,.glass,.panel,.role,.code-box,.chip,.result-row,.review-card,.field input,.field select,.answer,.question-jump,.timer,.eyebrow{backdrop-filter:blur(12px) saturate(145%);-webkit-backdrop-filter:blur(12px) saturate(145%)}body:before,body:after{filter:blur(8px);opacity:.32}.role-grid .role{animation:none}}
 @media(prefers-reduced-motion:reduce){body:before,body:after,.logo,.dot,.role-grid .role{animation:none!important}.panel,.review-card{animation:none!important}.panel,.role,.primary,.secondary,.back,.answer,.question-jump,.code-box,.result-row{transition:none!important}}
+.result-insights{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0 8px}.insight-card{padding:15px 14px;border:1px solid rgba(255,255,255,.86);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.72),rgba(255,255,255,.32));box-shadow:inset 0 1px 0 white,0 8px 24px rgba(70,82,140,.045)}.insight-value{display:block;font-size:clamp(20px,3vw,28px);font-weight:900;letter-spacing:-1px}.insight-label{display:block;margin-top:4px;color:var(--muted);font-size:11px;font-weight:750}.insight-card.good .insight-value{color:#199b70}.insight-card.bad .insight-value{color:#d65c73}.topic-insight{grid-column:1/-1;padding:13px 15px;border-radius:16px;background:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.8);font-size:12px;line-height:1.7;color:#515d7e}.topic-insight strong{color:var(--ink)}.review-filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.review-filter{border:1px solid rgba(255,255,255,.9);background:rgba(255,255,255,.45);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:12px;font-weight:800;transition:all .2s ease}.review-filter:hover{transform:translateY(-1px);background:rgba(255,255,255,.8)}.review-filter.active{color:#fff;background:linear-gradient(120deg,#6878ef,#9a7bf5);border-color:transparent;box-shadow:0 7px 18px rgba(98,111,243,.2)}.review-error-note{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(255,226,231,.48);border:1px solid rgba(235,145,160,.28);font-size:12px;line-height:1.7;color:#784b5b}.review-error-note strong{display:block;margin-bottom:4px;color:#a34159}.review-correct-note{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(207,248,230,.42);border:1px solid rgba(96,203,158,.2);font-size:12px;line-height:1.7;color:#386a58}@media(max-width:560px){.result-insights{grid-template-columns:repeat(2,minmax(0,1fr))}.insight-card{padding:13px}.review-filters{gap:6px}.review-filter{padding:8px 10px}}@media(prefers-reduced-motion:reduce){.review-filter{transition:none}}
 </style>
 </head>
 <body>
@@ -301,7 +302,7 @@ body:before,body:after{filter:blur(12px);opacity:.45;mix-blend-mode:normal;will-
 <p class="hint">Можно открывать любые задачи в любом порядке. Выбранные ответы остаются только в этой попытке и отправляются при завершении олимпиады.</p>
 </section>
 <section class="panel glass hidden" id="resultView">
-<div class="eyebrow"><span class="dot"></span> ЗАНЯТИЕ ЗАВЕРШЕНО</div><h1>Хорошая работа!</h1><p class="lead" id="resultLead">Вот твой результат.</p><div class="result-score" id="scoreDisplay">0 / 10</div><div class="meta"><span class="chip" id="resultSubject">Математика</span><span class="chip" id="resultTime">Время: —</span></div><div class="review-toolbar"><span>РАЗБОР ОТВЕТОВ</span><button type="button" class="secondary" id="toggleReview">Раскрыть все ↕</button></div><div class="result-list" id="resultList"></div><div style="margin-top:25px"><button class="primary" data-home>На главную ↗</button></div></section>
+<div class="eyebrow"><span class="dot"></span> ЗАНЯТИЕ ЗАВЕРШЕНО</div><h1>Хорошая работа!</h1><p class="lead" id="resultLead">Вот твой результат.</p><div class="result-score" id="scoreDisplay">0 / 10</div><div class="meta"><span class="chip" id="resultSubject">Математика</span><span class="chip" id="resultTime">Время: —</span></div><div class="result-insights" id="resultInsights" aria-live="polite"></div><div class="review-toolbar"><span>РАЗБОР ОТВЕТОВ</span><button type="button" class="secondary" id="toggleReview">Раскрыть все ↕</button></div><div class="review-filters" id="reviewFilters" role="group" aria-label="Фильтр разбора"><button type="button" class="review-filter active" data-review-filter="all">Все задачи</button><button type="button" class="review-filter" data-review-filter="incorrect">Ошибки</button><button type="button" class="review-filter" data-review-filter="unanswered">Пропуски</button></div><div class="result-list" id="resultList"></div><div style="margin-top:25px"><button class="primary" data-home>На главную ↗</button></div></section>
 </main><footer class="footer">Solara Olimp · Математика · Информатика · Русский язык · Учись думать шире</footer>
 </div>
 <nav class="ios-dock" id="iosDock" aria-label="Основная навигация">
@@ -504,36 +505,58 @@ $('prevQuestion').addEventListener('click',()=>{if(session&&session.index>0){ses
 $('nextQuestion').addEventListener('click',()=>{if(!session)return;if(session.index<9){session.index++;renderQuestion()}else if(confirm('Завершить занятие и посмотреть результат?'))finishQuiz(false)});
 $('quitQuiz').addEventListener('click',()=>{if(confirm('Выйти и завершить занятие сейчас?'))finishQuiz(false)});
 
-function explainTask(q){
- const question=String(q.q||"").toLowerCase(),topic=String(q.t||"").toLowerCase(),answer=q.a[q.c];
- if(/\d+\s*[:÷/]\s*\d+\s*\+/.test(question)) return "Сначала выполняем деление, затем сложение. Соблюдай порядок действий.";
- if(/процент|%/.test(topic+" "+question)) return "Чтобы найти процент от числа, умножь число на процент и раздели на 100. Если речь о скидке или увеличении, отдельно учти изменение.";
- if(/дроб/.test(topic+" "+question)) return "Сократи дробь или найди нужную часть числа: раздели целое на знаменатель и умножь на числитель.";
- if(/уравнен|x\s*[−+*/=]|найди x|чему равно x/.test(topic+" "+question)) return "Выполни одинаковые обратные действия с обеими частями уравнения, чтобы оставить неизвестную отдельно, затем проверь подстановкой.";
- if(/периметр/.test(topic+" "+question)) return "Периметр — сумма длин всех сторон. У прямоугольника можно сложить все четыре стороны или использовать формулу P = 2(a + b).";
- if(/площад/.test(topic+" "+question)) return "Для площади прямоугольника умножь длину на ширину. Не путай площадь в квадратных единицах с периметром.";
- if(/угл|треугольник|геометр|диагонал|пятиугольник|шестиугольник|гипотенуз|пифагор/.test(topic+" "+question)) return "Используй свойство соответствующей геометрической фигуры и проверь, что вычисления согласуются с условием.";
- if(/последовательност|закономерност/.test(topic+" "+question)) return "Сравни соседние элементы: найди повторяющуюся разность, множитель или другое правило, затем примени его к следующему элементу.";
- if(/двоич|₂|бит|систем.*счислен/.test(topic+" "+question)) return "В двоичной системе разряды соответствуют степеням двойки: справа налево это 1, 2, 4, 8, 16 и далее. Сложи веса разрядов, где стоит 1.";
- if(/граф|вершин|рёбер|ребер|дейкстр|крускал|тополог/.test(topic+" "+question)) return "Рассмотри структуру графа и условия задачи: вершины обозначают объекты, а рёбра — связи. Выбирай алгоритм по тому, что требуется найти.";
- if(/сложност|o\(|бинарн.*поиск|линейн.*поиск/.test(topic+" "+question)) return "Оцени, как растёт число операций при увеличении размера входных данных. Линейный проход обычно имеет O(n), а деление диапазона пополам — O(log n).";
- if(/сортиров/.test(topic+" "+question)) return "Сортировка упорядочивает элементы по выбранному правилу. Сначала проверь результат, затем вспомни характерную сложность используемого алгоритма.";
- if(/цикл|range\(|повтор/.test(topic+" "+question)) return "Посчитай все итерации цикла по его границам. В Python правая граница range не включается.";
- if(/стек|очередь|lifo|fifo/.test(topic+" "+question)) return "Стек работает по принципу LIFO: последним пришёл — первым вышел. Очередь работает по FIFO: первым пришёл — первым вышел.";
- if(/логик|true|false|импликац|xor|and| or |not /.test(topic+" "+question)) return "Проверь логическое выражение по определению операции: AND требует истинности обоих условий, OR — хотя бы одного, NOT меняет значение на противоположное.";
- if(/комбинатор|способ|перестанов|сочетан/.test(topic+" "+question)) return "Определи, важен ли порядок и разрешены ли повторы. Для перестановок n разных объектов количество вариантов равно n!, а для последовательного выбора перемножают числа доступных вариантов.";
- if(/среднее/.test(topic+" "+question)) return "Среднее арифметическое получается так: сложи все значения и раздели сумму на количество значений.";
- if(/делим|делится|остаток|нод|нoд|делител|простое число/.test(topic+" "+question)) return "Проверь делимость или разложи числа на множители. Для остатка используй деление с остатком; для простого числа проверь, что у него ровно два положительных делителя.";
- if(/производн/.test(topic+" "+question)) return "Примени правило производной к каждому слагаемому. Например, производная xⁿ равна n·xⁿ⁻¹.";
- if(/интеграл/.test(topic+" "+question)) return "Найди первообразную, а затем подставь верхний и нижний пределы и вычти нижнее значение из верхнего.";
- if(/алгоритм/.test(topic+" "+question)) return "Алгоритм — конечная последовательность точных шагов. Проследи выполнение по порядку и проверь, приводит ли оно к требуемому результату.";
- return "Правильный ответ: «"+answer+"». Сопоставь его с условием, выдели ключевое правило и проверь, почему остальные варианты ему не соответствуют.";
+function explainTask(q,correctIndex=q.c){
+ const question=String(q.q||""),lower=question.toLocaleLowerCase("ru-RU"),topic=String(q.t||"").toLocaleLowerCase("ru-RU"),answer=q.a[correctIndex];let m;
+ if((m=question.match(/(\d+)\s*[:÷/]\s*(\d+)\s*\+\s*(\d+)/))){const value=Number(m[1])/Number(m[2])+Number(m[3]);return "Сначала деление: "+m[1]+" ÷ "+m[2]+" = "+(Number(m[1])/Number(m[2]))+", затем сложение. Результат: "+value+"."}
+ if((m=question.match(/(\d+)\s*[%％]\s*от\s*(\d+)/i))){const value=Number(m[1])*Number(m[2])/100;return "Находим процент: "+m[2]+" × "+m[1]+" / 100 = "+value+". Поэтому правильный результат — "+answer+"."}
+ if((m=question.match(/(\d+)\s*\/\s*(\d+)\s*от\s*числа\s*(\d+)/i))){const value=Number(m[3])/Number(m[2])*Number(m[1]);return "Делим целое на знаменатель и умножаем на числитель: "+m[3]+" ÷ "+m[2]+" × "+m[1]+" = "+value+"."}
+ if((m=question.match(/(\d+)\s*[×*]\s*(\d+)\s*[−-]\s*(\d+)/))){const value=Number(m[1])*Number(m[2])-Number(m[3]);return "Сначала умножение: "+m[1]+" × "+m[2]+" = "+(Number(m[1])*Number(m[2]))+". Затем вычитание: "+(Number(m[1])*Number(m[2]))+" − "+m[3]+" = "+value+"."}
+ if((m=question.match(/(\d+)x\s*\+\s*(\d+)\s*=\s*(\d+)/i))){const value=(Number(m[3])-Number(m[2]))/Number(m[1]);return "Переносим свободное число: "+m[1]+"x = "+(Number(m[3])-Number(m[2]))+". Делим обе части на "+m[1]+": x = "+value+". Проверка — подстановка в исходное равенство."}
+ if((m=question.match(/x\s*−\s*(\d+)\s*=\s*(\d+)/i))){return "Прибавляем "+m[1]+" к обеим частям: x = "+m[2]+" + "+m[1]+" = "+(Number(m[1])+Number(m[2]))+"."}
+ if((m=question.match(/периметр\s+квадрата\s+со\s+стороной\s*(\d+)/i)))return "У квадрата четыре равные стороны: P = 4a = 4 × "+m[1]+" = "+(4*Number(m[1]))+".";
+ if(/сумма\s+углов\s+треугольника/i.test(lower))return "Сумма внутренних углов любого плоского треугольника равна 180°. Поэтому ответ — "+answer+".";
+ if(/101₂/i.test(question))return "В записи 101₂ веса разрядов справа налево равны 1, 2 и 4: 1×4 + 0×2 + 1×1 = 5.";
+ if(/true\s+and\s+false/.test(lower))return "AND даёт true только тогда, когда оба значения истинны. Здесь одно значение false, значит результат false.";
+ if(/not\s+true/.test(lower))return "NOT меняет логическое значение на противоположное: NOT true = false.";
+ if(/длина строки/.test(lower)){const quoted=question.match(/["«]([^"»]+)["»]/);if(quoted)return "Длина строки — число символов. В строке «"+quoted[1]+"» "+Array.from(quoted[1]).length+" символа."}
+ if(/двоич|₂|бит|систем.*счислен/.test(topic+" "+lower))return "Каждый разряд двоичной записи имеет вес — степень двойки, начиная справа с 1. Сложи веса разрядов, где стоит 1.";
+ if(/процент|%/.test(topic+" "+lower))return "Чтобы найти процент от числа, умножь число на процент и раздели на 100. Проверь вычисление обратным действием.";
+ if(/дроб/.test(topic+" "+lower))return "Чтобы найти часть числа по дроби, раздели целое на знаменатель и умножь на числитель. Для сравнения дробей приведи их к общему знаменателю.";
+ if(/уравнен|найди x|чему равно x/.test(topic+" "+lower))return "Выполни обратные действия с обеими частями уравнения, затем подставь найденное значение в исходное равенство.";
+ if(/периметр/.test(topic+" "+lower))return "Периметр — сумма длин всех сторон. У прямоугольника P = 2(a + b), у квадрата P = 4a.";
+ if(/последовательност|закономерност/.test(topic+" "+lower))return "Сравни соседние элементы: проверь разности, отношения или повторяющееся правило. Применяй его к следующему элементу и проверь по всей последовательности.";
+ if(/простое число|делится|остаток|делител/.test(topic+" "+lower))return "Проверь делимость и остаток. Простое число имеет ровно два положительных делителя: 1 и само число.";
+ if(/комбинатор|сколькими способами|сколько разных двузначных/.test(topic+" "+lower))return "Определи, важен ли порядок и разрешены ли повторы. Для независимых позиций перемножай число вариантов каждой позиции.";
+ if(/русский|орфограф|пунктуац|часть речи|существитель|прилагатель|глагол|ударен|синоним|антоним|фразеолог|литератур|автор|предложени/.test(topic+" "+lower))return "Разбери слово или предложение по правилу русского языка: учитывай значение, грамматические признаки и контекст. Проверь, что выбранный вариант соответствует именно этому правилу.";
+ if(/алгоритм/.test(topic+" "+lower))return "Алгоритм — конечная и точная последовательность шагов для решения задачи. Сверь каждый вариант с этим определением.";
+ if(/граф|вершин|рёбер|ребер/.test(topic+" "+lower))return "В графе вершины обозначают объекты, а рёбра — связи между ними. Сверь формулировку с тем, что требуется найти.";
+ if(/сложност|o\(|бинарн.*поиск|линейн.*поиск/.test(topic+" "+lower))return "Линейный поиск проверяет элементы по одному и имеет сложность O(n). Бинарный поиск делит отсортированный диапазон пополам и работает за O(log n).";
+ if(/цикл|range\(|повтор/.test(topic+" "+lower))return "Посчитай итерации по границам цикла. В Python правая граница range не включается; в других языках проверь правила границ.";
+ if(/стек|очередь|lifo|fifo/.test(topic+" "+lower))return "Стек — LIFO (последним пришёл — первым вышел), очередь — FIFO (первым пришёл — первым вышел).";
+ return "Правильный ответ — «"+answer+"». Сопоставь его с условием: выпиши данные, выбери подходящее правило и проверь результат подстановкой или обратным действием.";
+}
+function explainMistake(q,chosenIndex,correctIndex){
+ if(chosenIndex===null||chosenIndex===undefined)return "Ответ пропущен. Выпиши данные условия, определи нужное правило и проверь результат перед выбором.";
+ return "Выбран вариант «"+q.a[chosenIndex]+"», но проверка условия приводит к ответу «"+q.a[correctIndex]+"». Сравни оба варианта с объяснением решения ниже и найди шаг, на котором они расходятся.";
+}
+function renderResultInsights(tasks,answers,correct){
+ const total=tasks.length,correctCount=tasks.reduce((n,q,i)=>n+(answers[i]===correct[i]?1:0),0),unanswered=answers.reduce((n,a)=>n+(a===null?1:0),0),errors=total-correctCount-unanswered;
+ const root=$("resultInsights");root.replaceChildren();
+ [[""+correctCount,"Верных ответов","good"],[""+errors,"Ошибок","bad"],[""+unanswered,"Пропущено",""],[Math.round(correctCount/Math.max(total,1)*100)+"%","Точность",""]].forEach(([value,label,kind])=>{const card=document.createElement("div");card.className="insight-card "+kind;const v=document.createElement("strong");v.className="insight-value";v.textContent=value;const l=document.createElement("span");l.className="insight-label";l.textContent=label;card.append(v,l);root.appendChild(card)});
+ const topics={};tasks.forEach((q,i)=>{if(answers[i]!==correct[i])topics[q.t]=(topics[q.t]||0)+1});
+ const weak=Object.entries(topics).filter(([topic,count])=>count>0).sort((a,b)=>b[1]-a[1]),box=document.createElement("div");box.className="topic-insight";const strong=document.createElement("strong");strong.textContent=weak.length?"Что повторить: ":"Отлично — ошибок нет. ";box.appendChild(strong);box.appendChild(document.createTextNode(weak.length?weak.map(([topic,count])=>topic+" ("+count+")").join(" · "):"Попробуй другой предмет или более сложный уровень."));root.appendChild(box);
+}
+function applyReviewFilter(filter){
+ document.querySelectorAll("[data-review-filter]").forEach(button=>button.classList.toggle("active",button.dataset.reviewFilter===filter));
+ document.querySelectorAll("#resultList .review-card").forEach(card=>card.classList.toggle("hidden",filter!=="all"&&!card.classList.contains(filter==="incorrect"?"review-incorrect":"review-unanswered")));
+ const visible=[...document.querySelectorAll("#resultList .review-card:not(.hidden)")];$("toggleReview").textContent=visible.some(card=>!card.open)?"Раскрыть все ↕":"Свернуть все ↕";
 }
 
 
+document.querySelectorAll("[data-review-filter]").forEach(button=>button.addEventListener("click",()=>applyReviewFilter(button.dataset.reviewFilter)));
 const toggleReviewButton=$("toggleReview");
 if(toggleReviewButton)toggleReviewButton.addEventListener("click",()=>{
- const cards=[...$("resultList").querySelectorAll(".review-card")];
+ const cards=[...$("resultList").querySelectorAll(".review-card:not(.hidden)")];
  const shouldOpen=cards.some(card=>!card.open);
  cards.forEach(card=>card.open=shouldOpen);
  toggleReviewButton.textContent=shouldOpen?"Свернуть все ↕":"Раскрыть все ↕";
@@ -547,7 +570,9 @@ async function finishQuiz(timeUp){
   const result=await api("finish",{participantToken:session.participantToken,answers:submittedAnswers});
   session.finished=true;
   const score=result.score,spent=Math.floor(result.elapsedSeconds/60),correct=result.correctAnswers;
-  $("scoreDisplay").textContent=score+" / 10";
+  $("scoreDisplay").textContent=score+" / "+session.tasks.length;
+  renderResultInsights(session.tasks,session.answers,correct);
+  applyReviewFilter("all");
   $("resultLead").textContent=timeUp?"Время вышло. Вот твой результат.":"Ты завершил занятие. Вот твой результат.";
   $("resultSubject").textContent=(session.subject==="math"?"∑ ":session.subject==="info"?"⌘ ":"Аа ")+subjectName(session.subject);
   $("resultTime").textContent="Время: "+spent+" мин";
@@ -564,8 +589,10 @@ async function finishQuiz(timeUp){
    const prompt=document.createElement("p");prompt.className="review-question";prompt.textContent=q.q;
    const your=document.createElement("div");your.className="review-answer";const yourLabel=document.createElement("span");yourLabel.textContent="Твой ответ";const yourValue=document.createElement("strong");yourValue.textContent=session.answers[i]===null?"Не отвечено":q.a[session.answers[i]];your.append(yourLabel,yourValue);
    const rightAnswer=document.createElement("div");rightAnswer.className="review-answer correct-answer";const rightLabel=document.createElement("span");rightLabel.textContent="Правильный ответ";const rightValue=document.createElement("strong");rightValue.textContent=q.a[correct[i]];rightAnswer.append(rightLabel,rightValue);
-   const explain=document.createElement("div");explain.className="review-explanation";const explainTitle=document.createElement("strong");explainTitle.textContent="Почему так";const explainText=document.createElement("p");explainText.textContent=explainTask(q);explain.append(explainTitle,explainText);
-   body.append(prompt,your,rightAnswer,explain);review.append(summary,body);$("resultList").appendChild(review);
+   const explain=document.createElement("div");explain.className="review-explanation";const explainTitle=document.createElement("strong");explainTitle.textContent="Как решить";const explainText=document.createElement("p");explainText.textContent=explainTask(q,correct[i]);explain.append(explainTitle,explainText);
+   body.append(prompt,your,rightAnswer);
+   if(!isCorrect){review.classList.add(session.answers[i]===null?"review-unanswered":"review-incorrect");const mistake=document.createElement("div");mistake.className="review-error-note";const mistakeTitle=document.createElement("strong");mistakeTitle.textContent=session.answers[i]===null?"Разбор пропуска":"Разбор ошибки";const mistakeText=document.createElement("div");mistakeText.textContent=explainMistake(q,session.answers[i],correct[i]);mistake.append(mistakeTitle,mistakeText);body.appendChild(mistake)}else{const success=document.createElement("div");success.className="review-correct-note";success.textContent="Ответ верный. Прочитай решение, чтобы закрепить способ.";body.appendChild(success)}
+   body.appendChild(explain);review.append(summary,body);$("resultList").appendChild(review);
   });
   showView("resultView");
  }catch(error){session.finishing=false;notify("Не удалось завершить и сохранить результат: "+error.message);if(Date.now()<session.endsAt)timerInterval=setInterval(updateTimer,1000)}
