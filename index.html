@@ -561,23 +561,23 @@ html.low-power .ios-dock .dock-liquid:after{filter:none}
 }
 
 
-/* Liquid-wave screen transitions: a refractive water ripple reveals the next screen */
+/* Liquid-wave transition with continuous screen coverage: never expose an empty bottom edge */
 .panel:not(.hidden){view-transition-name:solara-screen}
-::view-transition-group(solara-screen){animation-duration:.72s;animation-timing-function:cubic-bezier(.2,.75,.2,1);overflow:visible}
-::view-transition-image-pair(solara-screen){isolation:isolate;overflow:visible}
-::view-transition-old(solara-screen){animation:solara-liquid-out .32s cubic-bezier(.4,0,.8,.2) both;transform-origin:50% 92%;backface-visibility:hidden}
-::view-transition-new(solara-screen){animation:solara-liquid-wave-in .76s cubic-bezier(.18,.78,.18,1) both;transform-origin:50% 92%;backface-visibility:hidden;filter:url(#solara-liquid-ripple)}
+::view-transition-group(solara-screen){animation-duration:.74s;animation-timing-function:cubic-bezier(.2,.75,.2,1);overflow:visible}
+::view-transition-image-pair(solara-screen){isolation:isolate;overflow:visible;background:transparent}
+::view-transition-old(solara-screen){animation:solara-liquid-out .74s cubic-bezier(.2,.75,.2,1) both;backface-visibility:hidden}
+::view-transition-new(solara-screen){animation:solara-liquid-wave-in .74s cubic-bezier(.18,.78,.18,1) both;backface-visibility:hidden;filter:url(#solara-liquid-ripple)}
 @keyframes solara-liquid-out{
- 0%{opacity:1;clip-path:inset(0 round 0);filter:blur(0) brightness(1);transform:scale(1)}
- 55%{opacity:.72;clip-path:inset(1.5% 1% 2% round 3% 3% 8% 8%);filter:blur(2px) brightness(1.08);transform:scale(.985,.99)}
- 100%{opacity:0;clip-path:inset(5% 4% 8% round 10% 10% 24% 24%);filter:blur(9px) brightness(1.12);transform:scale(.94,.96) translateY(-1.5%)}
+ 0%,68%{opacity:1;filter:blur(0) brightness(1);transform:none;clip-path:inset(0)}
+ 88%{opacity:.96;filter:blur(1px) brightness(1.04);transform:none;clip-path:inset(0)}
+ 100%{opacity:0;filter:blur(3px) brightness(1.06);transform:none;clip-path:inset(0)}
 }
 @keyframes solara-liquid-wave-in{
- 0%{opacity:.12;clip-path:circle(0% at 50% 92%);filter:url(#solara-liquid-ripple) blur(3px) saturate(1.8);transform:scale(1.025) translateY(1.5%)}
- 24%{opacity:.94;clip-path:circle(42% at 50% 92%);filter:url(#solara-liquid-ripple) blur(1.4px) saturate(1.45);transform:scale(1.012) translateY(.5%)}
- 58%{opacity:1;clip-path:circle(105% at 50% 92%);filter:url(#solara-liquid-ripple) blur(.35px) saturate(1.15);transform:scale(1.003) translateY(-.3%)}
- 78%{opacity:1;clip-path:circle(150% at 50% 92%);filter:url(#solara-liquid-ripple) blur(0) saturate(1.04);transform:scale(.998) translateY(0)}
- 100%{opacity:1;clip-path:circle(150% at 50% 92%);filter:none;transform:scale(1) translateY(0)}
+ 0%{opacity:1;clip-path:circle(0% at 50% 100%);filter:url(#solara-liquid-ripple) blur(2px) saturate(1.55);transform:none}
+ 24%{opacity:1;clip-path:circle(44% at 50% 100%);filter:url(#solara-liquid-ripple) blur(1.2px) saturate(1.4);transform:none}
+ 55%{opacity:1;clip-path:circle(92% at 50% 100%);filter:url(#solara-liquid-ripple) blur(.4px) saturate(1.15);transform:none}
+ 78%{opacity:1;clip-path:circle(140% at 50% 100%);filter:url(#solara-liquid-ripple) blur(0) saturate(1.04);transform:none}
+ 100%{opacity:1;clip-path:circle(150% at 50% 100%);filter:none;transform:none}
 }
 @media(max-width:640px){
  ::view-transition-group(solara-screen){animation-duration:.62s}
