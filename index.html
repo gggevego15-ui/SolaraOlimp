@@ -2704,5 +2704,28 @@ html[data-solara-theme="dark"] body .form .field select option:checked{color:#ff
 html[data-solara-theme="dark"] body .form .field select:focus-visible{outline:2px solid #a9b5ff!important;outline-offset:2px!important;box-shadow:0 0 0 4px rgba(133,151,255,.2)!important}
 </style>
 
+<style id="solara-phone-performance-final">
+/* Final cascade guard: these optimizations apply to touch phones only. */
+@media(max-width:650px) and (pointer:coarse){
+ html{scroll-behavior:auto}
+ body{background-attachment:scroll}
+ .top,.panel.glass,.ios-dock,.toast{
+  -webkit-backdrop-filter:blur(8px) saturate(145%)!important;
+  backdrop-filter:blur(8px) saturate(145%)!important;
+ }
+ .panel.glass{
+  box-shadow:0 10px 28px rgba(55,70,126,.09),inset 0 1px 0 rgba(255,255,255,.84)!important;
+ }
+ .panel:not(.hidden):not(.is-leaving){animation:solara-enter .22s ease-out both}
+ .wave-ribbon,.wave-glint{will-change:auto}
+ .solara-liquid-wave-overlay.is-running .wave-ribbon,
+ .solara-liquid-wave-overlay.is-running .wave-glint{will-change:transform,opacity}
+ .ios-dock{box-shadow:0 10px 28px rgba(41,53,103,.14),inset 0 1px 0 rgba(255,255,255,.88)!important}
+ .question-visual-media{content-visibility:auto}
+}
+@media(max-width:650px) and (pointer:coarse) and (prefers-reduced-motion:reduce){
+ .solara-liquid-wave-overlay,.wave-ribbon,.wave-glint{display:none!important;animation:none!important}
+}
+</style>
 </body>
 </html>
