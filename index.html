@@ -1298,6 +1298,67 @@ body{min-height:100%;padding-bottom:calc(124px + env(safe-area-inset-bottom,0px)
 @media(prefers-reduced-motion:reduce){.ios-dock{animation:none!important;transform:translateX(-50%)}}\n@media(max-width:650px){.ios-dock{animation:none!important;transform:none!important}}
 </style>
 
+<style id="solara-dark-grade-contrast-final">
+/* Final, high-specificity dark-mode contrast patch. Kept last so older theme rules cannot override it. */
+html[data-solara-theme="dark"] .form .field.class-field,
+html[data-solara-theme="dark"] .form .field:has(#teacherGrade){
+  color:#f4f6ff!important;
+  background:linear-gradient(145deg,rgba(38,44,66,.98),rgba(24,29,47,.98))!important;
+  border:1px solid rgba(174,190,255,.34)!important;
+  border-radius:18px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 10px 26px rgba(0,0,0,.18)!important;
+}
+html[data-solara-theme="dark"] #teacherGrade,
+html[data-solara-theme="dark"] .form .field.class-field select,
+html[data-solara-theme="dark"] .field select#teacherGrade{
+  display:block!important;
+  width:100%!important;
+  min-height:50px!important;
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:#20263b!important;
+  background-image:linear-gradient(145deg,rgba(49,57,83,.98),rgba(31,37,58,.98))!important;
+  border:1px solid rgba(181,195,255,.4)!important;
+  border-radius:14px!important;
+  opacity:1!important;
+  text-shadow:none!important;
+  color-scheme:dark;
+}
+html[data-solara-theme="dark"] #teacherGrade option,
+html[data-solara-theme="dark"] .field select#teacherGrade option{
+  color:#f7f8ff!important;
+  background-color:#20263b!important;
+  -webkit-text-fill-color:#f7f8ff!important;
+}
+html[data-solara-theme="dark"] .form .field.class-field label,
+html[data-solara-theme="dark"] .form .field:has(#teacherGrade)>label{
+  display:block!important;
+  color:#f0f2ff!important;
+  -webkit-text-fill-color:#f0f2ff!important;
+  font-weight:800!important;
+  letter-spacing:.025em;
+  opacity:1!important;
+}
+html[data-solara-theme="dark"] .form .field.class-field .field-help,
+html[data-solara-theme="dark"] .form .field:has(#teacherGrade) .hint{
+  color:#c0c9e4!important;
+  -webkit-text-fill-color:#c0c9e4!important;
+  opacity:1!important;
+}
+html[data-solara-theme="dark"] .field input,
+html[data-solara-theme="dark"] .field textarea,
+html[data-solara-theme="dark"] .field select{
+  color:#f7f8ff!important;
+  -webkit-text-fill-color:#f7f8ff!important;
+  caret-color:#c7d0ff!important;
+}
+html[data-solara-theme="dark"] .field input::placeholder,
+html[data-solara-theme="dark"] .field textarea::placeholder{
+  color:#b2bddb!important;
+  -webkit-text-fill-color:#b2bddb!important;
+  opacity:1!important;
+}
+</style>
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
