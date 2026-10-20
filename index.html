@@ -283,13 +283,13 @@ body:before,body:after{filter:blur(12px);opacity:.45;mix-blend-mode:normal;will-
 <div class="form" style="margin-bottom:22px"><button class="secondary" id="openTeacherDashboard">▤ Мои занятия и результаты</button><button class="secondary" id="refreshTeacherDashboard">↻ Обновить</button></div>
 <div id="teacherDashboard" class="hidden" style="margin-bottom:26px"><h2>Мои занятия</h2><p class="hint" id="dashboardStatus">Загрузка…</p><div id="dashboardSessions" style="display:grid;gap:12px"></div></div>
 <h2 style="margin-top:10px">Создать новое занятие</h2><p class="lead">Выбери предмет и создай уникальный код для нового набора задач.</p>
-<div class="form"><div class="field class-field"><label for="teacherGrade">КЛАСС — СНАЧАЛА ВЫБЕРИ КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select><p class="hint field-help">Этот класс будет указан в коде занятия. Ученики должны выбрать тот же класс, когда вводят код.</p></div><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option></select></div><div class="field"><label for="teacherDifficulty">УРОВЕНЬ СЛОЖНОСТИ</label><select id="teacherDifficulty"><option value="basic">Базовый</option><option value="olympiad" selected>Олимпиадный</option><option value="advanced">Продвинутый</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
+<div class="form"><div class="field class-field"><label for="teacherGrade">КЛАСС — СНАЧАЛА ВЫБЕРИ КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select><p class="hint field-help">Этот класс будет указан в коде занятия. Ученики должны выбрать тот же класс, когда вводят код.</p></div><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option></select></div><div class="field"><label for="teacherDifficulty">УРОВЕНЬ СЛОЖНОСТИ</label><select id="teacherDifficulty"><option value="basic">Базовый</option><option value="olympiad" selected>Олимпиадный</option><option value="advanced">Продвинутый</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
 <div class="hidden" id="generated"><div class="code-box"><div><div class="hint">НАСТОЯЩИЙ КОД ЗАНЯТИЯ</div><div class="code" id="generatedCode">—</div></div><button class="secondary" id="copyCode">Копировать код</button></div><div class="meta"><span class="chip" id="generatedSubject">∑ Математика</span><span class="chip" id="generatedGrade">7 класс</span><span class="chip" id="generatedDifficulty">Олимпиадный</span><span class="chip">10 задач</span><span class="chip">60 минут на ученика</span></div><p class="hint">Код сохранён в базе. Все ученики, которые введут его, получат один и тот же набор из 10 задач.</p><div class="field" style="margin-top:18px"><label for="teacherTokenDisplay">СЕКРЕТНЫЙ КЛЮЧ УЧИТЕЛЯ — СОХРАНИ ЕГО</label><div class="code-box"><div class="code" id="teacherTokenDisplay" style="font-size:13px;letter-spacing:0;overflow-wrap:anywhere">—</div><button class="secondary" id="copyTeacherToken">Копировать ключ</button></div><p class="hint">Этот ключ нужен для просмотра результатов. Не отправляй его ученикам.</p></div><button class="secondary" id="showResults" style="margin-top:12px">Посмотреть результаты учеников</button><div class="hidden" id="teacherResults" style="margin-top:16px"></div><button class="primary" id="newCode" style="margin-top:16px">Создать ещё одно занятие</button></div>
 </section>
 <section class="panel glass hidden" id="studentView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> КАБИНЕТ УЧЕНИКА</div><button class="back" data-home>← Назад</button></div>
 <h1>Готов к вызову?</h1><p class="lead">Выбери предмет и введи код от учителя. После старта у тебя будет 60 минут на 10 задач.</p>
-<form class="form" id="joinForm"><div class="field"><label for="studentName">ТВОЁ ИМЯ</label><input id="studentName" autocomplete="name" maxlength="40" minlength="2" placeholder="Например, Аня Иванова" required></div><div class="field"><label for="studentGrade">ТВОЙ КЛАСС — ВЫБЕРИ КАК В КОДЕ ОТ УЧИТЕЛЯ</label><select id="studentGrade" required><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div><div class="field"><label for="studentSubject">ПРЕДМЕТ</label><select id="studentSubject"><option value="math">Математика</option><option value="info">Информатика</option></select></div><div class="field"><label for="studentCode">КОД ЗАНЯТИЯ</label><input id="studentCode" autocomplete="off" maxlength="8" placeholder="Например, M4K8Q2" required></div><button class="primary" type="submit">Проверить код и начать ↗</button><p class="hint">Имя появится в кабинете учителя рядом с результатом. Таймер запускается при начале занятия.</p></form>
+<form class="form" id="joinForm"><div class="field"><label for="studentName">ТВОЁ ИМЯ</label><input id="studentName" autocomplete="name" maxlength="40" minlength="2" placeholder="Например, Аня Иванова" required></div><div class="field"><label for="studentGrade">ТВОЙ КЛАСС — ВЫБЕРИ КАК В КОДЕ ОТ УЧИТЕЛЯ</label><select id="studentGrade" required><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div><div class="field"><label for="studentSubject">ПРЕДМЕТ</label><select id="studentSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option></select></div><div class="field"><label for="studentCode">КОД ЗАНЯТИЯ</label><input id="studentCode" autocomplete="off" maxlength="8" placeholder="Например, M4K8Q2" required></div><button class="primary" type="submit">Проверить код и начать ↗</button><p class="hint">Имя появится в кабинете учителя рядом с результатом. Таймер запускается при начале занятия.</p></form>
 </section>
 <section class="panel glass hidden" id="quizView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> ЗАНЯТИЕ В ПРОЦЕССЕ</div><button class="back" id="quitQuiz">Выйти</button></div>
@@ -302,7 +302,7 @@ body:before,body:after{filter:blur(12px);opacity:.45;mix-blend-mode:normal;will-
 </section>
 <section class="panel glass hidden" id="resultView">
 <div class="eyebrow"><span class="dot"></span> ЗАНЯТИЕ ЗАВЕРШЕНО</div><h1>Хорошая работа!</h1><p class="lead" id="resultLead">Вот твой результат.</p><div class="result-score" id="scoreDisplay">0 / 10</div><div class="meta"><span class="chip" id="resultSubject">Математика</span><span class="chip" id="resultTime">Время: —</span></div><div class="review-toolbar"><span>РАЗБОР ОТВЕТОВ</span><button type="button" class="secondary" id="toggleReview">Раскрыть все ↕</button></div><div class="result-list" id="resultList"></div><div style="margin-top:25px"><button class="primary" data-home>На главную ↗</button></div></section>
-</main><footer class="footer">Solara Olimp · Математика · Информатика · Учись думать шире</footer>
+</main><footer class="footer">Solara Olimp · Математика · Информатика · Русский язык · Учись думать шире</footer>
 </div>
 <nav class="ios-dock" id="iosDock" aria-label="Основная навигация">
  <div class="dock-glow" aria-hidden="true"></div>
@@ -324,6 +324,7 @@ setTimeout(()=>{
 const $=id=>document.getElementById(id);
 const API_URL="https://husjlwgohxtatgguzdjm.supabase.co/functions/v1/olimp-api";
 const API_KEY="sb_publishable_iECwhv5Ljl48x8_v6FasJA_W5jwXNtZ";
+function subjectName(subject,upper=false){const names={math:"Математика",info:"Информатика",rus:"Русский язык"};const value=names[subject]||"Неизвестный предмет";return upper?value.toLocaleUpperCase("ru-RU"):value;}
 async function api(action,payload={}){const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":API_KEY},body:JSON.stringify({action,...payload})});let data={};try{data=await response.json()}catch(e){}if(!response.ok)throw new Error(data.error||"Ошибка соединения с сервером");return data;}
 const views=['roleView','teacherView','studentView','quizView','resultView'];
 let viewTransitionTimer=0,viewTransitionToken=0;
@@ -403,7 +404,7 @@ $("generateCode").addEventListener("click",async()=>{
   currentCode=data.code;currentTeacherToken=data.teacherToken;
   $("generatedCode").textContent=currentCode;
   $("teacherTokenDisplay").textContent=currentTeacherToken;
-  $("generatedSubject").textContent=subject==="math"?"∑ Математика":"⌘ Информатика";
+  $("generatedSubject").textContent=(subject==="math"?"∑ ":subject==="info"?"⌘ ":"Аа ")+subjectName(subject);
   $("generatedGrade").textContent=grade+" класс";
   $("generatedDifficulty").textContent=({basic:"Базовый",olympiad:"Олимпиадный",advanced:"Продвинутый"})[difficulty];
   $("teacherResults").classList.add("hidden");$("teacherResults").replaceChildren();
@@ -451,7 +452,7 @@ function renderTeacherSessions(){
  items.forEach(item=>{
   const card=document.createElement("div");card.className="result-row";card.style.display="block";card.style.padding="16px";
   const header=document.createElement("div");header.style.display="flex";header.style.justifyContent="space-between";header.style.gap="12px";header.style.flexWrap="wrap";
-  const title=document.createElement("strong");title.textContent=item.code+" · "+(item.subject==="math"?"Математика":"Информатика")+" · "+(item.grade||7)+" класс · "+({basic:"Базовый",olympiad:"Олимпиадный",advanced:"Продвинутый"})[item.difficulty||"olympiad"];
+  const title=document.createElement("strong");title.textContent=item.code+" · "+subjectName(item.subject)+" · "+(item.grade||7)+" класс · "+({basic:"Базовый",olympiad:"Олимпиадный",advanced:"Продвинутый"})[item.difficulty||"olympiad"];
   const date=document.createElement("span");date.className="hint";date.textContent=item.createdAt?new Date(item.createdAt).toLocaleDateString("ru-RU"):"";
   header.append(title,date);card.appendChild(header);
   const status=document.createElement("p");status.className="hint";status.textContent="Загружаем результаты…";status.style.margin="10px 0";card.appendChild(status);
@@ -493,7 +494,7 @@ $("joinForm").addEventListener("submit",async e=>{
 });
 function startQuiz(data){
  session={code:data.code,subject:data.subject,grade:String(data.grade||"7"),studentName:data.studentName||"",tasks:data.tasks,participantToken:data.participantToken,answers:Array(10).fill(null),index:0,startedAt:new Date(data.startedAt).getTime(),endsAt:new Date(data.endsAt).getTime(),finished:false,finishing:false,pendingSave:Promise.resolve()};
- $("quizSubject").textContent=(session.studentName?session.studentName+" · ":"")+session.grade+" КЛАСС · "+(data.subject==="math"?"МАТЕМАТИКА":"ИНФОРМАТИКА")+" · "+({basic:"БАЗОВЫЙ",olympiad:"ОЛИМПИАДНЫЙ",advanced:"ПРОДВИНУТЫЙ"})[data.difficulty||"olympiad"];
+ $("quizSubject").textContent=(session.studentName?session.studentName+" · ":"")+session.grade+" КЛАСС · "+subjectName(data.subject,true)+" · "+({basic:"БАЗОВЫЙ",olympiad:"ОЛИМПИАДНЫЙ",advanced:"ПРОДВИНУТЫЙ"})[data.difficulty||"olympiad"];
  showView("quizView");renderQuestion();updateTimer();clearInterval(timerInterval);timerInterval=setInterval(updateTimer,1000);
 }
 function updateTimer(){if(!session||session.finished||session.finishing)return;const remain=Math.max(0,Math.ceil((session.endsAt-Date.now())/1000));const m=String(Math.floor(remain/60)).padStart(2,"0"),s=String(remain%60).padStart(2,"0");$("timer").textContent=m+":"+s;$("timer").classList.toggle("warn",remain<=300);if(remain<=0)finishQuiz(true)}
@@ -548,7 +549,7 @@ async function finishQuiz(timeUp){
   const score=result.score,spent=Math.floor(result.elapsedSeconds/60),correct=result.correctAnswers;
   $("scoreDisplay").textContent=score+" / 10";
   $("resultLead").textContent=timeUp?"Время вышло. Вот твой результат.":"Ты завершил занятие. Вот твой результат.";
-  $("resultSubject").textContent=session.subject==="math"?"∑ Математика":"⌘ Информатика";
+  $("resultSubject").textContent=(session.subject==="math"?"∑ ":session.subject==="info"?"⌘ ":"Аа ")+subjectName(session.subject);
   $("resultTime").textContent="Время: "+spent+" мин";
   $("resultList").replaceChildren();
   session.tasks.forEach((q,i)=>{
@@ -573,10 +574,10 @@ try{
  const saved=JSON.parse(localStorage.getItem("solara_last_teacher_session")||"null");
  const history=JSON.parse(localStorage.getItem("solara_teacher_sessions")||"[]");
  if(saved&&saved.code&&saved.teacherToken&&Array.isArray(history)&&!history.some(x=>x.code===saved.code)){history.unshift(saved);localStorage.setItem("solara_teacher_sessions",JSON.stringify(history))}
- if(saved&&/^[MI][A-HJ-NP-Z2-9]{5}$/.test(saved.code)&&saved.teacherToken){
+ if(saved&&/^[MIR][A-HJ-NP-Z2-9]{5}$/.test(saved.code)&&saved.teacherToken){
   currentCode=saved.code;currentTeacherToken=saved.teacherToken;
   $("generatedCode").textContent=currentCode;$("teacherTokenDisplay").textContent=currentTeacherToken;
-  $("generatedSubject").textContent=saved.subject==="math"?"∑ Математика":"⌘ Информатика";
+  $("generatedSubject").textContent=(saved.subject==="math"?"∑ ":saved.subject==="info"?"⌘ ":"Аа ")+subjectName(saved.subject);
   $("teacherSubject").value=saved.subject;$("teacherGrade").value=String(saved.grade||7);$("generatedGrade").textContent=(saved.grade||7)+" класс";$("generated").classList.remove("hidden");
  }
 }catch(e){}
