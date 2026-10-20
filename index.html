@@ -1554,6 +1554,61 @@ html[data-solara-theme="dark"] #notesText::placeholder{
 html[data-solara-theme="dark"] #notesText{caret-color:#c4ccff!important}
 </style>
 
+
+<style id="solara-dark-select-contrast-v2">
+/* High-contrast form controls in dark theme, especially the teacher's class selector. */
+html[data-solara-theme="dark"] .form .field,
+html[data-solara-theme="dark"] .form .field.class-field,
+html[data-solara-theme="dark"] .form .field:has(#teacherGrade) {
+  color: #f7f8ff !important;
+}
+html[data-solara-theme="dark"] .form .field label,
+html[data-solara-theme="dark"] .form .field .hint,
+html[data-solara-theme="dark"] .form .field-help {
+  color: #d8def6 !important;
+  -webkit-text-fill-color: #d8def6 !important;
+  opacity: 1 !important;
+}
+html[data-solara-theme="dark"] .form .field select,
+html[data-solara-theme="dark"] .form .field input,
+html[data-solara-theme="dark"] .form .field textarea,
+html[data-solara-theme="dark"] #teacherGrade,
+html[data-solara-theme="dark"] #teacherSubject,
+html[data-solara-theme="dark"] #teacherDifficulty {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-color: #20263b !important;
+  border: 1px solid rgba(190, 202, 255, .52) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 4px 14px rgba(0,0,0,.12) !important;
+  opacity: 1 !important;
+  color-scheme: dark;
+}
+html[data-solara-theme="dark"] .form .field select option,
+html[data-solara-theme="dark"] #teacherGrade option,
+html[data-solara-theme="dark"] #teacherSubject option,
+html[data-solara-theme="dark"] #teacherDifficulty option {
+  color: #f7f8ff !important;
+  background: #20263b !important;
+}
+html[data-solara-theme="dark"] .form .field input::placeholder,
+html[data-solara-theme="dark"] .form .field textarea::placeholder {
+  color: #b8c1df !important;
+  -webkit-text-fill-color: #b8c1df !important;
+  opacity: 1 !important;
+}
+html[data-solara-theme="dark"] .form .field:has(#teacherGrade) {
+  background: linear-gradient(145deg, #262c42, #181d2f) !important;
+  border: 1px solid rgba(174,190,255,.42) !important;
+  border-radius: 18px !important;
+}
+html[data-solara-theme="dark"] #teacherGrade:focus,
+html[data-solara-theme="dark"] #teacherSubject:focus,
+html[data-solara-theme="dark"] #teacherDifficulty:focus {
+  outline: 3px solid rgba(155,168,255,.42) !important;
+  outline-offset: 2px;
+}
+</style>
+
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
