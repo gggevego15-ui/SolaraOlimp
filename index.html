@@ -1396,7 +1396,7 @@ html[data-solara-theme="dark"] .field textarea::placeholder{
 <div class="form" style="margin-bottom:22px"><button class="secondary" id="openTeacherDashboard">▤ Мои занятия и результаты</button><button class="secondary" id="refreshTeacherDashboard">↻ Обновить</button></div>
 <div id="teacherDashboard" class="hidden" style="margin-bottom:26px"><h2>Мои занятия</h2><p class="hint" id="dashboardStatus">Загрузка…</p><div id="dashboardSessions" style="display:grid;gap:12px"></div></div>
 <h2 style="margin-top:10px">Создать новое занятие</h2><p class="lead">Выбери предмет и создай уникальный код для нового набора задач.</p>
-<div class="form"><div class="field class-field"><label for="teacherGrade">КЛАСС — СНАЧАЛА ВЫБЕРИ КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select><p class="hint field-help">Этот класс будет указан в коде занятия. Ученики должны выбрать тот же класс, когда вводят код.</p></div><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option><option value="geography">География</option><option value="history">История</option><option value="chemistry">Химия</option></select></div><div class="field"><label for="teacherDifficulty">УРОВЕНЬ СЛОЖНОСТИ</label><select id="teacherDifficulty"><option value="basic">Базовый</option><option value="olympiad" selected>Олимпиадный</option><option value="advanced">Продвинутый</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
+<div class="form"><div class="field class-field"><label for="teacherGrade">ВЫБЕРИ КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select><p class="hint field-help">Этот класс будет указан в коде занятия. Ученики должны выбрать тот же класс, когда вводят код.</p></div><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option><option value="geography">География</option><option value="history">История</option><option value="chemistry">Химия</option></select></div><div class="field"><label for="teacherDifficulty">УРОВЕНЬ СЛОЖНОСТИ</label><select id="teacherDifficulty"><option value="basic">Базовый</option><option value="olympiad" selected>Олимпиадный</option><option value="advanced">Продвинутый</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
 <div class="hidden" id="generated"><div class="code-box"><div><div class="hint">НАСТОЯЩИЙ КОД ЗАНЯТИЯ</div><div class="code" id="generatedCode">—</div></div><button class="secondary" id="copyCode">Копировать код</button></div><div class="meta"><span class="chip" id="generatedSubject">∑ Математика</span><span class="chip" id="generatedGrade">7 класс</span><span class="chip" id="generatedDifficulty">Олимпиадный</span><span class="chip">10 задач</span><span class="chip">60 минут на ученика</span></div><p class="hint">Код сохранён в базе. Все ученики, которые введут его, получат один и тот же набор из 10 задач.</p><div class="field" style="margin-top:18px"><label for="teacherTokenDisplay">СЕКРЕТНЫЙ КЛЮЧ УЧИТЕЛЯ — СОХРАНИ ЕГО</label><div class="code-box"><div class="code" id="teacherTokenDisplay" style="font-size:13px;letter-spacing:0;overflow-wrap:anywhere">—</div><button class="secondary" id="copyTeacherToken">Копировать ключ</button></div><p class="hint">Этот ключ нужен для просмотра результатов. Не отправляй его ученикам.</p></div><button class="secondary" id="showResults" style="margin-top:12px">Посмотреть результаты учеников</button><div class="hidden" id="teacherResults" style="margin-top:16px"></div><button class="primary" id="newCode" style="margin-top:16px">Создать ещё одно занятие</button></div>
 </section>
 <section class="panel glass hidden" id="studentView">
@@ -2284,6 +2284,51 @@ html[data-solara-theme="dark"] .dock-item:before { background:linear-gradient(14
   .ios-dock .dock-item { gap:2px; }
   .ios-dock .dock-label { font-size:8px; letter-spacing:-.15px; }
 }
+</style>
+
+
+<style id="solara-dark-grade-select-final-v2">
+/* Final fix: keep the grade selector crisp and readable in dark mode (including Firefox native controls). */
+html[data-solara-theme="dark"] .form .field.class-field,
+html[data-solara-theme="dark"] .form .field:has(> #teacherGrade) {
+  padding: 15px !important; gap: 10px !important; color: #f5f7ff !important;
+  background: linear-gradient(145deg, rgba(37,44,67,.98), rgba(22,27,44,.98)) !important;
+  border: 1px solid rgba(178,193,255,.32) !important; border-radius: 19px !important;
+}
+html[data-solara-theme="dark"] .form .field.class-field > label,
+html[data-solara-theme="dark"] .form .field:has(> #teacherGrade) > label {
+  display: block !important; margin: 0 !important; color: #f1f4ff !important;
+  -webkit-text-fill-color: #f1f4ff !important; font-size: 12px !important; line-height: 1.4 !important;
+  font-weight: 850 !important; letter-spacing: .045em !important; opacity: 1 !important; text-shadow: none !important;
+}
+html[data-solara-theme="dark"] #teacherGrade,
+html[data-solara-theme="dark"] .form .field.class-field > select {
+  appearance: none !important; -webkit-appearance: none !important; display: block !important;
+  width: 100% !important; min-height: 52px !important; margin: 0 !important;
+  padding: 13px 46px 13px 15px !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important;
+  font: 700 16px/1.35 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  text-align: left !important; color-scheme: dark !important; background-color: #20263b !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23dbe2ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"), linear-gradient(145deg, #303955, #20263b) !important;
+  background-repeat: no-repeat, no-repeat !important; background-position: right 15px center, center !important;
+  background-size: 18px 18px, 100% 100% !important; border: 1px solid rgba(181,195,255,.38) !important;
+  border-radius: 15px !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 5px 15px rgba(0,0,0,.12) !important;
+  opacity: 1 !important; text-shadow: none !important;
+}
+html[data-solara-theme="dark"] #teacherGrade option,
+html[data-solara-theme="dark"] .form .field.class-field > select option {
+  color: #f7f8ff !important; -webkit-text-fill-color: #f7f8ff !important;
+  background: #1b2134 !important; font-weight: 600 !important;
+}
+html[data-solara-theme="dark"] #teacherGrade:focus-visible,
+html[data-solara-theme="dark"] .form .field.class-field > select:focus-visible {
+  outline: 3px solid rgba(166,180,255,.68) !important; outline-offset: 3px !important; border-color: #b4c0ff !important;
+}
+html[data-solara-theme="dark"] .form .field.class-field .field-help,
+html[data-solara-theme="dark"] .form .field:has(> #teacherGrade) .hint {
+  margin: 0 !important; color: #c1cbe6 !important; -webkit-text-fill-color: #c1cbe6 !important;
+  font-size: 12px !important; line-height: 1.55 !important; opacity: 1 !important;
+}
+@media(prefers-reduced-motion:reduce) { html[data-solara-theme="dark"] #teacherGrade { transition: none !important; } }
 </style>
 
 </body>
