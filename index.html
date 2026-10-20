@@ -561,6 +561,32 @@ html.low-power .ios-dock .dock-liquid:after{filter:none}
 }
 
 
+/* Latest-updates view, styled to match the liquid-glass system */
+.updates-hero{position:relative;padding:12px 0 28px}
+.updates-symbol{width:54px;height:54px;display:grid;place-items:center;margin-bottom:22px;border:1px solid rgba(255,255,255,.72);border-radius:19px;background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(190,208,255,.28));box-shadow:0 12px 30px rgba(82,100,173,.13),inset 0 1px rgba(255,255,255,.9)}
+.updates-symbol svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;color:var(--ink,#3d4b75)}
+.updates-hero h1{margin:8px 0 10px;letter-spacing:-.055em}
+.updates-timeline{display:grid;gap:0;margin-top:8px}
+.update-entry{display:grid;grid-template-columns:20px minmax(0,1fr);gap:14px;position:relative;padding-bottom:24px}
+.update-entry:last-child{padding-bottom:0}
+.update-entry-rail{display:flex;align-items:center;flex-direction:column;padding-top:5px}
+.update-entry-dot{width:11px;height:11px;flex:0 0 11px;border-radius:50%;background:linear-gradient(135deg,#a6b7ff,#7c8df5);border:2px solid rgba(255,255,255,.9);box-shadow:0 0 0 4px rgba(142,159,255,.13),0 0 16px rgba(130,151,255,.3)}
+.update-entry-line{width:1px;flex:1;margin-top:9px;background:linear-gradient(rgba(140,157,238,.48),rgba(140,157,238,.04))}
+.update-entry-content{min-width:0;padding:18px 20px 19px;border:1px solid rgba(255,255,255,.66);border-radius:23px;background:linear-gradient(145deg,rgba(255,255,255,.56),rgba(240,244,255,.24));box-shadow:0 10px 30px rgba(61,75,132,.055),inset 0 1px 0 rgba(255,255,255,.8);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)}
+.update-entry-featured .update-entry-content{border-color:rgba(149,165,255,.42);background:linear-gradient(130deg,rgba(227,233,255,.7),rgba(255,255,255,.43) 58%,rgba(220,230,255,.35));box-shadow:0 14px 38px rgba(104,121,205,.11),inset 0 1px 0 rgba(255,255,255,.9)}
+.update-entry-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:11px;color:var(--muted,#77809c);font-size:11px;font-weight:750;letter-spacing:.035em}
+.update-entry-meta time{font-weight:650;letter-spacing:0}
+.update-tag{display:inline-flex;align-items:center;min-height:23px;padding:4px 9px;border:1px solid rgba(139,154,219,.18);border-radius:999px;background:rgba(255,255,255,.48);color:#6e7db7;font-size:9px;letter-spacing:.1em}
+.update-tag-new{border-color:rgba(104,129,238,.26);background:linear-gradient(110deg,rgba(148,168,255,.25),rgba(255,255,255,.72));color:#5367c6}
+.update-entry-content h2{margin:0 0 8px;font-size:clamp(17px,2.4vw,21px);letter-spacing:-.035em}
+.update-entry-content p{margin:0;color:var(--muted,#77809c);font-size:13px;line-height:1.7}
+.update-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.update-pills span{padding:6px 9px;border-radius:10px;background:rgba(139,155,224,.1);color:var(--muted,#77809c);font-size:10px;font-weight:700}
+.updates-footer{display:flex;align-items:center;gap:10px;margin-top:26px;padding:15px 16px;border:1px solid rgba(255,255,255,.58);border-radius:17px;background:rgba(255,255,255,.26);color:var(--muted,#77809c);font-size:12px;line-height:1.5}
+.updates-footer-mark{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:10px;background:rgba(143,160,255,.17);color:#7485dc}
+.updates-actions{margin-top:20px}
+@media(max-width:640px){.updates-hero{padding-top:4px}.updates-symbol{width:46px;height:46px;border-radius:16px;margin-bottom:17px}.update-entry{grid-template-columns:15px minmax(0,1fr);gap:10px;padding-bottom:16px}.update-entry-content{padding:15px 14px 16px;border-radius:19px}.update-entry-content p{font-size:12px}.updates-footer{align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){.update-entry-content{backdrop-filter:none;-webkit-backdrop-filter:none}}
 /* Lightweight, seamless liquid transition: opaque screen cover prevents flashes */
 .panel:not(.hidden){view-transition-name:solara-screen}
 ::view-transition-group(solara-screen){animation-duration:.42s;animation-timing-function:cubic-bezier(.22,.72,.18,1)}
@@ -655,6 +681,55 @@ html.low-power .ios-dock .dock-liquid:after{filter:none}
 </section>
 <section class="panel glass hidden" id="resultView">
 <div class="eyebrow"><span class="dot"></span> ЗАНЯТИЕ ЗАВЕРШЕНО</div><h1>Хорошая работа!</h1><p class="lead" id="resultLead">Вот твой результат.</p><div class="result-score" id="scoreDisplay">0 / 10</div><div class="meta"><span class="chip" id="resultSubject">Математика</span><span class="chip" id="resultTime">Время: —</span></div><div class="result-insights" id="resultInsights" aria-live="polite"></div><div class="review-toolbar"><span>РАЗБОР ОТВЕТОВ</span><button type="button" class="secondary" id="toggleReview">Раскрыть все ↕</button></div><div class="review-filters" id="reviewFilters" role="group" aria-label="Фильтр разбора"><button type="button" class="review-filter active" data-review-filter="all">Все задачи</button><button type="button" class="review-filter" data-review-filter="incorrect">Ошибки</button><button type="button" class="review-filter" data-review-filter="unanswered">Пропуски</button></div><div class="result-list" id="resultList"></div><div style="margin-top:25px"><button class="primary" data-home>На главную ↗</button></div></section>
+<section class="panel glass hidden" id="updatesView">
+ <div class="view-head"><div class="eyebrow"><span class="dot"></span> SOLARA CHANGELOG</div><button class="back" data-home>← На главную</button></div>
+ <div class="updates-hero">
+  <div class="updates-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.4-5.9L3.5 8.5"/><path d="M3.5 3.8v4.7h4.7"/><path d="M12 7.5v5l3.2 1.9"/></svg></div>
+  <div class="eyebrow">ЖУРНАЛ ИЗМЕНЕНИЙ</div>
+  <h1>Последние <span class="gradient">обновления</span></h1>
+  <p class="lead">Всё новое в Solara Olimp — интерфейс, функции и улучшения. Здесь будут появляться свежие изменения проекта.</p>
+ </div>
+ <div class="updates-timeline">
+  <article class="update-entry update-entry-featured">
+   <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
+   <div class="update-entry-content">
+    <div class="update-entry-meta"><span class="update-tag update-tag-new">НОВОЕ</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <h2>Жидкие переходы между экранами</h2>
+    <p>Переходы стали легче: меньше размытия и лишних эффектов. Волна вынесена в отдельный слой, чтобы не обрезать нижнюю часть интерфейса.</p>
+    <div class="update-pills"><span>Liquid Glass</span><span>Плавность</span><span>Оптимизация</span></div>
+   </div>
+  </article>
+  <article class="update-entry">
+   <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
+   <div class="update-entry-content">
+    <div class="update-entry-meta"><span class="update-tag">ФУНКЦИИ</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <h2>Добавлена физика</h2>
+    <p>Новый предмет для тренировок: механика, электричество, оптика, давление и энергия. Задания подбираются по уровню сложности.</p>
+    <div class="update-pills"><span>5–11 классы</span><span>Новый предмет</span></div>
+   </div>
+  </article>
+  <article class="update-entry">
+   <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
+   <div class="update-entry-content">
+    <div class="update-entry-meta"><span class="update-tag">ИНТЕРФЕЙС</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <h2>Liquid Glass и адаптация под телефон</h2>
+    <p>Обновлена стеклянная навигация с движущейся капсулой, отражениями и более аккуратным поведением на узких экранах.</p>
+    <div class="update-pills"><span>Навигация</span><span>Адаптивность</span></div>
+   </div>
+  </article>
+  <article class="update-entry">
+   <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
+   <div class="update-entry-content">
+    <div class="update-entry-meta"><span class="update-tag">РЕЗУЛЬТАТЫ</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <h2>Подробный разбор олимпиады</h2>
+    <p>В результатах можно просматривать ответы, ошибки и пояснения, чтобы понимать, какие темы стоит повторить.</p>
+    <div class="update-pills"><span>Разбор ответов</span><span>История</span></div>
+   </div>
+  </article>
+ </div>
+ <div class="updates-footer"><span class="updates-footer-mark">✦</span><span>Ты видишь актуальный журнал изменений Solara Olimp.</span></div>
+ <div class="updates-actions"><button class="primary" data-home>Вернуться на главную ↗</button></div>
+</section>
 </main><footer class="footer">Solara Olimp · Математика · Информатика · Русский язык · Учись думать шире</footer>
 </div>
 <nav class="ios-dock" id="iosDock" aria-label="Основная навигация">
@@ -670,6 +745,9 @@ html.low-power .ios-dock .dock-liquid:after{filter:none}
  <button class="dock-item" type="button" data-nav="studentView" aria-label="Ученику" title="Ученику">
   <span class="dock-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.4-3.6 2.8-5.5 7-5.5s6.6 1.9 7 5.5z"/></svg></span><span class="dock-label">Ученику</span>
  </button>
+ <button class="dock-item" type="button" data-nav="updatesView" aria-label="Последние обновления" title="Последние обновления">
+  <span class="dock-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.4-5.9L3.5 8.5"/><path d="M3.5 3.8v4.7h4.7"/><path d="M12 7.5v5l3.2 1.9"/></svg></span><span class="dock-label">Обновления</span>
+ </button>
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
@@ -681,7 +759,7 @@ const API_URL="https://husjlwgohxtatgguzdjm.supabase.co/functions/v1/olimp-api";
 const API_KEY="sb_publishable_iECwhv5Ljl48x8_v6FasJA_W5jwXNtZ";
 function subjectName(subject,upper=false){const names={math:"Математика",info:"Информатика",rus:"Русский язык",physics:"Физика"};const value=names[subject]||"Неизвестный предмет";return upper?value.toLocaleUpperCase("ru-RU"):value;}
 async function api(action,payload={}){const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":API_KEY},body:JSON.stringify({action,...payload})});let data={};try{data=await response.json()}catch(e){}if(!response.ok)throw new Error(data.error||"Ошибка соединения с сервером");return data;}
-const views=['roleView','teacherView','studentView','quizView','resultView'];
+const views=['roleView','teacherView','studentView','quizView','resultView','updatesView'];
 let viewTransitionTimer=0,viewTransitionToken=0;
 
 function syncDockLiquid(){
@@ -764,7 +842,7 @@ function syncDockLiquid(){
 })();
 
 function syncViewChrome(id){
- $('topStatus').textContent=id==='quizView'?'ЗАНЯТИЕ ИДЁТ':(id==='teacherView')?'КАБИНЕТ УЧИТЕЛЯ':id==='studentView'?'КАБИНЕТ УЧЕНИКА':'ПРОСТРАНСТВО ОЛИМПИАД';
+ $('topStatus').textContent=id==='quizView'?'ЗАНЯТИЕ ИДЁТ':(id==='teacherView')?'КАБИНЕТ УЧИТЕЛЯ':id==='studentView'?'КАБИНЕТ УЧЕНИКА':id==='updatesView'?'ИСТОРИЯ ОБНОВЛЕНИЙ':'ПРОСТРАНСТВО ОЛИМПИАД';
  const dock=$('iosDock');
  if(dock){dock.classList.toggle('dock-hidden',id==='quizView');dock.querySelectorAll('[data-nav]').forEach(item=>item.classList.toggle('active',item.dataset.nav===id||(id==='resultView'&&item.dataset.nav==='studentView')));requestAnimationFrame(syncDockLiquid)}
 }
