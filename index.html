@@ -487,6 +487,28 @@ html[data-solara-theme="dark"] #solara-theme-toggle{background:rgba(255,255,255,
 html.low-power .dock-liquid{backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 2px 8px rgba(70,80,150,.1)}
 html.low-power .dock-liquid,html.low-power .dock-icon,#solara-theme-toggle{transition-duration:.15s}
 </style>
+
+<style id="solara-liquid-dock-refraction">
+/* Refraction-inspired layered glass, with a real spring on selection */
+.ios-dock{--dock-light-x:50%;--dock-light-y:0%;overflow:visible}
+.ios-dock .dock-glow{z-index:0}
+.ios-dock .dock-liquid{z-index:0;overflow:hidden;isolation:isolate;will-change:transform,width;border:1px solid rgba(255,255,255,.74);background:linear-gradient(148deg,rgba(255,255,255,.62) 0%,rgba(221,230,255,.28) 34%,rgba(160,178,255,.22) 63%,rgba(255,255,255,.42) 100%);box-shadow:0 7px 23px rgba(87,101,194,.18),0 1px 4px rgba(255,255,255,.38),inset 0 1.5px 0 rgba(255,255,255,.94),inset 0 -2px 5px rgba(103,122,211,.12),inset 1px 0 2px rgba(255,255,255,.5);backdrop-filter:blur(22px) saturate(220%) contrast(1.04);-webkit-backdrop-filter:blur(22px) saturate(220%) contrast(1.04);transition:transform .58s cubic-bezier(.16,1,.3,1),width .42s cubic-bezier(.16,1,.3,1),height .34s cubic-bezier(.2,.8,.2,1),opacity .2s ease,border-radius .35s ease,filter .25s ease}
+.ios-dock .dock-liquid:before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse 85% 105% at var(--dock-light-x) var(--dock-light-y),rgba(255,255,255,.78),transparent 56%),linear-gradient(125deg,rgba(255,255,255,.3),transparent 31%,rgba(160,177,255,.13) 58%,rgba(255,255,255,.25));box-shadow:inset 0 1px 0 rgba(255,255,255,.54);opacity:.95}
+.ios-dock .dock-liquid:after{content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;background:linear-gradient(112deg,transparent 18%,rgba(255,255,255,.46) 32%,rgba(255,255,255,.07) 43%,transparent 57%),linear-gradient(180deg,rgba(255,255,255,.24),transparent 42%);opacity:.78;mix-blend-mode:screen;transform:translateX(-14%);transition:transform .6s cubic-bezier(.16,1,.3,1),opacity .25s ease}
+.ios-dock .dock-liquid.is-springing{filter:brightness(1.08) saturate(1.12);border-radius:24px}
+.ios-dock .dock-liquid.is-springing:after{transform:translateX(9%);opacity:1}
+.ios-dock .dock-item{z-index:1;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.ios-dock .dock-item.active .dock-icon{filter:drop-shadow(0 1px 4px rgba(108,123,227,.2))}
+.ios-dock .dock-item:active .dock-icon{transform:scale(.91)}
+html[data-solara-theme="dark"] .ios-dock .dock-liquid{background:linear-gradient(148deg,rgba(181,194,255,.27),rgba(114,132,239,.18) 42%,rgba(161,133,255,.16) 72%,rgba(255,255,255,.13));border-color:rgba(221,226,255,.27);box-shadow:0 8px 24px rgba(0,0,0,.22),inset 0 1.5px 0 rgba(255,255,255,.28),inset 0 -2px 5px rgba(90,100,183,.16);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%)}
+html[data-solara-theme="dark"] .ios-dock .dock-liquid:before{background:radial-gradient(ellipse 85% 105% at var(--dock-light-x) var(--dock-light-y),rgba(228,232,255,.3),transparent 56%),linear-gradient(125deg,rgba(255,255,255,.13),transparent 31%,rgba(144,158,255,.13) 58%,rgba(255,255,255,.1))}
+html[data-solara-theme="dark"] .ios-dock .dock-liquid:after{background:linear-gradient(112deg,transparent 18%,rgba(255,255,255,.25) 32%,rgba(255,255,255,.04) 43%,transparent 57%),linear-gradient(180deg,rgba(255,255,255,.12),transparent 42%)}
+@media(hover:hover){.ios-dock .dock-item:hover .dock-icon{transform:translateY(-2px) scale(1.06)}}
+@media(prefers-reduced-motion:reduce){.ios-dock .dock-liquid,.ios-dock .dock-liquid:after{transition:none!important}.ios-dock .dock-liquid.is-springing{filter:none}}
+@media(prefers-reduced-transparency:reduce){.ios-dock .dock-liquid{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(132,148,240,.25)}.ios-dock .dock-liquid:before,.ios-dock .dock-liquid:after{display:none}}
+html.low-power .ios-dock .dock-liquid{backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 3px 10px rgba(70,80,150,.12),inset 0 1px 0 rgba(255,255,255,.55)}
+html.low-power .ios-dock .dock-liquid:after{display:none}
+</style>
 </head>
 <body>
 
@@ -579,6 +601,31 @@ function syncDockLiquid(){
  liquid.style.transform='translate3d('+left+'px,0,0)';
  liquid.classList.add('is-ready');
 }
+(function initLiquidDockPhysics(){
+ const dock=$('iosDock'), liquid=$('dockLiquid');
+ if(!dock||!liquid)return;
+ let springTimer=0;
+ dock.querySelectorAll('.dock-item').forEach(item=>{
+  item.addEventListener('click',()=>{ 
+   liquid.classList.remove('is-springing');
+   void liquid.offsetWidth;
+   liquid.classList.add('is-springing');
+   clearTimeout(springTimer);
+   springTimer=setTimeout(()=>liquid.classList.remove('is-springing'),420);
+   requestAnimationFrame(syncDockLiquid);
+  });
+ });
+ dock.addEventListener('pointermove',event=>{
+  if(event.pointerType==='touch')return;
+  const rect=dock.getBoundingClientRect();
+  dock.style.setProperty('--dock-light-x',Math.max(0,Math.min(100,(event.clientX-rect.left)/rect.width*100))+'%');
+  dock.style.setProperty('--dock-light-y',Math.max(0,Math.min(100,(event.clientY-rect.top)/rect.height*100))+'%');
+ },{passive:true});
+ dock.addEventListener('pointerleave',()=>{
+  dock.style.setProperty('--dock-light-x','50%');
+  dock.style.setProperty('--dock-light-y','0%');
+ },{passive:true});
+})();
 (function initSolaraTheme(){
  const root=document.documentElement,button=$('solara-theme-toggle');
  let saved='light';
