@@ -2767,6 +2767,21 @@ html[data-solara-theme="dark"] body .form .field select:focus-visible{outline:2p
     animation:none!important; translate:none!important; scale:1!important; filter:none!important;
   }
 }
+
+/* Solara dock motion polish: luminous glass and playful selection feedback, GPU-light */
+.ios-dock:after{content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;z-index:2;background:linear-gradient(108deg,transparent 0%,rgba(255,255,255,0) 27%,rgba(255,255,255,.28) 43%,rgba(255,255,255,.06) 49%,transparent 63%);background-size:220% 100%;opacity:.5;animation:solara-dock-sheen 7.5s ease-in-out infinite}
+@keyframes solara-dock-sheen{0%,18%{background-position:120% 0;opacity:.12}42%{opacity:.6}65%,100%{background-position:-120% 0;opacity:.16}}
+.ios-dock .dock-item{transition:transform .32s cubic-bezier(.2,.8,.2,1),color .25s ease,filter .25s ease}
+@media(hover:hover) and (pointer:fine){.ios-dock .dock-item:hover{transform:translateY(-3px) scale(1.025);filter:drop-shadow(0 5px 8px rgba(97,112,217,.16))}}
+.ios-dock .dock-item.active .dock-icon{animation:solara-dock-icon-pop .52s cubic-bezier(.2,.9,.25,1.35) both}
+@keyframes solara-dock-icon-pop{0%{transform:translateY(2px) scale(.82)}58%{transform:translateY(-2px) scale(1.13)}100%{transform:translateY(0) scale(1)}}
+.ios-dock .dock-liquid.is-springing{animation:solara-liquid-spring .42s cubic-bezier(.2,.85,.22,1) both}
+@keyframes solara-liquid-spring{0%{scale:1 1}34%{scale:1.045 .94}68%{scale:.985 1.035}100%{scale:1 1}}
+html[data-solara-theme="dark"] .ios-dock:after{background:linear-gradient(108deg,transparent 0%,rgba(255,255,255,0) 27%,rgba(206,214,255,.2) 43%,rgba(172,183,255,.04) 49%,transparent 63%)}
+html.low-power .ios-dock:after{animation:none!important}
+@media(max-width:650px) and (pointer:coarse){.ios-dock:after{animation-duration:10s;opacity:.32}}
+@media(prefers-reduced-motion:reduce){.ios-dock:after,.ios-dock .dock-item.active .dock-icon,.ios-dock .dock-liquid.is-springing{animation:none!important;translate:none!important;scale:1!important;filter:none!important}}
+
 </style>
 
 </body>
