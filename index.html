@@ -2727,5 +2727,47 @@ html[data-solara-theme="dark"] body .form .field select:focus-visible{outline:2p
  .solara-liquid-wave-overlay,.wave-ribbon,.wave-glint{display:none!important;animation:none!important}
 }
 </style>
+
+<style id="solara-dock-motion-phone-restore-v1">
+/* Restore bottom Liquid Glass dock entrance motion with phone-friendly rendering. */
+@keyframes solara-dock-rise-in {
+  0% { opacity:0; translate:0 24px; scale:.965; filter:blur(5px); }
+  72% { opacity:1; translate:0 -2px; scale:1.008; filter:blur(0); }
+  100% { opacity:1; translate:0 0; scale:1; filter:blur(0); }
+}
+@keyframes solara-dock-item-rise {
+  from { opacity:.45; translate:0 8px; }
+  to { opacity:1; translate:0 0; }
+}
+.ios-dock.dock-mounted:not(.dock-hidden) {
+  animation:solara-dock-rise-in .62s cubic-bezier(.2,.82,.22,1) both!important;
+}
+.ios-dock.dock-mounted:not(.dock-hidden) .dock-item {
+  animation:solara-dock-item-rise .38s cubic-bezier(.2,.8,.25,1) both;
+}
+.ios-dock.dock-mounted:not(.dock-hidden) .dock-item:nth-of-type(1){animation-delay:.04s}
+.ios-dock.dock-mounted:not(.dock-hidden) .dock-item:nth-of-type(2){animation-delay:.075s}
+.ios-dock.dock-mounted:not(.dock-hidden) .dock-item:nth-of-type(3){animation-delay:.11s}
+.ios-dock.dock-mounted:not(.dock-hidden) .dock-item:nth-of-type(4){animation-delay:.145s}
+.ios-dock.dock-mounted:not(.dock-hidden) .dock-item:nth-of-type(5){animation-delay:.18s}
+@media(max-width:650px) and (pointer:coarse) {
+  .ios-dock,.top,.panel.glass,.toast {
+    -webkit-backdrop-filter:blur(8px) saturate(138%)!important;
+    backdrop-filter:blur(8px) saturate(138%)!important;
+  }
+  .ios-dock.dock-mounted:not(.dock-hidden) { animation-duration:.52s!important; }
+  .ios-dock.dock-mounted:not(.dock-hidden) .dock-item { animation-duration:.3s; }
+  .ios-dock .dock-item { -webkit-tap-highlight-color:transparent; }
+  .ios-dock .dock-liquid { will-change:auto!important; }
+  .ios-dock .dock-item:active { transition:transform .12s ease!important; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .ios-dock.dock-mounted:not(.dock-hidden),
+  .ios-dock.dock-mounted:not(.dock-hidden) .dock-item {
+    animation:none!important; translate:none!important; scale:1!important; filter:none!important;
+  }
+}
+</style>
+
 </body>
 </html>
