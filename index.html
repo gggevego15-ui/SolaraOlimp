@@ -1609,6 +1609,44 @@ html[data-solara-theme="dark"] #teacherDifficulty:focus {
 }
 </style>
 
+
+<style id="solara-dock-hover-labels-v3">
+/* Navigation labels stay hidden until a tab is hovered or keyboard-focused. */
+.ios-dock .dock-label,
+.ios-dock .dock-item.active .dock-label,
+.ios-dock .dock-item.active:not(:hover):not(:focus-visible) .dock-label{
+  display:inline-block!important;
+  width:auto!important;
+  max-width:0!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  opacity:0!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+  transform:translateX(-5px)!important;
+  pointer-events:none!important;
+  transition:max-width .28s cubic-bezier(.2,.8,.2,1),opacity .18s ease,transform .28s ease!important;
+}
+.ios-dock .dock-item:hover .dock-label,
+.ios-dock .dock-item:focus-visible .dock-label{
+  max-width:110px!important;
+  opacity:1!important;
+  transform:translateX(0)!important;
+}
+@media(hover:none),(pointer:coarse){
+  .ios-dock .dock-item:active .dock-label{
+    max-width:110px!important;
+    opacity:1!important;
+    transform:translateX(0)!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .ios-dock .dock-label{transition:none!important}
+}
+</style>
+
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
