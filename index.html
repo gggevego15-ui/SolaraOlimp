@@ -2484,5 +2484,89 @@ html[data-solara-theme="dark"] .form .field:has(> #studentGrade) .hint {
 }
 </style>
 
+
+<style id="solara-bottom-dock-usability-v1">
+/* Keep the bottom navigation readable and usable; notes/quiz logic is intentionally untouched. */
+body{padding-bottom:calc(104px + env(safe-area-inset-bottom,0px))!important}
+.ios-dock{
+  display:flex!important;
+  align-items:stretch!important;
+  justify-content:center!important;
+  gap:6px!important;
+  width:max-content!important;
+  max-width:calc(100vw - 24px)!important;
+  padding:7px!important;
+  bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;
+  border-radius:25px!important;
+}
+.ios-dock.dock-hidden{display:none!important}
+.ios-dock .dock-item{
+  display:flex!important;
+  flex:0 1 auto!important;
+  flex-direction:row!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:7px!important;
+  min-width:0!important;
+  height:48px!important;
+  padding:0 13px!important;
+  border-radius:17px!important;
+  white-space:nowrap!important;
+}
+.ios-dock .dock-label{
+  display:inline-block!important;
+  max-width:110px!important;
+  opacity:1!important;
+  overflow:visible!important;
+  transform:none!important;
+  font-size:12px!important;
+  line-height:1.15!important;
+  letter-spacing:0!important;
+}
+.ios-dock .dock-icon{width:22px!important;height:22px!important;flex:0 0 22px!important}
+.ios-dock .dock-icon svg{width:21px!important;height:21px!important}
+.ios-dock .dock-item.active{
+  color:#465fe0!important;
+  background:rgba(111,130,244,.13)!important;
+}
+html[data-solara-theme="dark"] .ios-dock .dock-item.active{
+  color:#f4f6ff!important;
+  background:rgba(153,166,255,.17)!important;
+}
+@media(max-width:650px){
+  body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}
+  .ios-dock,.ios-dock.dock-hidden{
+    left:12px!important;right:12px!important;width:auto!important;
+    max-width:none!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;
+    gap:3px!important;padding:5px!important;border-radius:22px!important;
+    justify-content:stretch!important;transform:none!important;
+  }
+  .ios-dock.dock-hidden{display:none!important}
+  .ios-dock .dock-item{
+    flex:1 1 0!important;min-width:0!important;height:57px!important;
+    flex-direction:column!important;gap:3px!important;padding:4px 2px!important;
+    border-radius:15px!important;
+  }
+  .ios-dock .dock-label{
+    display:block!important;max-width:100%!important;width:100%!important;
+    overflow:hidden!important;text-overflow:ellipsis!important;
+    font-size:clamp(8px,2.55vw,10px)!important;line-height:1.1!important;
+    text-align:center!important;white-space:nowrap!important;
+  }
+  .ios-dock .dock-icon{width:22px!important;height:22px!important;flex:0 0 22px!important}
+  .ios-dock .dock-icon svg{width:20px!important;height:20px!important}
+  .ios-dock .dock-liquid{border-radius:15px!important}
+  .ios-dock .dock-update-badge{top:1px!important;right:1px!important;font-size:7px!important;padding:2px 3px!important}
+}
+@media(max-width:360px){
+  .ios-dock,.ios-dock.dock-hidden{left:8px!important;right:8px!important}
+  .ios-dock .dock-item{height:54px!important}
+  .ios-dock .dock-label{font-size:8px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .ios-dock,.ios-dock .dock-item,.ios-dock .dock-liquid{animation:none!important;transition:none!important}
+}
+</style>
+
 </body>
 </html>
