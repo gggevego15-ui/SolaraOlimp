@@ -2595,14 +2595,55 @@ html[data-solara-theme="dark"] .ios-dock .dock-item.active {background:rgba(153,
 </style>
 
 
-<style id="solara-dock-alignment-nudge">
-/* Slight left correction so the floating mini-tabs align visually with the page. */
-@media (hover:hover) and (min-width:651px) {
-  .ios-dock { left:calc(50% - 16px)!important; }
+<style id="solara-dock-proportional-alignment">
+/* Consistent, proportional navigation: centered desktop dock and equally sized tabs. */
+.ios-dock{
+  box-sizing:border-box!important;left:50%!important;right:auto!important;
+  width:min(440px,calc(100vw - 32px))!important;max-width:calc(100vw - 32px)!important;
+  transform:translateX(-50%)!important;display:flex!important;align-items:stretch!important;
+  justify-content:stretch!important;gap:5px!important;padding:7px!important;
 }
-@media (hover:none), (max-width:650px) {
-  .ios-dock { left:6px!important; right:18px!important; }
+.ios-dock>.dock-item{
+  box-sizing:border-box!important;flex:1 1 0!important;width:0!important;min-width:0!important;
+  max-width:none!important;height:52px!important;padding:0 5px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  justify-content:center!important;gap:4px!important;border-radius:17px!important;overflow:hidden!important;
 }
+.ios-dock>.dock-item:hover,.ios-dock>.dock-item:focus-visible{
+  flex:1 1 0!important;width:0!important;padding:0 5px!important;
+}
+.ios-dock .dock-icon{flex:0 0 21px!important;width:21px!important;height:21px!important;display:grid!important;place-items:center!important}
+.ios-dock .dock-icon svg{display:block!important;width:20px!important;height:20px!important}
+.ios-dock .dock-label,
+.ios-dock .dock-item:hover .dock-label,
+.ios-dock .dock-item:focus-visible .dock-label,
+.ios-dock .dock-item.active:not(:hover):not(:focus-visible) .dock-label{
+  display:block!important;box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important;
+  opacity:1!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+  text-align:center!important;transform:none!important;font-size:clamp(8px,2.4vw,10px)!important;
+  line-height:1.1!important;letter-spacing:0!important;padding:0 1px!important;
+}
+.ios-dock .dock-item.active{background:rgba(111,130,244,.13)!important}
+html[data-solara-theme="dark"] .ios-dock .dock-item.active{color:#f4f6ff!important;background:rgba(153,166,255,.19)!important}
+.ios-dock .dock-update-badge{top:1px!important;right:1px!important}
+@media(max-width:650px){
+  .ios-dock,.ios-dock.dock-hidden{
+    left:12px!important;right:12px!important;width:auto!important;max-width:none!important;transform:none!important;
+    gap:3px!important;padding:5px!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;border-radius:22px!important;
+  }
+  .ios-dock .dock-item,.ios-dock .dock-item:hover,.ios-dock .dock-item:focus-visible{
+    flex:1 1 0!important;width:0!important;min-width:0!important;height:56px!important;padding:4px 2px!important;
+    flex-direction:column!important;gap:4px!important;
+  }
+  .ios-dock .dock-label,.ios-dock .dock-item.active:not(:hover):not(:focus-visible) .dock-label{font-size:clamp(8px,2.5vw,10px)!important}
+}
+@media(max-width:360px){
+  .ios-dock,.ios-dock.dock-hidden{left:8px!important;right:8px!important}
+  .ios-dock{gap:2px!important;padding:4px!important}
+  .ios-dock .dock-item{height:53px!important;padding-inline:1px!important}
+  .ios-dock .dock-label{font-size:8px!important}
+}
+@media(prefers-reduced-motion:reduce){.ios-dock,.ios-dock .dock-item,.ios-dock .dock-label{transition:none!important}}
 </style>
 
 </body>
