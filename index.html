@@ -615,7 +615,7 @@ html.low-power .ios-dock .dock-liquid:after{filter:none}
 <div class="form" style="margin-bottom:22px"><button class="secondary" id="openTeacherDashboard">▤ Мои занятия и результаты</button><button class="secondary" id="refreshTeacherDashboard">↻ Обновить</button></div>
 <div id="teacherDashboard" class="hidden" style="margin-bottom:26px"><h2>Мои занятия</h2><p class="hint" id="dashboardStatus">Загрузка…</p><div id="dashboardSessions" style="display:grid;gap:12px"></div></div>
 <h2 style="margin-top:10px">Создать новое занятие</h2><p class="lead">Выбери предмет и создай уникальный код для нового набора задач.</p>
-<div class="form"><div class="field class-field"><label for="teacherGrade">КЛАСС — СНАЧАЛА ВЫБЕРИ КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select><p class="hint field-help">Этот класс будет указан в коде занятия. Ученики должны выбрать тот же класс, когда вводят код.</p></div><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option></select></div><div class="field"><label for="teacherDifficulty">УРОВЕНЬ СЛОЖНОСТИ</label><select id="teacherDifficulty"><option value="basic">Базовый</option><option value="olympiad" selected>Олимпиадный</option><option value="advanced">Продвинутый</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
+<div class="form"><div class="field class-field"><label for="teacherGrade">КЛАСС — СНАЧАЛА ВЫБЕРИ КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select><p class="hint field-help">Этот класс будет указан в коде занятия. Ученики должны выбрать тот же класс, когда вводят код.</p></div><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option></select></div><div class="field"><label for="teacherDifficulty">УРОВЕНЬ СЛОЖНОСТИ</label><select id="teacherDifficulty"><option value="basic">Базовый</option><option value="olympiad" selected>Олимпиадный</option><option value="advanced">Продвинутый</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
 <div class="hidden" id="generated"><div class="code-box"><div><div class="hint">НАСТОЯЩИЙ КОД ЗАНЯТИЯ</div><div class="code" id="generatedCode">—</div></div><button class="secondary" id="copyCode">Копировать код</button></div><div class="meta"><span class="chip" id="generatedSubject">∑ Математика</span><span class="chip" id="generatedGrade">7 класс</span><span class="chip" id="generatedDifficulty">Олимпиадный</span><span class="chip">10 задач</span><span class="chip">60 минут на ученика</span></div><p class="hint">Код сохранён в базе. Все ученики, которые введут его, получат один и тот же набор из 10 задач.</p><div class="field" style="margin-top:18px"><label for="teacherTokenDisplay">СЕКРЕТНЫЙ КЛЮЧ УЧИТЕЛЯ — СОХРАНИ ЕГО</label><div class="code-box"><div class="code" id="teacherTokenDisplay" style="font-size:13px;letter-spacing:0;overflow-wrap:anywhere">—</div><button class="secondary" id="copyTeacherToken">Копировать ключ</button></div><p class="hint">Этот ключ нужен для просмотра результатов. Не отправляй его ученикам.</p></div><button class="secondary" id="showResults" style="margin-top:12px">Посмотреть результаты учеников</button><div class="hidden" id="teacherResults" style="margin-top:16px"></div><button class="primary" id="newCode" style="margin-top:16px">Создать ещё одно занятие</button></div>
 </section>
 <section class="panel glass hidden" id="studentView">
@@ -658,7 +658,7 @@ setTimeout(()=>{
 const $=id=>document.getElementById(id);
 const API_URL="https://husjlwgohxtatgguzdjm.supabase.co/functions/v1/olimp-api";
 const API_KEY="sb_publishable_iECwhv5Ljl48x8_v6FasJA_W5jwXNtZ";
-function subjectName(subject,upper=false){const names={math:"Математика",info:"Информатика",rus:"Русский язык"};const value=names[subject]||"Неизвестный предмет";return upper?value.toLocaleUpperCase("ru-RU"):value;}
+function subjectName(subject,upper=false){const names={math:"Математика",info:"Информатика",rus:"Русский язык",physics:"Физика"};const value=names[subject]||"Неизвестный предмет";return upper?value.toLocaleUpperCase("ru-RU"):value;}
 async function api(action,payload={}){const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":API_KEY},body:JSON.stringify({action,...payload})});let data={};try{data=await response.json()}catch(e){}if(!response.ok)throw new Error(data.error||"Ошибка соединения с сервером");return data;}
 const views=['roleView','teacherView','studentView','quizView','resultView'];
 let viewTransitionTimer=0,viewTransitionToken=0;
@@ -818,6 +818,18 @@ info:[
 {t:'Логика',q:'Каково значение выражения NOT true?',a:['true','false','2','null всегда'],c:1},
 {t:'Функции',q:'Зачем используют функции в программе?',a:['Чтобы переиспользовать именованный блок кода','Чтобы увеличить экран','Чтобы заменить все переменные','Только для хранения изображений'],c:0},
 {t:'Поиск',q:'Какой алгоритм поиска в отсортированном массиве за O(log n)?',a:['Линейный поиск','Бинарный поиск','Пузырьковая сортировка','Обход в глубину'],c:1}
+],
+physics:[
+{t:'Механика',q:'Как называется единица силы в СИ?',a:['Джоуль','Ньютон','Ватт','Паскаль'],c:1},
+{t:'Движение',q:'Тело прошло 100 м за 20 с. Скорость равна…',a:['2 м/с','5 м/с','20 м/с','2000 м/с'],c:1},
+{t:'Силы',q:'Какой прибор измеряет силу?',a:['Термометр','Амперметр','Динамометр','Барометр'],c:2},
+{t:'Электричество',q:'Какая частица имеет отрицательный заряд?',a:['Протон','Нейтрон','Электрон','Фотон'],c:2},
+{t:'Энергия',q:'В каких единицах измеряется работа?',a:['Ньютон','Джоуль','Ватт','Ампер'],c:1},
+{t:'Плотность',q:'Как вычислить плотность?',a:['Объём разделить на массу','Массу разделить на объём','Массу умножить на объём','Силу разделить на время'],c:1},
+{t:'Звук',q:'Где звук не может распространяться?',a:['В воздухе','В воде','В стали','В вакууме'],c:3},
+{t:'Давление',q:'Давление равно…',a:['Силе, умноженной на площадь','Площади, делённой на силу','Силе, делённой на площадь','Массе, делённой на время'],c:2},
+{t:'Оптика',q:'Угол отражения света равен…',a:['Углу падения','Двойному углу падения','90° всегда','Половине угла падения'],c:0},
+{t:'Закон Ома',q:'Напряжение 12 В, сопротивление 4 Ом. Сила тока?',a:['48 А','8 А','3 А','0,33 А'],c:2}
 ]};
 function hashSeed(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function rng(seed){let x=seed>>>0;return()=>{x+=0x6D2B79F5;let t=x;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
@@ -831,7 +843,7 @@ $("generateCode").addEventListener("click",async()=>{
   currentCode=data.code;currentTeacherToken=data.teacherToken;
   $("generatedCode").textContent=currentCode;
   $("teacherTokenDisplay").textContent=currentTeacherToken;
-  $("generatedSubject").textContent=(subject==="math"?"∑ ":subject==="info"?"⌘ ":"Аа ")+subjectName(subject);
+  $("generatedSubject").textContent=(subject==="math"?"∑ ":subject==="info"?"⌘ ":subject==="physics"?"⚛ ":"Аа ")+subjectName(subject);
   $("generatedGrade").textContent=grade+" класс";
   $("generatedDifficulty").textContent=({basic:"Базовый",olympiad:"Олимпиадный",advanced:"Продвинутый"})[difficulty];
   $("teacherResults").classList.add("hidden");$("teacherResults").replaceChildren();
@@ -1000,7 +1012,7 @@ async function finishQuiz(timeUp){
   renderResultInsights(session.tasks,session.answers,correct);
   applyReviewFilter("all");
   $("resultLead").textContent=timeUp?"Время вышло. Вот твой результат.":"Ты завершил занятие. Вот твой результат.";
-  $("resultSubject").textContent=(session.subject==="math"?"∑ ":session.subject==="info"?"⌘ ":"Аа ")+subjectName(session.subject);
+  $("resultSubject").textContent=(session.subject==="math"?"∑ ":session.subject==="info"?"⌘ ":session.subject==="physics"?"⚛ ":"Аа ")+subjectName(session.subject);
   $("resultTime").textContent="Время: "+spent+" мин";
   $("resultList").replaceChildren();
   session.tasks.forEach((q,i)=>{
@@ -1030,7 +1042,7 @@ try{
  if(saved&&/^[MIR][A-HJ-NP-Z2-9]{5}$/.test(saved.code)&&saved.teacherToken){
   currentCode=saved.code;currentTeacherToken=saved.teacherToken;
   $("generatedCode").textContent=currentCode;$("teacherTokenDisplay").textContent=currentTeacherToken;
-  $("generatedSubject").textContent=(saved.subject==="math"?"∑ ":saved.subject==="info"?"⌘ ":"Аа ")+subjectName(saved.subject);
+  $("generatedSubject").textContent=(saved.subject==="math"?"∑ ":saved.subject==="info"?"⌘ ":saved.subject==="physics"?"⚛ ":"Аа ")+subjectName(saved.subject);
   $("teacherSubject").value=saved.subject;$("teacherGrade").value=String(saved.grade||7);$("generatedGrade").textContent=(saved.grade||7)+" класс";$("generated").classList.remove("hidden");
  }
 }catch(e){}
