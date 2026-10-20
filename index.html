@@ -406,6 +406,25 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{
 .low-power .panel,.low-power .panel.glass,.low-power .review-card{animation:none!important}
 .low-power .panel.glass:before,.low-power .panel.glass:after,.low-power .dock-glow{display:none!important}
 .low-power .panel,.low-power .role,.low-power .primary,.low-power .secondary,.low-power .back,.low-power .answer,.low-power .question-jump,.low-power .code-box,.low-power .result-row{transition:none!important}
+
+/* Phone-only performance tuning: keep the glass look, reduce expensive repaints */
+@media(max-width:650px) and (pointer:coarse){
+ body{background-attachment:scroll}
+ .top,.panel.glass,.ios-dock,.toast{
+  -webkit-backdrop-filter:blur(8px) saturate(145%);
+  backdrop-filter:blur(8px) saturate(145%);
+ }
+ .panel.glass{box-shadow:0 10px 28px rgba(55,70,126,.09),inset 0 1px 0 rgba(255,255,255,.84)}
+ .panel:not(.hidden):not(.is-leaving){animation:solara-enter .22s ease-out both}
+ .wave-ribbon,.wave-glint{will-change:auto}
+ .solara-liquid-wave-overlay.is-running .wave-ribbon,
+ .solara-liquid-wave-overlay.is-running .wave-glint{will-change:transform,opacity}
+ .question-visual-media{content-visibility:auto}
+ .ios-dock{box-shadow:0 10px 28px rgba(41,53,103,.14),inset 0 1px 0 rgba(255,255,255,.88)}
+}
+@media(max-width:650px) and (pointer:coarse) and (prefers-reduced-motion:reduce){
+ .solara-liquid-wave-overlay,.wave-ribbon,.wave-glint{display:none!important;animation:none!important}
+}
 </style>
 
 <style id="solara-update-announcement-style">
@@ -1126,10 +1145,11 @@ html[data-solara-theme="dark"] .role:hover .role-icon{background:#2a3140!importa
 (()=>{
  const root=document.documentElement;
  const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+ const phone=!!(window.matchMedia&&window.matchMedia("(max-width:650px) and (pointer:coarse)").matches);
  const constrained=(Number(navigator.deviceMemory)>0&&Number(navigator.deviceMemory)<=4)
    ||(Number(navigator.hardwareConcurrency)>0&&Number(navigator.hardwareConcurrency)<=4)
    ||!!(connection&&connection.saveData);
- if(constrained)root.classList.add('low-power');
+ if(phone&&constrained)root.classList.add('low-power');
 })();
 </script>
 
@@ -2221,12 +2241,19 @@ showView('roleView');
 </script>
 <script id="solara-performance-profile">
 (function(){
+ const root=document.documentElement;
  const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+ const phone=!!(window.matchMedia&&window.matchMedia("(max-width:650px) and (pointer:coarse)").matches);
  const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
  const lowPower=(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||(navigator.deviceMemory&&navigator.deviceMemory<=4)||(connection&&connection.saveData);
- if(lowPower||reducedMotion)document.documentElement.classList.add("low-power");
+ if(phone&&(lowPower||reducedMotion))root.classList.add("low-power");
  if(connection&&typeof connection.addEventListener==="function"){
-  connection.addEventListener("change",function(){document.documentElement.classList.toggle("low-power",!!connection.saveData||!!(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||!!(navigator.deviceMemory&&navigator.deviceMemory<=4)||!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches));});
+  connection.addEventListener("change",function(){
+   const isPhone=!!(window.matchMedia&&window.matchMedia("(max-width:650px) and (pointer:coarse)").matches);
+   const constrained=(!!(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||!!(navigator.deviceMemory&&navigator.deviceMemory<=4)||!!connection.saveData);
+   const prefersLess=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+   root.classList.toggle("low-power",isPhone&&(constrained||prefersLess));
+  });
  }
 })();
 </script>
