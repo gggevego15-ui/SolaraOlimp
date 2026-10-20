@@ -1487,6 +1487,73 @@ html[data-solara-theme="dark"] .ios-dock>.dock-item.active:after{background:line
 html.low-power .ios-dock>.dock-item.active .dock-icon,html.low-power .ios-dock>.dock-item.active .dock-label,html.low-power .ios-dock>.dock-item.active:after{animation:none!important}
 </style>
 
+
+<style id="solara-hover-dock-dark-readability">
+/* Keep the floating dock compact: icons first, labels only on hover/focus. */
+.ios-dock .dock-item{
+  width:54px;min-width:54px;flex:0 0 54px;padding:0;gap:0;
+  justify-content:center;overflow:hidden;
+  transition:flex-basis .32s cubic-bezier(.2,.8,.2,1),width .32s cubic-bezier(.2,.8,.2,1),padding .28s ease,gap .22s ease,transform .3s ease,background .3s ease,color .3s ease,box-shadow .3s ease;
+}
+.ios-dock .dock-item .dock-label,
+.ios-dock .dock-item.active .dock-label{
+  display:block;max-width:0;opacity:0;transform:translateX(-5px);pointer-events:none;
+  transition:max-width .3s ease,opacity .18s ease,transform .3s ease;
+}
+.ios-dock .dock-item:hover,
+.ios-dock .dock-item:focus-visible{
+  width:auto;min-width:54px;flex:0 0 auto;padding:0 15px;gap:7px;
+}
+.ios-dock .dock-item:hover .dock-label,
+.ios-dock .dock-item:focus-visible .dock-label{
+  max-width:110px;opacity:1;transform:translateX(0);
+}
+.ios-dock .dock-item:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(hover:none),(pointer:coarse){
+  .ios-dock .dock-item{width:50px;min-width:50px;flex-basis:50px}
+  .ios-dock .dock-item:active{transform:scale(.94)}
+}
+@media(prefers-reduced-motion:reduce){
+  .ios-dock .dock-item,.ios-dock .dock-label{transition:none!important}
+}
+/* Dark-mode class picker and text fields: strong contrast without losing the glass style. */
+html[data-solara-theme="dark"] .form .field:has(#teacherGrade){
+  background:linear-gradient(145deg,rgba(34,39,62,.94),rgba(21,25,42,.96))!important;
+  border-color:rgba(190,202,255,.22)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 28px rgba(0,0,0,.14)!important;
+}
+html[data-solara-theme="dark"] .field label,
+html[data-solara-theme="dark"] .field>label,
+html[data-solara-theme="dark"] .field-help,
+html[data-solara-theme="dark"] .class-field .hint,
+html[data-solara-theme="dark"] #teacherGrade,
+html[data-solara-theme="dark"] #teacherGrade:focus,
+html[data-solara-theme="dark"] .field input,
+html[data-solara-theme="dark"] .field select,
+html[data-solara-theme="dark"] .field textarea,
+html[data-solara-theme="dark"] #notesText{
+  color:#f5f6ff!important;
+}
+html[data-solara-theme="dark"] #teacherGrade,
+html[data-solara-theme="dark"] .field input,
+html[data-solara-theme="dark"] .field select,
+html[data-solara-theme="dark"] .field textarea,
+html[data-solara-theme="dark"] #notesText{
+  background-color:rgba(17,21,37,.96)!important;
+  border-color:rgba(190,202,255,.25)!important;
+}
+html[data-solara-theme="dark"] #teacherGrade option,
+html[data-solara-theme="dark"] .field select option{
+  background:#171b2d!important;color:#f5f6ff!important;
+}
+html[data-solara-theme="dark"] .field input::placeholder,
+html[data-solara-theme="dark"] .field textarea::placeholder,
+html[data-solara-theme="dark"] #notesText::placeholder{
+  color:#aeb8d8!important;opacity:1!important;
+}
+html[data-solara-theme="dark"] #notesText{caret-color:#c4ccff!important}
+</style>
+
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
