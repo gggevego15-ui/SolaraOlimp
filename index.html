@@ -1647,6 +1647,80 @@ html[data-solara-theme="dark"] #teacherDifficulty:focus {
 }
 </style>
 
+
+<style id="solara-dock-v101">
+/* v1.0.1 — full-button Liquid Glass, aligned tabs, icon-first hover expansion */
+.ios-dock{
+  display:flex!important;align-items:stretch!important;justify-content:stretch!important;
+  gap:5px!important;padding:7px!important;overflow:visible!important;
+}
+.ios-dock>.dock-item{
+  box-sizing:border-box!important;position:relative!important;isolation:isolate!important;
+  flex:1 1 0!important;width:0!important;min-width:0!important;max-width:none!important;
+  height:52px!important;padding:0 5px!important;margin:0!important;
+  display:flex!important;flex-direction:row!important;align-items:center!important;
+  justify-content:center!important;gap:0!important;overflow:hidden!important;
+  border:1px solid transparent!important;border-radius:17px!important;
+  transition:flex-grow .34s cubic-bezier(.2,.85,.25,1.15),gap .28s ease,
+    padding .28s ease,transform .28s ease,color .22s ease!important;
+}
+.ios-dock>.dock-item .dock-icon{
+  flex:0 0 22px!important;width:22px!important;height:22px!important;
+  display:grid!important;place-items:center!important;
+}
+.ios-dock>.dock-item .dock-label{
+  display:block!important;flex:0 1 auto!important;width:auto!important;min-width:0!important;
+  max-width:0!important;margin:0!important;padding:0!important;opacity:0!important;
+  overflow:hidden!important;text-overflow:clip!important;white-space:nowrap!important;
+  transform:translateX(-5px)!important;pointer-events:none!important;
+  font-size:11px!important;line-height:1!important;
+  transition:max-width .3s ease,opacity .2s ease,transform .3s ease!important;
+}
+@media(hover:hover) and (pointer:fine) and (min-width:651px){
+  .ios-dock>.dock-item:hover,.ios-dock>.dock-item:focus-visible{
+    flex-grow:2.35!important;gap:8px!important;padding-inline:12px!important;
+    z-index:3!important;background:rgba(111,130,244,.10)!important;
+  }
+  .ios-dock>.dock-item:hover .dock-label,.ios-dock>.dock-item:focus-visible .dock-label{
+    max-width:110px!important;opacity:1!important;transform:translateX(0)!important;
+  }
+  .ios-dock>.dock-item.active:not(:hover):not(:focus-visible){background:transparent!important}
+}
+.ios-dock>.dock-liquid{
+  position:absolute!important;z-index:0!important;pointer-events:none!important;
+  box-sizing:border-box!important;max-width:none!important;max-height:none!important;
+  border-radius:17px!important;overflow:hidden!important;
+  transition:transform .48s cubic-bezier(.2,.8,.2,1),width .38s cubic-bezier(.2,.8,.2,1),
+    height .28s ease!important;
+}
+.ios-dock>.dock-liquid:before,.ios-dock>.dock-liquid:after{
+  content:""!important;position:absolute!important;inset:0!important;
+  border-radius:inherit!important;pointer-events:none!important;
+}
+.ios-dock>.dock-liquid:before{
+  background:linear-gradient(135deg,rgba(255,255,255,.5),rgba(255,255,255,.08) 42%,rgba(130,150,255,.16))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72),inset 0 -1px 0 rgba(255,255,255,.18),
+    inset 1px 0 0 rgba(255,255,255,.34)!important;
+}
+.ios-dock>.dock-item{z-index:1!important}
+.ios-dock>.dock-item:hover,.ios-dock>.dock-item:focus-visible{z-index:2!important}
+html[data-solara-theme="dark"] .ios-dock>.dock-liquid:before{
+  background:linear-gradient(135deg,rgba(193,205,255,.26),rgba(115,132,190,.10) 52%,rgba(172,150,220,.18))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(255,255,255,.08)!important;
+}
+@media(hover:none),(max-width:650px){
+  .ios-dock>.dock-item{flex:1 1 0!important;width:0!important;min-width:0!important;height:56px!important;
+    flex-direction:column!important;gap:4px!important;padding:4px 2px!important}
+  .ios-dock>.dock-item .dock-label{max-width:100%!important;width:100%!important;opacity:0!important;
+    transform:none!important;font-size:clamp(8px,2.5vw,10px)!important;text-align:center!important}
+  .ios-dock>.dock-item.active .dock-label{opacity:1!important}
+  .ios-dock>.dock-item.active{background:rgba(111,130,244,.11)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .ios-dock,.ios-dock>.dock-item,.ios-dock>.dock-item .dock-label,.ios-dock>.dock-liquid{transition:none!important}
+}
+</style>
+
 </head>
 <body>
 <div class="solara-liquid-wave-overlay" id="solara-liquid-wave-overlay" aria-hidden="true"><span class="wave-ribbon wave-ribbon-back"></span><span class="wave-ribbon wave-ribbon-front"></span><span class="wave-glint"></span></div>
@@ -1861,7 +1935,7 @@ let viewTransitionTimer=0,viewTransitionToken=0;
 function syncDockLiquid(){
  const dock=$('iosDock'), liquid=$('dockLiquid');
  if(!dock||!liquid)return;
- const active=dock.querySelector('.dock-item.active');
+ const active=dock.querySelector('.dock-item:hover')||dock.querySelector('.dock-item:focus-visible')||dock.querySelector('.dock-item.active');
  if(!active)return;
  const dockRect=dock.getBoundingClientRect(), itemRect=active.getBoundingClientRect();
  const left=itemRect.left-dockRect.left-dock.clientLeft;
@@ -2495,7 +2569,7 @@ showView('roleView');
 
 <script id="solara-update-announcement">
 (function(){
-  const version = "2026-10-20-v100";
+  const version = "2026-10-21-v101";
   const storageKey = "solara_seen_update_" + version;
   const modal = document.getElementById("solara-update-modal");
   const dismiss = document.getElementById("solara-update-dismiss");
