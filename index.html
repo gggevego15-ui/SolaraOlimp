@@ -1735,8 +1735,7 @@ html[data-solara-theme="dark"] .ios-dock>.dock-liquid:before{
     <ul class="update-list">
       <li><span class="update-check">✓</span><span>Уменьшены вкладки нижней панели, чтобы интерфейс выглядел компактнее.</span></li>
       <li><span class="update-check">✓</span><span>Добавлена блокировка повторных нажатий во время перехода между экранами.</span></li>
-      <li><span class="update-check">✓</span><span>Переход завершается прежде, чем навигация снова станет доступна.</span></li>
-      <li><span class="update-check">✓</span><span>Заметки теперь открываются компактной Liquid Glass-кнопкой и сохраняются отдельно для каждой задачи.</span></li><li><span class="update-check">✓</span><span>Иллюстрации предусмотрены для всех семи предметов; панели заметок и тёмная тема получили более контрастное стекло.</span></li><li><span class="update-check">✓</span><span>Журнал версий обновлён до 0.7.0.</span></li>
+      <li><span class="update-check">✓</span><span>После завершения анимации навигация снова становится доступна.</span></li>
     </ul>
     <button class="update-dismiss" id="solara-update-dismiss" type="button">Понятно, продолжить</button>
   </div>
@@ -2094,7 +2093,7 @@ function showView(id){
  if(currentId){
   setNavigationTransitionLock(true);
   clearTimeout(navigationUnlockTimer);
-  const lockDuration=window.matchMedia("(max-width:640px)").matches?1150:1450;
+  const lockDuration=window.matchMedia("(prefers-reduced-motion: reduce)").matches?350:(window.matchMedia("(max-width:640px)").matches?1150:1450);
   navigationUnlockTimer=setTimeout(releaseNavigationTransitionLock,lockDuration);
  }
  const token=++viewTransitionToken;
