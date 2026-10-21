@@ -73,7 +73,10 @@ jobs:
                   raise SystemExit(f"API does not mention subject {key}")
               if f'subject==="{key}"' not in html:
                   raise SystemExit(f"Missing question visual branch for {key}")
-          migration = Path("supabase/migrations/20261021150724_add_biology_astronomy_ecology.sql").read_text(encoding="utf-8")
+          migration_paths = list(Path("supabase/migrations").glob("*add_biology_astronomy_ecology.sql"))
+          if not migration_paths:
+              raise SystemExit("Missing database migration for new subjects")
+          migration = migration_paths[0].read_text(encoding="utf-8")
           if "olimp_sessions_code_check" not in migration:
               raise SystemExit("Missing database migration for new subjects")
           print("All 1.1.0 subjects are present in UI, API, visuals and migration")
