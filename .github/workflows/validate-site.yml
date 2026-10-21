@@ -54,3 +54,27 @@ jobs:
               raise SystemExit("Missing quiz review features: " + ", ".join(missing))
           print("Quiz review UI and explanation functions are present")
           PY
+      - name: Check 1.1.0 subject integration
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html = Path("index.html").read_text(encoding="utf-8")
+          api = Path("supabase/functions/olimp-api/index.ts").read_text(encoding="utf-8")
+          subjects = {
+              "biology": "Биология",
+              "astronomy": "Астрономия",
+              "ecology": "Экология",
+          }
+          for key, label in subjects.items():
+              if html.count(f'<option value="{key}">{label}</option>') != 2:
+                  raise SystemExit(f"Expected teacher and student selectors for {label}")
+              if f'"{key}"' not in api:
+                  raise SystemExit(f"API does not mention subject {key}")
+              if f'subject==="{key}"' not in html:
+                  raise SystemExit(f"Missing question visual branch for {key}")
+          migration = Path("supabase/migrations/20261021150724_add_biology_astronomy_ecology.sql").read_text(encoding="utf-8")
+          if "olimp_sessions_code_check" not in migration:
+              raise SystemExit("Missing database migration for new subjects")
+          print("All 1.1.0 subjects are present in UI, API, visuals and migration")
+          PY
