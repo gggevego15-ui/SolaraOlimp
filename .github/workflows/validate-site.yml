@@ -81,3 +81,36 @@ jobs:
               raise SystemExit("Missing database migration for new subjects")
           print("All 1.1.0 subjects are present in UI, API, visuals and migration")
           PY
+      - name: Smoke test live Supabase API
+        run: |
+          python - <<'PY'
+          import os, re
+          from pathlib import Path
+
+          html = Path("index.html").read_text(encoding="utf-8")
+          api_url = re.search(r'const API_URL="([^"]+)"', html)
+          api_key = re.search(r'const API_KEY="([^"]+)"', html)
+          if not api_url or not api_key:
+              raise SystemExit("Could not read public API configuration from index.html")
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env:
+              env.write(f"SOLARA_API_URL={api_url.group(1)}\n")
+              env.write(f"SOLARA_API_KEY={api_key.group(1)}\n")
+          PY
+          curl --fail-with-body --silent --show-error "$SOLARA_API_URL" \
+            -X POST \
+            -H "apikey: $SOLARA_API_KEY" \
+            -H "Content-Type: application/json" \
+            --data '{"action":"health"}' \
+            -o /tmp/solara-api-health.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          response = json.loads(Path("/tmp/solara-api-health.json").read_text(encoding="utf-8"))
+          expected = {"math", "info", "rus", "physics", "geography", "history", "chemistry", "biology", "astronomy", "ecology"}
+          if response.get("ok") is not True or response.get("service") != "olimp-api" or response.get("version") != "1.1.0":
+              raise SystemExit(f"Unexpected API health response: {response}")
+          if set(response.get("subjects", [])) != expected:
+              raise SystemExit("Live API subject list does not match Solara Olimp 1.1.0")
+          print("Live Supabase API health check passed for all 10 subjects")
+          PY
