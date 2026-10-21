@@ -560,7 +560,7 @@ Deno.serve(async (req: Request) => {
       const correctAnswers = tasks.map((task: any) => task.c);
       if (participant.finished_at) {
         const finishedAt = new Date(participant.finished_at);
-        const elapsed = Number.isFinite(Number(participant.elapsed_seconds))
+        const elapsed = participant.elapsed_seconds != null && Number.isFinite(Number(participant.elapsed_seconds))
           ? Number(participant.elapsed_seconds)
           : Math.min(3600, Math.max(0, Math.floor((finishedAt.getTime() - new Date(participant.started_at).getTime()) / 1000)));
         return reply({
