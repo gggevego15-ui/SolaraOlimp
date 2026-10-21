@@ -66,6 +66,8 @@ jobs:
               "astronomy": "Астрономия",
               "ecology": "Экология",
           }
+          if "MIRPGHCBAE" not in html:
+              raise SystemExit("Frontend code validation excludes one or more new subject prefixes")
           for key, label in subjects.items():
               if html.count(f'<option value="{key}">{label}</option>') != 2:
                   raise SystemExit(f"Expected teacher and student selectors for {label}")
