@@ -2199,7 +2199,7 @@ $("generateCode").addEventListener("click",async()=>{
  try{
   const subject=$("teacherSubject").value,grade=Number($("teacherGrade").value),difficulty=$("teacherDifficulty").value;
   const data=await api("create",{subject,grade,difficulty});
-  if(!/^[MIRPGHC][A-HJ-NP-Z2-9]{5}$/.test(String(data.code||""))||!data.teacherToken)throw new Error("Сервер вернул некорректный код. Обнови страницу и создай занятие ещё раз.");
+  if(!/^[MIRPGHCBAE][A-HJ-NP-Z2-9]{5}$/.test(String(data.code||""))||!data.teacherToken)throw new Error("Сервер вернул некорректный код. Обнови страницу и создай занятие ещё раз.");
   currentCode=data.code;currentTeacherToken=data.teacherToken;
   $("generatedCode").textContent=currentCode;
   $("teacherTokenDisplay").textContent=currentTeacherToken;
@@ -2288,7 +2288,7 @@ $("joinForm").addEventListener("submit",async e=>{
  e.preventDefault();const code=$("studentCode").value.trim().toUpperCase(),subject=$("studentSubject").value,grade=$("studentGrade").value,studentName=$("studentName").value.trim().replace(/\s+/g," "),button=e.submitter||$("joinForm").querySelector("button[type=submit]");
  joinStatus.style.display="none";
  if(studentName.length<2||studentName.length>40){showJoinStatus("Введи имя от 2 до 40 символов.",true);notify("Введи имя от 2 до 40 символов");$("studentName").focus();return}
- if(!/^[MIRPGHC][A-HJ-NP-Z2-9]{5}$/.test(code)){showJoinStatus("Код должен состоять из 6 символов. Если у учителя показана одна буква или старый код — попроси создать новое занятие.",true);notify("Проверь код: нужно 6 символов");$("studentCode").focus();return}
+ if(!/^[MIRPGHCBAE][A-HJ-NP-Z2-9]{5}$/.test(code)){showJoinStatus("Код должен состоять из 6 символов. Если у учителя показана одна буква или старый код — попроси создать новое занятие.",true);notify("Проверь код: нужно 6 символов");$("studentCode").focus();return}
  button.disabled=true;button.textContent="Проверяем код…";showJoinStatus("Проверяем код и подключаемся к занятию…");
  try{const data=await api("join",{code,subject,studentName,grade});if(!Array.isArray(data.tasks)||data.tasks.length!==10||!data.participantToken)throw new Error("Код принят, но сервер не вернул задания. Попроси учителя создать новый код.");data.grade=grade;startQuiz(data)}
  catch(error){const message=error.message||"Не удалось подключиться к занятию";showJoinStatus(message,true);notify(message)}
@@ -2534,7 +2534,7 @@ try{
  const saved=JSON.parse(localStorage.getItem("solara_last_teacher_session")||"null");
  const history=JSON.parse(localStorage.getItem("solara_teacher_sessions")||"[]");
  if(saved&&saved.code&&saved.teacherToken&&Array.isArray(history)&&!history.some(x=>x.code===saved.code)){history.unshift(saved);localStorage.setItem("solara_teacher_sessions",JSON.stringify(history))}
- if(saved&&/^[MIRPGHC][A-HJ-NP-Z2-9]{5}$/.test(saved.code)&&saved.teacherToken){
+ if(saved&&/^[MIRPGHCBAE][A-HJ-NP-Z2-9]{5}$/.test(saved.code)&&saved.teacherToken){
   currentCode=saved.code;currentTeacherToken=saved.teacherToken;
   $("generatedCode").textContent=currentCode;$("teacherTokenDisplay").textContent=currentTeacherToken;
   $("generatedSubject").textContent=(saved.subject==="math"?"∑ ":saved.subject==="info"?"⌘ ":saved.subject==="physics"?"⚛ ":saved.subject==="geography"?"⌖ ":saved.subject==="history"?"◷ ":saved.subject==="chemistry"?"⚗ ":"Аа ")+subjectName(saved.subject);
