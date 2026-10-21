@@ -1731,11 +1731,11 @@ html[data-solara-theme="dark"] .ios-dock>.dock-liquid:before{
   <div class="update-card">
     <div class="update-kicker">Solara Olimp · обновление</div>
     <h2 id="solara-update-title">Что нового?</h2>
-    <div class="update-date">Версия 1.0.2 · 21 октября 2026</div>
+    <div class="update-date">Версия 1.1.0 · 21 октября 2026</div>
     <ul class="update-list">
-      <li><span class="update-check">✓</span><span>Уменьшены вкладки нижней панели, чтобы интерфейс выглядел компактнее.</span></li>
-      <li><span class="update-check">✓</span><span>Добавлена блокировка повторных нажатий во время перехода между экранами.</span></li>
-      <li><span class="update-check">✓</span><span>После завершения анимации навигация снова становится доступна.</span></li>
+      <li><span class="update-check">✓</span><span>Добавлены новые олимпиады по биологии, астрономии и экологии.</span></li>
+      <li><span class="update-check">✓</span><span>Расширен банк заданий и поддержка кодов для всех 10 предметов.</span></li>
+      <li><span class="update-check">✓</span><span>Обновлены проверки подключения к занятию и журнал изменений.</span></li>
     </ul>
     <button class="update-dismiss" id="solara-update-dismiss" type="button">Понятно, продолжить</button>
   </div>
@@ -1758,13 +1758,13 @@ html[data-solara-theme="dark"] .ios-dock>.dock-liquid:before{
 <div class="form" style="margin-bottom:22px"><button class="secondary" id="openTeacherDashboard">▤ Мои занятия и результаты</button><button class="secondary" id="refreshTeacherDashboard">↻ Обновить</button></div>
 <div id="teacherDashboard" class="hidden" style="margin-bottom:26px"><h2>Мои занятия</h2><p class="hint" id="dashboardStatus">Загрузка…</p><div id="dashboardSessions" style="display:grid;gap:12px"></div></div>
 <h2 style="margin-top:10px">Создать новое занятие</h2><p class="lead">Выбери предмет и создай уникальный код для нового набора задач.</p>
-<div class="form"><div class="field class-field"><label for="teacherGrade">ВЫБЕРИ КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select><p class="hint field-help">Этот класс будет указан в коде занятия. Ученики должны выбрать тот же класс, когда вводят код.</p></div><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option><option value="geography">География</option><option value="history">История</option><option value="chemistry">Химия</option></select></div><div class="field"><label for="teacherDifficulty">УРОВЕНЬ СЛОЖНОСТИ</label><select id="teacherDifficulty"><option value="basic">Базовый</option><option value="olympiad" selected>Олимпиадный</option><option value="advanced">Продвинутый</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
+<div class="form"><div class="field class-field"><label for="teacherGrade">ВЫБЕРИ КЛАСС</label><select id="teacherGrade"><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select><p class="hint field-help">Этот класс будет указан в коде занятия. Ученики должны выбрать тот же класс, когда вводят код.</p></div><div class="field"><label for="teacherSubject">ПРЕДМЕТ</label><select id="teacherSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option><option value="geography">География</option><option value="history">История</option><option value="chemistry">Химия</option><option value="biology">Биология</option><option value="astronomy">Астрономия</option><option value="ecology">Экология</option></select></div><div class="field"><label for="teacherDifficulty">УРОВЕНЬ СЛОЖНОСТИ</label><select id="teacherDifficulty"><option value="basic">Базовый</option><option value="olympiad" selected>Олимпиадный</option><option value="advanced">Продвинутый</option></select></div><button class="primary" id="generateCode">✦ Сгенерировать код занятия</button></div>
 <div class="hidden" id="generated"><div class="code-box"><div><div class="hint">НАСТОЯЩИЙ КОД ЗАНЯТИЯ</div><div class="code" id="generatedCode">—</div></div><button class="secondary" id="copyCode">Копировать код</button></div><div class="meta"><span class="chip" id="generatedSubject">∑ Математика</span><span class="chip" id="generatedGrade">7 класс</span><span class="chip" id="generatedDifficulty">Олимпиадный</span><span class="chip">10 задач</span><span class="chip">60 минут на ученика</span></div><p class="hint">Код сохранён в базе. Все ученики, которые введут его, получат один и тот же набор из 10 задач.</p><div class="field" style="margin-top:18px"><label for="teacherTokenDisplay">СЕКРЕТНЫЙ КЛЮЧ УЧИТЕЛЯ — СОХРАНИ ЕГО</label><div class="code-box"><div class="code" id="teacherTokenDisplay" style="font-size:13px;letter-spacing:0;overflow-wrap:anywhere">—</div><button class="secondary" id="copyTeacherToken">Копировать ключ</button></div><p class="hint">Этот ключ нужен для просмотра результатов. Не отправляй его ученикам.</p></div><button class="secondary" id="showResults" style="margin-top:12px">Посмотреть результаты учеников</button><div class="hidden" id="teacherResults" style="margin-top:16px"></div><button class="primary" id="newCode" style="margin-top:16px">Создать ещё одно занятие</button></div>
 </section>
 <section class="panel glass hidden" id="studentView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> КАБИНЕТ УЧЕНИКА</div><button class="back" data-home>← Назад</button></div>
 <h1>Готов к вызову?</h1><p class="lead">Выбери предмет и введи код от учителя. После старта у тебя будет 60 минут на 10 задач.</p>
-<form class="form" id="joinForm"><div class="field"><label for="studentName">ТВОЁ ИМЯ</label><input id="studentName" autocomplete="name" maxlength="40" minlength="2" placeholder="Например, Аня Иванова" required></div><div class="field"><label for="studentGrade">ТВОЙ КЛАСС — ВЫБЕРИ КАК В КОДЕ ОТ УЧИТЕЛЯ</label><select id="studentGrade" required><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div><div class="field"><label for="studentSubject">ПРЕДМЕТ</label><select id="studentSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option><option value="geography">География</option><option value="history">История</option><option value="chemistry">Химия</option></select></div><div class="field"><label for="studentCode">КОД ЗАНЯТИЯ</label><input id="studentCode" autocomplete="off" maxlength="6" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="Например, M4K8Q2" aria-describedby="joinStatus" required></div><button class="primary" type="submit">Проверить код и начать ↗</button><p class="hint" id="joinStatus" role="status" aria-live="polite" style="display:none;color:var(--blue);font-weight:650"></p><p class="hint">Имя появится в кабинете учителя рядом с результатом. Таймер запускается при начале занятия.</p></form>
+<form class="form" id="joinForm"><div class="field"><label for="studentName">ТВОЁ ИМЯ</label><input id="studentName" autocomplete="name" maxlength="40" minlength="2" placeholder="Например, Аня Иванова" required></div><div class="field"><label for="studentGrade">ТВОЙ КЛАСС — ВЫБЕРИ КАК В КОДЕ ОТ УЧИТЕЛЯ</label><select id="studentGrade" required><option value="5">5 класс</option><option value="6">6 класс</option><option value="7" selected>7 класс</option><option value="8">8 класс</option><option value="9">9 класс</option><option value="10">10 класс</option><option value="11">11 класс</option></select></div><div class="field"><label for="studentSubject">ПРЕДМЕТ</label><select id="studentSubject"><option value="math">Математика</option><option value="info">Информатика</option><option value="rus">Русский язык</option><option value="physics">Физика</option><option value="geography">География</option><option value="history">История</option><option value="chemistry">Химия</option><option value="biology">Биология</option><option value="astronomy">Астрономия</option><option value="ecology">Экология</option></select></div><div class="field"><label for="studentCode">КОД ЗАНЯТИЯ</label><input id="studentCode" autocomplete="off" maxlength="6" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="Например, M4K8Q2" aria-describedby="joinStatus" required></div><button class="primary" type="submit">Проверить код и начать ↗</button><p class="hint" id="joinStatus" role="status" aria-live="polite" style="display:none;color:var(--blue);font-weight:650"></p><p class="hint">Имя появится в кабинете учителя рядом с результатом. Таймер запускается при начале занятия.</p></form>
 </section>
 <section class="panel glass hidden" id="quizView">
 <div class="view-head"><div class="eyebrow"><span class="dot"></span> ЗАНЯТИЕ В ПРОЦЕССЕ</div><button class="back" id="quitQuiz">Выйти</button></div>
@@ -1802,11 +1802,11 @@ html[data-solara-theme="dark"] .ios-dock>.dock-liquid:before{
   <article class="update-entry update-entry-featured">
    <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
    <div class="update-entry-content">
-    <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 1.0.2</span><time datetime="2026-10-21">21 октября 2026</time></div>
-    <h2>Solara Olimp 1.0.2 — компактная навигация</h2>
-    <p>Нижняя панель стала компактнее, а переключение экранов защищено от случайных повторных нажатий.</p>
-    <ul class="update-fix-list"><li>Уменьшена высота вкладок и размер иконок.</li><li>Во время перехода навигация временно блокируется, поэтому анимация не запускается повторно.</li><li>После завершения перехода кнопки снова доступны.</li></ul>
-    <div class="update-pills"><span>Навигация</span><span>Liquid Glass</span><span>1.0.2</span></div>
+    <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 1.1.0</span><time datetime="2026-10-21">21 октября 2026</time></div>
+    <h2>Solara Olimp 1.1.0 — новые олимпиады</h2>
+    <p>Три новых предмета, расширенный банк заданий и согласованные коды занятий.</p>
+    <ul class="update-fix-list"><li>Добавлены биология, астрономия и экология.</li><li>Обновлены API-проверки и формат кода для новых предметов.</li><li>Окно обновления теперь отмечает выпуск 1.1.0 отдельно.</li></ul>
+    <div class="update-pills"><span>Предметы</span><span>Банк заданий</span><span>1.1.0</span></div>
    </div>
   </article>
   <article class="update-entry update-entry-featured">
@@ -1956,7 +1956,7 @@ setTimeout(()=>{
 const $=id=>document.getElementById(id);
 const API_URL="https://husjlwgohxtatgguzdjm.supabase.co/functions/v1/olimp-api";
 const API_KEY="sb_publishable_iECwhv5Ljl48x8_v6FasJA_W5jwXNtZ";
-function subjectName(subject,upper=false){const names={math:"Математика",info:"Информатика",rus:"Русский язык",physics:"Физика",geography:"География",history:"История",chemistry:"Химия"};const value=names[subject]||"Неизвестный предмет";return upper?value.toLocaleUpperCase("ru-RU"):value;}
+function subjectName(subject,upper=false){const names={math:"Математика",info:"Информатика",rus:"Русский язык",physics:"Физика",geography:"География",history:"История",chemistry:"Химия",biology:"Биология",astronomy:"Астрономия",ecology:"Экология"};const value=names[subject]||"Неизвестный предмет";return upper?value.toLocaleUpperCase("ru-RU"):value;}
 async function api(action,payload={}){const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":API_KEY},body:JSON.stringify({action,...payload})});let data={};try{data=await response.json()}catch(e){}if(!response.ok)throw new Error(data.error||"Ошибка соединения с сервером");return data;}
 const views=['roleView','teacherView','studentView','quizView','resultView','updatesView'];
 let viewTransitionTimer=0,viewTransitionToken=0;
@@ -2621,7 +2621,7 @@ showView('roleView');
 <script id="solara-update-announcement">
 (function(){
   /* Показываем приветственное окно обновления только один раз на этом браузере. */
-  const storageKey = "solara_update_announcement_seen_once";
+  const storageKey = "solara_update_announcement_seen_1_1_0";
   const modal = document.getElementById("solara-update-modal");
   const dismiss = document.getElementById("solara-update-dismiss");
   if (!modal || !dismiss) return;
