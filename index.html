@@ -3260,5 +3260,21 @@ html.low-power .ios-dock:after{animation:none!important}
 }
 </style>
 
+
+<style id="solara-dock-new-badge-unclipped-v2">
+/* Keep the NEW pill fully inside the Updates button; override older responsive offsets. */
+.ios-dock{overflow:visible!important}
+.ios-dock .dock-item[data-nav="updatesView"]{position:relative!important;overflow:visible!important;contain:none!important}
+.ios-dock .dock-update-badge{
+  top:3px!important;right:3px!important;left:auto!important;bottom:auto!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  box-sizing:border-box!important;min-width:30px!important;width:auto!important;height:17px!important;
+  padding:0 5px!important;line-height:1!important;white-space:nowrap!important;
+  overflow:visible!important;transform:none!important;animation:none!important;
+  font-size:8px!important;letter-spacing:.035em!important;z-index:20!important;
+}
+.ios-dock .dock-update-badge.is-seen{transform:none!important;opacity:0!important;pointer-events:none!important}
+@media(max-width:360px){.ios-dock .dock-update-badge{top:3px!important;right:3px!important;min-width:29px!important;height:16px!important;padding:0 4px!important;font-size:7px!important}}
+</style>
 </body>
 </html>
