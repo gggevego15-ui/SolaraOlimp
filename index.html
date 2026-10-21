@@ -3093,5 +3093,152 @@ html.low-power .ios-dock:after{animation:none!important}
 
 </style>
 
+
+<style id="solara-phone-graphics-settings">
+#solara-phone-graphics-setup{display:none}
+@media(max-width:650px) and (pointer:coarse){
+ #solara-phone-graphics-setup{position:fixed;inset:0;z-index:10050;display:flex;align-items:center;justify-content:center;padding:18px;
+  background:rgba(13,17,34,.48);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s ease,visibility .24s ease}
+ #solara-phone-graphics-setup.is-open{opacity:1;visibility:visible;pointer-events:auto}
+ #solara-phone-graphics-setup .graphics-card{width:min(100%,410px);max-height:calc(100dvh - 36px);overflow:auto;box-sizing:border-box;
+  padding:22px;border-radius:28px;border:1px solid rgba(255,255,255,.5);
+  background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(236,241,255,.76) 55%,rgba(224,231,255,.72));
+  color:#202744;box-shadow:0 28px 90px rgba(5,10,35,.3),inset 0 1px 0 rgba(255,255,255,.9);
+  transform:translateY(14px) scale(.98);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+ #solara-phone-graphics-setup.is-open .graphics-card{transform:translateY(0) scale(1)}
+ #solara-phone-graphics-setup .graphics-kicker{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#6572b7}
+ #solara-phone-graphics-setup h2{font-size:25px;line-height:1.12;letter-spacing:-.04em;margin:8px 0}
+ #solara-phone-graphics-setup .graphics-subtitle{font-size:13px;line-height:1.5;color:#65708e;margin:0 0 18px}
+ #solara-phone-graphics-setup .graphics-options{display:grid;gap:9px}
+ #solara-phone-graphics-setup .graphics-option{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px;border-radius:18px;
+  border:1px solid rgba(107,123,177,.18);background:rgba(255,255,255,.48);color:inherit;box-shadow:inset 0 1px 0 rgba(255,255,255,.65);
+  transform:none!important;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease}
+ #solara-phone-graphics-setup .graphics-option[aria-checked="true"]{border-color:rgba(92,110,232,.68);background:rgba(127,143,255,.17);box-shadow:0 0 0 2px rgba(107,123,244,.1),inset 0 1px 0 rgba(255,255,255,.7)}
+ #solara-phone-graphics-setup .graphics-option-icon{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:14px;background:rgba(116,132,224,.13);font-size:20px}
+ #solara-phone-graphics-setup .graphics-option-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+ #solara-phone-graphics-setup .graphics-option-copy strong{font-size:14px}
+ #solara-phone-graphics-setup .graphics-option-copy small{font-size:11px;line-height:1.35;color:#65708e}
+ #solara-phone-graphics-setup .graphics-check{font-size:17px;color:#596bd6;opacity:0}
+ #solara-phone-graphics-setup .graphics-option[aria-checked="true"] .graphics-check{opacity:1}
+ #solara-phone-graphics-setup .graphics-start{width:100%;margin-top:16px;padding:14px 16px;border:0;border-radius:16px;color:white;font-weight:750;
+  background:linear-gradient(135deg,#6578ed,#8b72e8);box-shadow:0 9px 22px rgba(93,108,220,.3);transform:none!important}
+ #solara-phone-graphics-setup .graphics-footnote{font-size:10px;line-height:1.45;text-align:center;color:#78809b;margin:11px 4px 0}
+ html[data-solara-theme="dark"] #solara-phone-graphics-setup .graphics-card{color:#f0f2ff;background:linear-gradient(145deg,rgba(35,42,65,.97),rgba(22,27,45,.96));border-color:rgba(207,216,255,.2)}
+ html[data-solara-theme="dark"] #solara-phone-graphics-setup .graphics-subtitle,
+ html[data-solara-theme="dark"] #solara-phone-graphics-setup .graphics-option-copy small,
+ html[data-solara-theme="dark"] #solara-phone-graphics-setup .graphics-footnote{color:#aab5d5}
+ html[data-solara-theme="dark"] #solara-phone-graphics-setup .graphics-option{background:rgba(255,255,255,.045);border-color:rgba(200,210,255,.13)}
+ html[data-solara-theme="dark"] #solara-phone-graphics-setup .graphics-option[aria-checked="true"]{background:rgba(125,143,255,.18);border-color:rgba(160,173,255,.6)}
+}
+@media(prefers-reduced-motion:reduce){#solara-phone-graphics-setup,#solara-phone-graphics-setup .graphics-card,#solara-phone-graphics-setup .graphics-option{transition:none!important}}
+</style>
+<div id="solara-phone-graphics-setup" role="dialog" aria-modal="true" aria-labelledby="solara-graphics-title">
+ <div class="graphics-card">
+  <div class="graphics-kicker">SOLARA OLIMP · MOBILE</div>
+  <h2 id="solara-graphics-title">Настроим графику</h2>
+  <p class="graphics-subtitle">Выбери баланс плавности и эффектов. Настройка действует только на телефоне и сохраняется для следующих посещений.</p>
+  <div class="graphics-options" role="radiogroup" aria-label="Профиль графики">
+   <button type="button" class="graphics-option" data-graphics="eco" role="radio" aria-checked="false">
+    <span class="graphics-option-icon">⚡</span><span class="graphics-option-copy"><strong>Экономия</strong><small>Меньше размытия и анимаций — для слабых устройств</small></span><span class="graphics-check">✓</span>
+   </button>
+   <button type="button" class="graphics-option" data-graphics="balanced" role="radio" aria-checked="true">
+    <span class="graphics-option-icon">◈</span><span class="graphics-option-copy"><strong>Баланс</strong><small>Liquid Glass и плавность без лишней нагрузки</small></span><span class="graphics-check">✓</span>
+   </button>
+   <button type="button" class="graphics-option" data-graphics="quality" role="radio" aria-checked="false">
+    <span class="graphics-option-icon">✦</span><span class="graphics-option-copy"><strong>Качество</strong><small>Более выразительное стекло и эффекты</small></span><span class="graphics-check">✓</span>
+   </button>
+  </div>
+  <button type="button" class="graphics-start" id="solara-graphics-start">Продолжить</button>
+  <p class="graphics-footnote">Меню показывается при каждом входе с телефона. На компьютере настройки не меняются.</p>
+ </div>
+</div>
+<script id="solara-phone-graphics-settings-script">
+(function(){
+ const root=document.documentElement, modal=document.getElementById('solara-phone-graphics-setup');
+ if(!modal)return;
+ const phoneQuery=window.matchMedia('(max-width:650px) and (pointer:coarse)');
+ const options=[...modal.querySelectorAll('[data-graphics]')];
+ const start=modal.querySelector('#solara-graphics-start');
+ const key='solara_phone_graphics_profile_v101';
+ let selected='balanced',previousFocus=null;
+ try{const saved=localStorage.getItem(key);if(['eco','balanced','quality'].includes(saved))selected=saved;}catch(e){}
+ function selectProfile(profile){
+  selected=profile;
+  options.forEach(button=>button.setAttribute('aria-checked',String(button.dataset.graphics===profile)));
+ }
+ function applyProfile(profile){
+  root.classList.remove('solara-graphics-eco','solara-graphics-balanced','solara-graphics-quality');
+  root.classList.add('solara-graphics-'+profile);
+  root.dataset.solaraGraphics=profile;
+  if(phoneQuery.matches){
+   root.classList.toggle('low-power',profile==='eco'||(profile==='balanced'&&(
+    (navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||
+    (navigator.deviceMemory&&navigator.deviceMemory<=4)||
+    ((navigator.connection||{}).saveData)
+   )));
+  }
+ }
+ function open(){
+  if(!phoneQuery.matches)return;
+  previousFocus=document.activeElement;
+  modal.classList.add('is-open');
+  root.style.overflow='hidden';
+  const active=options.find(button=>button.dataset.graphics===selected)||options[1];
+  if(active)active.focus({preventScroll:true});
+ }
+ function close(){
+  modal.classList.remove('is-open');
+  root.style.overflow='';
+  if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus({preventScroll:true});
+ }
+ options.forEach(button=>button.addEventListener('click',()=>selectProfile(button.dataset.graphics)));
+ start.addEventListener('click',()=>{
+  applyProfile(selected);
+  try{localStorage.setItem(key,selected);}catch(e){}
+  close();
+ });
+ document.addEventListener('keydown',event=>{
+  if(!modal.classList.contains('is-open'))return;
+  if(event.key==='Escape'){event.preventDefault();return;}
+  if(event.key==='ArrowDown'||event.key==='ArrowUp'){
+   const current=options.findIndex(button=>button.dataset.graphics===selected);
+   const next=(current+(event.key==='ArrowDown'?1:options.length-1))%options.length;
+   selectProfile(options[next].dataset.graphics);options[next].focus();event.preventDefault();
+  }
+ });
+ if(phoneQuery.matches){
+  applyProfile(selected);
+  requestAnimationFrame(()=>requestAnimationFrame(open));
+ }else{
+  root.classList.remove('solara-graphics-eco','solara-graphics-balanced','solara-graphics-quality');
+ }
+ if(typeof phoneQuery.addEventListener==='function'){
+  phoneQuery.addEventListener('change',event=>{
+   if(event.matches){applyProfile(selected);open();}
+   else{modal.classList.remove('is-open');root.style.overflow='';root.classList.remove('solara-graphics-eco','solara-graphics-balanced','solara-graphics-quality');}
+  });
+ }
+})();
+</script>
+<style id="solara-phone-graphics-profiles">
+@media(max-width:650px) and (pointer:coarse){
+ html.solara-graphics-eco .top,html.solara-graphics-eco .panel.glass,html.solara-graphics-eco .ios-dock,html.solara-graphics-eco .toast,
+ html.solara-graphics-eco .question-notes,html.solara-graphics-eco .question-visual,html.solara-graphics-eco .role,html.solara-graphics-eco .answer{
+  -webkit-backdrop-filter:blur(3px) saturate(118%)!important;backdrop-filter:blur(3px) saturate(118%)!important;
+ }
+ html.solara-graphics-eco .panel.glass{box-shadow:0 4px 12px rgba(55,70,126,.07)!important}
+ html.solara-graphics-eco *,html.solara-graphics-eco *:before,html.solara-graphics-eco *:after{scroll-behavior:auto!important;animation-duration:.12s!important;animation-iteration-count:1!important}
+ html.solara-graphics-balanced .top,html.solara-graphics-balanced .panel.glass,html.solara-graphics-balanced .ios-dock,html.solara-graphics-balanced .toast,
+ html.solara-graphics-balanced .question-notes,html.solara-graphics-balanced .question-visual,html.solara-graphics-balanced .role,html.solara-graphics-balanced .answer{
+  -webkit-backdrop-filter:blur(7px) saturate(135%)!important;backdrop-filter:blur(7px) saturate(135%)!important;
+ }
+ html.solara-graphics-quality .top,html.solara-graphics-quality .panel.glass,html.solara-graphics-quality .ios-dock,html.solara-graphics-quality .toast,
+ html.solara-graphics-quality .question-notes,html.solara-graphics-quality .question-visual,html.solara-graphics-quality .role,html.solara-graphics-quality .answer{
+  -webkit-backdrop-filter:blur(12px) saturate(155%)!important;backdrop-filter:blur(12px) saturate(155%)!important;
+ }
+}
+</style>
+
 </body>
 </html>
