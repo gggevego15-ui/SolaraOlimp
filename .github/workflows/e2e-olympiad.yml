@@ -1,0 +1,99 @@
+name: Solara Olimp end-to-end test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[e2e]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Load public API config
+        run: |
+          python - <<'PY'
+          import os, re
+          from pathlib import Path
+          html = Path("index.html").read_text(encoding="utf-8")
+          url = re.search(r'const API_URL="([^"]+)"', html)
+          key = re.search(r'const API_KEY="([^"]+)"', html)
+          if not url or not key:
+              raise SystemExit("Missing API URL or publishable key")
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env:
+              env.write(f"SOLARA_API_URL={url.group(1)}\n")
+              env.write(f"SOLARA_API_KEY={key.group(1)}\n")
+          PY
+      - name: Test create → join → answer → finish → results
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+
+          url, key = os.environ["SOLARA_API_URL"], os.environ["SOLARA_API_KEY"]
+
+          def call(action, payload=None, expected_status=200):
+              body = json.dumps({"action": action, **(payload or {})}).encode()
+              request = urllib.request.Request(url, data=body, method="POST", headers={
+                  "apikey": key, "Content-Type": "application/json"
+              })
+              try:
+                  with urllib.request.urlopen(request, timeout=20) as response:
+                      status, raw = response.status, response.read()
+              except urllib.error.HTTPError as error:
+                  status, raw = error.code, error.read()
+              try:
+                  data = json.loads(raw)
+              except Exception:
+                  raise AssertionError(f"{action}: API did not return JSON (HTTP {status})")
+              if status != expected_status:
+                  raise AssertionError(f"{action}: expected HTTP {expected_status}, got {status}: {data}")
+              return data
+
+          # Validate an invalid request is rejected before creating test data.
+          bad = call("create", {"subject": "not-a-subject", "grade": 7, "difficulty": "olympiad"}, 400)
+          assert bad.get("error"), "Invalid subject was not rejected"
+
+          room = call("create", {"subject": "math", "grade": 7, "difficulty": "olympiad"})
+          code, teacher = room.get("code"), room.get("teacherToken")
+          assert code and teacher and room.get("subject") == "math", f"Malformed create response: {room}"
+          # Persist cleanup identifiers immediately so a later assertion cannot lose them.
+          Path("/tmp/solara-e2e-created.json").write_text(json.dumps({"code": code}), encoding="utf-8")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              out.write(f"test_code={code}\n")
+          print(f"Created isolated test session: {code}")
+
+          joined = call("join", {"code": code, "subject": "math", "grade": 7, "studentName": "Solara E2E"})
+          token, tasks = joined.get("participantToken"), joined.get("tasks")
+          assert token and len(tasks or []) == 10, f"Join did not return 10 tasks: {joined}"
+          assert all(len(t.get("a", [])) == 4 and "c" not in t for t in tasks), "Student tasks leaked answer keys or have invalid choices"
+          print("Join passed: student token issued, 10 tasks returned, answer keys hidden")
+
+          for i in range(10):
+              saved = call("answer", {"participantToken": token, "index": i, "answer": 0})
+              assert saved.get("saved") is True, f"Answer {i} was not saved: {saved}"
+          print("Answer passed: all 10 answers accepted")
+
+          result = call("finish", {"participantToken": token, "answers": {str(i): 0 for i in range(10)}})
+          assert isinstance(result.get("score"), int) and 0 <= result["score"] <= 10, f"Invalid score: {result}"
+          assert len(result.get("correctAnswers", [])) == 10, "Finish response missing answer key"
+          assert isinstance(result.get("elapsedSeconds"), int) and result["elapsedSeconds"] >= 0, "Invalid elapsed time"
+          assert result.get("finishedAt"), "Finish response missing finish timestamp"
+          repeated = call("finish", {"participantToken": token, "answers": {str(i): 3 for i in range(10)}})
+          assert (repeated.get("score"), repeated.get("finishedAt"), repeated.get("elapsedSeconds")) == (result["score"], result["finishedAt"], result["elapsedSeconds"]), "Repeated finish changed saved result"
+          print(f"Finish passed: score={result['score']}/10, repeated finish is idempotent")
+
+          ranking = call("results", {"code": code, "teacherToken": teacher})
+          participants = ranking.get("participants", [])
+          match = next((p for p in participants if p.get("student_name") == "Solara E2E"), None)
+          assert match and match.get("score") == result["score"] and match.get("rank") == 1, f"Results/ranking mismatch: {ranking}"
+          forbidden = call("results", {"code": code, "teacherToken": "00000000-0000-4000-8000-000000000000"}, 403)
+          assert forbidden.get("error"), "Invalid teacher token was accepted"
+          print("Results passed: teacher sees matching score/rank; invalid teacher token rejected")
+          print("END-TO-END PASS: create → join → answer → finish → repeated finish → results")
+          PY
