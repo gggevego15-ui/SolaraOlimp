@@ -1731,11 +1731,11 @@ html[data-solara-theme="dark"] .ios-dock>.dock-liquid:before{
   <div class="update-card">
     <div class="update-kicker">Solara Olimp · обновление</div>
     <h2 id="solara-update-title">Что нового?</h2>
-    <div class="update-date">Версия 0.7.0 · 20 октября 2026</div>
+    <div class="update-date">Версия 1.0.2 · 21 октября 2026</div>
     <ul class="update-list">
-      <li><span class="update-check">✓</span><span>Переработана тёмная тема: цвета и контраст стали ровнее.</span></li>
-      <li><span class="update-check">✓</span><span>Смягчены акценты, блики и градиенты без потери Liquid Glass.</span></li>
-      <li><span class="update-check">✓</span><span>Унифицированы карточки, поля, кнопки и нижняя навигация.</span></li>
+      <li><span class="update-check">✓</span><span>Уменьшены вкладки нижней панели, чтобы интерфейс выглядел компактнее.</span></li>
+      <li><span class="update-check">✓</span><span>Добавлена блокировка повторных нажатий во время перехода между экранами.</span></li>
+      <li><span class="update-check">✓</span><span>Переход завершается прежде, чем навигация снова станет доступна.</span></li>
       <li><span class="update-check">✓</span><span>Заметки теперь открываются компактной Liquid Glass-кнопкой и сохраняются отдельно для каждой задачи.</span></li><li><span class="update-check">✓</span><span>Иллюстрации предусмотрены для всех семи предметов; панели заметок и тёмная тема получили более контрастное стекло.</span></li><li><span class="update-check">✓</span><span>Журнал версий обновлён до 0.7.0.</span></li>
     </ul>
     <button class="update-dismiss" id="solara-update-dismiss" type="button">Понятно, продолжить</button>
@@ -1803,7 +1803,17 @@ html[data-solara-theme="dark"] .ios-dock>.dock-liquid:before{
   <article class="update-entry update-entry-featured">
    <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
    <div class="update-entry-content">
-    <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 1.0.1</span><time datetime="2026-10-20">20 октября 2026</time></div>
+    <div class="update-entry-meta"><span class="update-tag update-tag-new">ТЕКУЩАЯ ВЕРСИЯ · 1.0.2</span><time datetime="2026-10-21">21 октября 2026</time></div>
+    <h2>Solara Olimp 1.0.2 — компактная навигация</h2>
+    <p>Нижняя панель стала компактнее, а переключение экранов защищено от случайных повторных нажатий.</p>
+    <ul class="update-fix-list"><li>Уменьшена высота вкладок и размер иконок.</li><li>Во время перехода навигация временно блокируется, поэтому анимация не запускается повторно.</li><li>После завершения перехода кнопки снова доступны.</li></ul>
+    <div class="update-pills"><span>Навигация</span><span>Liquid Glass</span><span>1.0.2</span></div>
+   </div>
+  </article>
+  <article class="update-entry update-entry-featured">
+   <div class="update-entry-rail"><span class="update-entry-dot"></span><span class="update-entry-line"></span></div>
+   <div class="update-entry-content">
+    <div class="update-entry-meta"><span class="update-tag">ВЕРСИЯ 1.0.1</span><time datetime="2026-10-20">20 октября 2026</time></div>
     <h2>Solara Olimp 1.0.1 — Liquid Glass Dock</h2>
     <p>Обновление нижней панели: Liquid Glass покрывает кнопку целиком, вкладки выровнены, а подписи плавно раскрываются при наведении.</p>
     <ul class="update-fix-list"><li>Обновлены панели, поля, карточки и кнопки: полупрозрачные слои, тонкие световые границы и аккуратные отражения.</li><li>В тёмной теме усилен контраст текста и состояний ввода.</li><li>Учитываются настройки уменьшения движения и режим экономии ресурсов.</li></ul>
@@ -1951,6 +1961,20 @@ function subjectName(subject,upper=false){const names={math:"Математик�
 async function api(action,payload={}){const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":API_KEY},body:JSON.stringify({action,...payload})});let data={};try{data=await response.json()}catch(e){}if(!response.ok)throw new Error(data.error||"Ошибка соединения с сервером");return data;}
 const views=['roleView','teacherView','studentView','quizView','resultView','updatesView'];
 let viewTransitionTimer=0,viewTransitionToken=0;
+let navigationTransitionLocked=false,navigationUnlockTimer=0;
+function setNavigationTransitionLock(locked){
+ navigationTransitionLocked=locked;
+ const dock=$("iosDock");
+ if(!dock)return;
+ dock.classList.toggle("is-transition-locked",locked);
+ dock.querySelectorAll("[data-nav]").forEach(button=>{
+  button.setAttribute("aria-disabled",locked?"true":"false");
+ });
+}
+function releaseNavigationTransitionLock(){
+ clearTimeout(navigationUnlockTimer);
+ setNavigationTransitionLock(false);
+}
 
 function syncDockLiquid(){
  const dock=$('iosDock'), liquid=$('dockLiquid');
@@ -2066,6 +2090,13 @@ function showView(id){
  if(!views.includes(id))return;
  const currentId=views.find(v=>!$(v).classList.contains('hidden'));
  if(currentId===id){syncViewChrome(id);return}
+ if(navigationTransitionLocked)return;
+ if(currentId){
+  setNavigationTransitionLock(true);
+  clearTimeout(navigationUnlockTimer);
+  const lockDuration=window.matchMedia("(max-width:640px)").matches?1150:1450;
+  navigationUnlockTimer=setTimeout(releaseNavigationTransitionLock,lockDuration);
+ }
  const token=++viewTransitionToken;
  clearTimeout(viewTransitionTimer);
  clearTimeout(solaraWaveTimer);
@@ -2536,6 +2567,7 @@ try{
 
 
 document.querySelectorAll('[data-nav]').forEach(item=>item.addEventListener('click',()=>{
+ if(navigationTransitionLocked)return;
  const target=item.dataset.nav;
  if(target==='roleView'){
   if(session&&!session.finished&&!confirm('Выйти из занятия? Текущий прогресс будет потерян.'))return;
@@ -3275,6 +3307,24 @@ html.low-power .ios-dock:after{animation:none!important}
 }
 .ios-dock .dock-update-badge.is-seen{transform:none!important;opacity:0!important;pointer-events:none!important}
 @media(max-width:360px){.ios-dock .dock-update-badge{top:3px!important;right:3px!important;min-width:29px!important;height:16px!important;padding:0 4px!important;font-size:7px!important}}
+</style>
+
+<style id="solara-1-0-2-compact-dock-transition-lock">
+/* 1.0.2: compact tabs and prevent transition spam while the liquid wave is running. */
+.ios-dock>.dock-item{height:44px!important;border-radius:15px!important}
+.ios-dock>.dock-item .dock-icon{flex-basis:20px!important;width:20px!important;height:20px!important}
+.ios-dock>.dock-item .dock-icon svg{width:19px!important;height:19px!important}
+.ios-dock>.dock-item .dock-label{font-size:10px!important}
+.ios-dock.is-transition-locked{pointer-events:none!important;cursor:wait!important}
+.ios-dock.is-transition-locked .dock-item{pointer-events:none!important;cursor:wait!important;opacity:.78!important}
+.ios-dock.is-transition-locked .dock-liquid{transition:none!important}
+@media(hover:none),(max-width:650px){
+ .ios-dock>.dock-item{height:47px!important;gap:3px!important;padding:3px 2px!important}
+ .ios-dock>.dock-item .dock-icon{flex-basis:20px!important;width:20px!important;height:20px!important}
+ .ios-dock>.dock-item .dock-icon svg{width:18px!important;height:18px!important}
+ .ios-dock>.dock-item .dock-label{font-size:9px!important}
+}
+@media(max-width:360px){.ios-dock>.dock-item{height:44px!important}.ios-dock>.dock-item .dock-label{font-size:8px!important}}
 </style>
 </body>
 </html>
