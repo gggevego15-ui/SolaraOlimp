@@ -48,6 +48,8 @@ jobs:
               "function explainMistake(",
               "function renderResultInsights(",
               "function applyReviewFilter(",
+              'api("answer"',
+              "await session.pendingSave;",
           ]
           missing = [item for item in required if item not in html]
           if missing:
