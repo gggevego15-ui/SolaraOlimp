@@ -484,7 +484,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{
 @keyframes solaraUpdateFade{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){#solara-update-modal.is-visible{animation:none}#solara-update-modal .update-dismiss{transition:none}}
 @media(prefers-reduced-transparency:reduce){#solara-update-modal{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(8,12,24,.72)}#solara-update-modal .update-card{background:#f4f6fc}}
-@media(max-width:480px){#solara-update-modal{padding:14px}#solara-update-modal .update-card{padding:22px;border-radius:23px}}
+@media(max-width:480px){#solara-update-modal{padding:12px;align-items:flex-start;overflow-y:auto;overscroll-behavior:contain}#solara-update-modal .update-card{width:100%;max-width:440px;max-height:calc(100dvh - 24px);margin:auto 0;padding:18px;border-radius:23px;overflow-y:auto;overscroll-behavior:contain;box-sizing:border-box}#solara-update-modal .update-list{gap:9px;margin:14px 0 18px}#solara-update-modal .update-list li{font-size:13px;line-height:1.45}#solara-update-modal h2{font-size:clamp(22px,6vw,28px)}}
+@media(min-width:481px){#solara-update-modal{overflow-y:auto;overscroll-behavior:contain}#solara-update-modal .update-card{max-height:calc(100dvh - 40px);overflow-y:auto;overscroll-behavior:contain;box-sizing:border-box}}
 </style>
 
 <style id="solara-liquid-glass-premium">
@@ -514,7 +515,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{
 @keyframes solaraGlassSweep{0%{left:-70%;opacity:0}18%{opacity:.9}100%{left:135%;opacity:0}}
 @media(prefers-reduced-motion:reduce){#solara-update-modal.is-visible,#solara-update-modal .update-card,#solara-update-modal .update-card:after{animation:none!important}#solara-update-modal .update-list li,#solara-update-modal .update-dismiss{transition:none!important}}
 @media(prefers-reduced-transparency:reduce){#solara-update-modal .update-card{backdrop-filter:none;-webkit-backdrop-filter:none;background:#f4f6fc}.top,.panel.glass{background:#f4f6fc!important}}
-@media(max-width:480px){#solara-update-modal .update-card{max-height:calc(100dvh - 28px);overflow-y:auto}}
+@media(max-width:480px){#solara-update-modal{padding:12px;align-items:flex-start;overflow-y:auto}#solara-update-modal .update-card{width:100%;max-height:calc(100dvh - 24px);margin:auto 0;padding:18px;overflow-y:auto;box-sizing:border-box}}
 html.low-power #solara-update-modal .update-card{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 html.low-power #solara-update-modal.is-visible,html.low-power #solara-update-modal .update-card,html.low-power #solara-update-modal .update-card:after{animation:none!important}
 html.low-power #solara-update-modal .update-list li,html.low-power #solara-update-modal .update-dismiss{transition:none!important}
@@ -2588,8 +2589,8 @@ showView('roleView');
 
 <script id="solara-update-announcement">
 (function(){
-  const version = "2026-10-21-v101";
-  const storageKey = "solara_seen_update_" + version;
+  /* Показываем приветственное окно обновления только один раз на этом браузере. */
+  const storageKey = "solara_update_announcement_seen_once";
   const modal = document.getElementById("solara-update-modal");
   const dismiss = document.getElementById("solara-update-dismiss");
   if (!modal || !dismiss) return;
