@@ -81,7 +81,7 @@ jobs:
               raise SystemExit("Missing database migration for new subjects")
           print("All 1.1.0 subjects are present in UI, API, visuals and migration")
           PY
-      - name: Smoke test live Supabase API
+      - name: Load live Supabase API config
         run: |
           python - <<'PY'
           import os, re
@@ -96,6 +96,8 @@ jobs:
               env.write(f"SOLARA_API_URL={api_url.group(1)}\n")
               env.write(f"SOLARA_API_KEY={api_key.group(1)}\n")
           PY
+      - name: Smoke test live Supabase API
+        run: |
           curl --fail-with-body --silent --show-error "$SOLARA_API_URL" \
             -X POST \
             -H "apikey: $SOLARA_API_KEY" \
