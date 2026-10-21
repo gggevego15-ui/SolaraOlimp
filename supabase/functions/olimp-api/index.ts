@@ -551,14 +551,27 @@ Deno.serve(async (req: Request) => {
       const token = body.participantToken;
       if (!validToken(token)) return reply({ error: "Не удалось проверить сессию ученика." }, 400);
       const { data: participant, error } = await db.from("olimp_participants")
-        .select("id, session_id, started_at, ends_at, finished_at, answers, olimp_sessions(task_set)")
+        .select("id, session_id, started_at, ends_at, finished_at, elapsed_seconds, score, answers, olimp_sessions(task_set)")
         .eq("participant_token", token).maybeSingle();
       if (error) throw error;
       if (!participant) return reply({ error: "Занятие не найдено." }, 404);
       const tasks = (participant as any).olimp_sessions?.task_set;
       if (!Array.isArray(tasks) || tasks.length !== 10) return reply({ error: "Не удалось загрузить задания." }, 500);
+      const correctAnswers = tasks.map((task: any) => task.c);
+      if (participant.finished_at) {
+        const finishedAt = new Date(participant.finished_at);
+        const elapsed = Number.isFinite(Number(participant.elapsed_seconds))
+          ? Number(participant.elapsed_seconds)
+          : Math.min(3600, Math.max(0, Math.floor((finishedAt.getTime() - new Date(participant.started_at).getTime()) / 1000)));
+        return reply({
+          score: Number.isInteger(participant.score) ? participant.score : 0,
+          correctAnswers,
+          elapsedSeconds: elapsed,
+          finishedAt: finishedAt.toISOString()
+        });
+      }
       const now = new Date();
-      const finishedAt = participant.finished_at ? new Date(participant.finished_at) : now;
+      const finishedAt = now;
       const elapsed = Math.min(3600, Math.max(0, Math.floor((finishedAt.getTime() - new Date(participant.started_at).getTime()) / 1000)));
       const submitted = body.answers && typeof body.answers === "object" && !Array.isArray(body.answers) ? body.answers : {};
       for (const [key, value] of Object.entries(submitted)) {
@@ -571,7 +584,6 @@ Deno.serve(async (req: Request) => {
         if (value === null) delete answers[key];
         else answers[key] = value;
       }
-      const correctAnswers = tasks.map((task: any) => task.c);
       const score = tasks.reduce((sum: number, task: any, i: number) => sum + (answers[String(i)] !== undefined && Number(answers[String(i)]) === task.c ? 1 : 0), 0);
       if (!participant.finished_at) {
         const { error: finishError } = await db.from("olimp_participants").update({
