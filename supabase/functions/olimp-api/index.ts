@@ -484,6 +484,15 @@ Deno.serve(async (req: Request) => {
     const body = await req.json();
     const action = body?.action;
 
+    if (action === "health") {
+      return reply({
+        ok: true,
+        service: "olimp-api",
+        version: "1.1.0",
+        subjects: ["math", "info", "rus", "physics", "geography", "history", "chemistry", "biology", "astronomy", "ecology"]
+      });
+    }
+
     if (action === "create") {
       const subject = body.subject;
       const grade = Number(body.grade);
