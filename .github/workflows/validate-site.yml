@@ -34,6 +34,27 @@ jobs:
           PY
       - name: Check JavaScript syntax
         run: node --check /tmp/solara-inline.js
+      - name: Build Cloudflare Pages artifact
+        run: npm run build
+      - name: Verify public deployment bundle
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          output = Path("dist")
+          files = sorted(path.name for path in output.iterdir() if path.is_file())
+          expected = ["_headers", "_redirects", "index.html"]
+          if files != expected:
+              raise SystemExit(f"Unexpected public bundle files: {files}")
+          html = (output / "index.html").read_text(encoding="utf-8")
+          if "olimp-api" not in html or "sb_publishable_" not in html:
+              raise SystemExit("Built site is missing the Supabase client configuration")
+          if any(path.is_dir() for path in output.iterdir()):
+              raise SystemExit("Nested project directories must not be published")
+          print(f"Cloudflare Pages bundle verified: {files}")
+          print(f"Public HTML size: {(output / 'index.html').stat().st_size} bytes")
+          PY
       - name: Check quiz review features
         run: |
           python - <<'PY'
