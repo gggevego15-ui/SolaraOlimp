@@ -1,0 +1,12 @@
+{
+  "name": "solara-olimp",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Solara Olimp static web app",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
