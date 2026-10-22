@@ -29,5 +29,5 @@ const deployedFiles = fs.readdirSync(output).sort();
 if (deployedFiles.some((file) => file === "supabase" || file === ".github" || file === "README.md")) {
   throw new Error("Internal project files must not be included in the public deployment");
 }
-console.log(`Cloudflare Pages bundle ready: ${deployedFiles.join(", ")}`);
+console.log(`Static site bundle ready: ${deployedFiles.join(", ")}`);
 console.log(`index.html: ${fs.statSync(path.join(output, "index.html")).size} bytes`);
